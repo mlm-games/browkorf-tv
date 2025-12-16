@@ -273,7 +273,7 @@ data class WebTabState(@PrimaryKey(autoGenerate = true)
     suspend fun changePopupBlockingLevel(newLevel: Int) {
         val hostConfig = findHostConfig(true) ?: return
         hostConfig.popupBlockLevel = newLevel
-        AppDatabase.db.hostsDao().update(hostConfig)
+//        AppDatabase.db.hostsDao().update(hostConfig)
     }
 
     suspend fun findHostConfig(createIfNotFound: Boolean): HostConfig? {

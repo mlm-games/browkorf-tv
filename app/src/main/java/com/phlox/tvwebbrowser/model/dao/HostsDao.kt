@@ -1,16 +1,19 @@
 package com.phlox.tvwebbrowser.model.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.phlox.tvwebbrowser.model.HostConfig
 
 @Dao
 interface HostsDao {
-    @Query("SELECT * FROM hosts WHERE host_name = :name")
-    fun findByHostName(name: String): HostConfig?
+    @Query("SELECT * FROM hosts WHERE host_name=:name")
+    suspend fun findByHostName(name: String): HostConfig?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: HostConfig): Long
+    suspend fun insert(config: HostConfig): Long
 
-    @Update
-    suspend fun update(item: HostConfig)
+    @Query("DELETE FROM hosts")
+    suspend fun deleteAll()
 }

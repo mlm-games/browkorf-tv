@@ -39,7 +39,7 @@ class FileDownloadTask(override var downloadInfo: Download, private val userAgen
     }
 
     override fun run() {
-        downloadInfo.id = AppDatabase.db.downloadDao().insert(downloadInfo)
+        downloadInfo.id = AppDatabase.db.downloadsDao().insert(downloadInfo)
 
         var input: InputStream? = null
         var output: OutputStream? = null
@@ -136,7 +136,7 @@ class FileDownloadTask(override var downloadInfo: Download, private val userAgen
 class BlobDownloadTask(override var downloadInfo: Download, val blobBase64Data: String, val callback: DownloadTask.Callback) : Runnable, DownloadTask {
 
     override fun run() {
-        downloadInfo.id = AppDatabase.db.downloadDao().insert(downloadInfo)
+        downloadInfo.id = AppDatabase.db.downloadsDao().insert(downloadInfo)
 
         try {
             val blobAsBytes: ByteArray = Base64.decode(blobBase64Data.replaceFirst("data:${downloadInfo.mimeType};base64,", ""), 0)
@@ -157,7 +157,7 @@ class BlobDownloadTask(override var downloadInfo: Download, val blobBase64Data: 
 
 class StreamDownloadTask(override var downloadInfo: Download, val stream: InputStream, val callback: DownloadTask.Callback) : Runnable, DownloadTask {
     override fun run() {
-        downloadInfo.id = AppDatabase.db.downloadDao().insert(downloadInfo)
+        downloadInfo.id = AppDatabase.db.downloadsDao().insert(downloadInfo)
 
         var output: OutputStream? = null
         try {
@@ -237,7 +237,7 @@ private fun prepareDownloadOutput(downloadInfo: Download): OutputStream {
         }
         val fd = contentResolver.openFileDescriptor(downloadUri, "w", null)
         downloadInfo.filepath = downloadUri.toString()
-        AppDatabase.db.downloadDao().update(downloadInfo)
+        AppDatabase.db.downloadsDao().update(downloadInfo)
         AutoCloseOutputStream(fd)
     } else {
         FileOutputStream(downloadInfo.filepath)

@@ -77,7 +77,7 @@ object DownloadUtils {
                 val queryIndex = decodedUrl.indexOf('?')
                 // If there is a query string strip it, same as desktop browsers
                 if (queryIndex > 0) {
-                    decodedUrl = decodedUrl.substring(0, queryIndex)
+                    decodedUrl = decodedUrl.take(queryIndex)
                 }
                 if (!decodedUrl.endsWith("/")) {
                     val index = decodedUrl.lastIndexOf('/') + 1
@@ -104,14 +104,14 @@ object DownloadUtils {
                 }
             }
             if (extension == null) {
-                if (mimeType != null && mimeType.toLowerCase(Locale.ROOT).startsWith("text/")) {
+                extension = if (mimeType != null && mimeType.lowercase(Locale.ROOT).startsWith("text/")) {
                     if (mimeType.equals("text/html", ignoreCase = true)) {
-                        extension = ".html"
+                        ".html"
                     } else {
-                        extension = ".txt"
+                        ".txt"
                     }
                 } else {
-                    extension = ".bin"
+                    ".bin"
                 }
             }
         } else {
@@ -131,7 +131,7 @@ object DownloadUtils {
             if (extension == null) {
                 extension = filename.substring(dotIndex)
             }
-            filename = filename.substring(0, dotIndex)
+            filename = filename.take(dotIndex)
         }
 
         return filename + extension
@@ -147,7 +147,7 @@ object DownloadUtils {
                 val encoding = m.group(3)
 
                 if (encodedFileName != null) {
-                    return decodeHeaderField(encodedFileName, encoding)
+                    return decodeHeaderField(encodedFileName, encoding!!)
                 }
 
                 // Return quoted string if available and replace escaped characters.
@@ -176,7 +176,7 @@ object DownloadUtils {
             if (symbol.startsWith("%")) {
                 stream.write(Integer.parseInt(symbol.substring(1), 16))
             } else {
-                stream.write(symbol[0].toInt())
+                stream.write(symbol[0].code)
             }
         }
 
