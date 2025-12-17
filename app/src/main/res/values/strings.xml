@@ -195,4 +195,6 @@
     <string name="err_no_app_to_handle_url">Can not find suitable application to handle this URL</string>
     <string name="settings_engine_change_gecko_msg">GeckoView recommended system requirements: 3GB RAM, 64-bit octa-core CPU. Do you want to continue?</string>
     <string name="settings_engine_change_webview_msg">WebView will have less features in future updates. Do you want to continue?</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
 </resources>

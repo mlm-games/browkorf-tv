@@ -195,4 +195,6 @@
   <string name="home_page_links">קישורים בעמוד הבית</string>
   <string name="settings_engine_change_gecko_msg">דרישות מערכת מומלצות של GeckoView: 3GB RAM, מעבד מתומן ליבות של 64 סיביות. האם אתה רוצה להמשיך\?</string>
   <string name="settings_engine_change_webview_msg">ל-WebView יהיו פחות תכונות בעדכונים עתידיים. האם אתה רוצה להמשיך\?</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
 </resources>

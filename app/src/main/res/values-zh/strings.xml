@@ -192,4 +192,6 @@
   <string name="home_page_links">主页上的链接</string>
   <string name="settings_engine_change_gecko_msg">GeckoView 推荐的系统要求：3GB RAM、64 位八核 CPU。 你想继续吗\?</string>
   <string name="settings_engine_change_webview_msg">WebView 在未来的更新中将会减少功能。 你想继续吗\?</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
 </resources>

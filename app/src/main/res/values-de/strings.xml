@@ -192,4 +192,6 @@
   <string name="home_page_links">Links auf der Homepage</string>
   <string name="settings_engine_change_gecko_msg">Von GeckoView empfohlene Systemanforderungen: 3 GB RAM, 64-Bit-Octa-Core-CPU. Möchtest du fortfahren\?</string>
   <string name="settings_engine_change_webview_msg">WebView wird in zukünftigen Updates weniger Funktionen haben. Möchtest du fortfahren\?</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
 </resources>

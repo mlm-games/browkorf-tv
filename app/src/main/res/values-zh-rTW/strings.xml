@@ -161,6 +161,8 @@
     <string name="site_asks_to_open_unknown_url">網站要求開啟未知網址</string>
     <string name="site_asks_to_open_unknown_url_message">您要在外部應用程式開啟此網址嗎？</string>
     <string name="err_no_app_to_handle_url">找不到能夠處理此網址的合適應用程式</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
     <string-array name="home_page_links_modes">
         <item>書籤</item>
         <item>歷史紀錄</item>

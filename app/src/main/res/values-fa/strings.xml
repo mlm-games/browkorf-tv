@@ -196,4 +196,6 @@
   <string name="home_page_links">لینک ها در صفحه اصلی</string>
   <string name="settings_engine_change_gecko_msg">سیستم مورد نیاز توصیه شده GeckoView: 3 گیگابایت رم، CPU هشت هسته ای 64 بیتی. می خواهید ادامه دهید؟</string>
   <string name="settings_engine_change_webview_msg">WebView در به روز رسانی های بعدی ویژگی های کمتری خواهد داشت. می خواهید ادامه دهید؟</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
 </resources>

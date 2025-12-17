@@ -192,4 +192,6 @@
   <string name="home_page_links">Посилання на домашній сторінці</string>
   <string name="settings_engine_change_gecko_msg">Системні вимоги, рекомендовані GeckoView: 3 ГБ оперативної пам’яті, 64-розрядний восьмиядерний процесор. Ви хочете продовжити\?</string>
   <string name="settings_engine_change_webview_msg">WebView матиме менше функцій у майбутніх оновленнях. Ви хочете продовжити\?</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
 </resources>

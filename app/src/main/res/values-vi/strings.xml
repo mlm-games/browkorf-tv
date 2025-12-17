@@ -192,4 +192,6 @@
   <string name="home_page_links">Liên kết trên trang chủ</string>
   <string name="settings_engine_change_gecko_msg">Yêu cầu hệ thống được GeckoView đề xuất: RAM 3 GB, CPU lõi tám 64 bit. Bạn có muốn tiếp tục\?</string>
   <string name="settings_engine_change_webview_msg">WebView sẽ có ít tính năng hơn trong các bản cập nhật trong tương lai. Bạn có muốn tiếp tục\?</string>
+    <string name="link_options">Link Options</string>
+    <string name="menu">Menu</string>
 </resources>
