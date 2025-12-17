@@ -28,7 +28,6 @@ braveAdblock = "v0.0.1-ci"
 # Services
 gms = "4.4.4"
 crashlytics = "3.0.6"
-material3 = "1.4.0"
 
 [libraries]
 # Core
@@ -71,7 +70,7 @@ lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:l
 
 # Adblock
 brave-adblock = { group = "com.github.truefedex", name = "ad-block", version.ref = "braveAdblock" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
