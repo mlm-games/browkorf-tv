@@ -1,10 +1,9 @@
-import java.util.*
-
+import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
 }
 
 val properties = Properties()
@@ -13,25 +12,23 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { properties.load(it) }
 }
 
+// To conditionally apply plugins
 var includeFirebase = true
 
 android {
-    compileSdk = 34
-    buildToolsVersion = "34.0.0"
     namespace = "com.phlox.tvwebbrowser"
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "com.phlox.tvwebbrowser"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 61
-        versionName = "2.0.1"
+
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
 
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += mapOf(
                     "room.incremental" to "true",
-                    //used when AppDatabase @Database annotation exportSchema = true. Useful for migrations
                     "room.schemaLocation" to "$projectDir/schemas"
                 )
             }
@@ -55,7 +52,7 @@ android {
             isDebuggable = false
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig=signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -74,11 +71,9 @@ android {
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
                 val flavour = variant.flavorName
-                //val builtType = variant.buildType.name
                 val versionName = variant.versionName
-                val arch = output.filters.first().identifier
-                output.outputFileName =
-                    "tvbro-${flavour}-${versionName}(${arch}).apk"
+                val arch = output.filters.firstOrNull()?.identifier ?: "universal"
+                output.outputFileName = "tvbro-${flavour}-${versionName}(${arch}).apk"
             }
     }
 
@@ -90,14 +85,13 @@ android {
         }
         create("google") {
             dimension = "appstore"
-            //now auto-update violates Google Play policies
             buildConfigField("Boolean", "BUILT_IN_AUTO_UPDATE", "false")
         }
         create("foss") {
             dimension = "appstore"
             applicationIdSuffix = ".foss"
             buildConfigField("Boolean", "BUILT_IN_AUTO_UPDATE", "false")
-            includeFirebase = false//do not include firebase in the foss build
+            includeFirebase = false
         }
 
         create("geckoIncluded") {
@@ -113,11 +107,6 @@ android {
         buildConfig = true
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -131,41 +120,38 @@ dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.webkit:webkit:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.webkit)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.lifecycle.runtime)
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(libs.kotlin.coroutines)
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.1")
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    // Legacy annotation processor support if needed for Room Java modules, otherwise KSP is enough
+    annotationProcessor(libs.androidx.room.compiler)
 
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    // UI
+    implementation(libs.segmented.button)
+    implementation(libs.ad.block)
+    implementation(libs.pinned.section.listview)
 
-    implementation("com.github.truefedex:segmented-button:v1.0.0")
-    implementation("com.github.truefedex:ad-block:v0.0.1-ci")
-    implementation("de.halfbit:pinned-section-listview:1.0.0")
+    // Firebase (Conditional Logic handled below, but dependencies defined here)
+    "googleImplementation"(libs.firebase.core)
+    "googleImplementation"(libs.firebase.crashlytics)
 
-    //"debugImplementation"("com.squareup.leakcanary:leakcanary-android:2.14")
+    "genericImplementation"(libs.firebase.core)
+    "genericImplementation"(libs.firebase.crashlytics)
 
-    "googleImplementation"("com.google.firebase:firebase-core:21.1.1")
-    "googleImplementation"("com.google.firebase:firebase-crashlytics-ktx:19.0.1")
-
-    "genericImplementation"("com.google.firebase:firebase-core:21.1.1")
-    "genericImplementation"("com.google.firebase:firebase-crashlytics-ktx:19.0.1")
-
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.robolectric:robolectric:4.9")
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
 }
 
-if(includeFirebase) {
-    plugins {
-        id("com.google.gms.google-services")
-        id("com.google.firebase.crashlytics")
-    }
+if (includeFirebase) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
 }

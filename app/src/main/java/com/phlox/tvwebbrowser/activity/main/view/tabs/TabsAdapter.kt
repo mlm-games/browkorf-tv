@@ -23,8 +23,7 @@ import kotlinx.coroutines.launch
 
 
 class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabViewHolder>() {
-    private val tabsCopy =
-        ArrayList<WebTabState>().apply { addAll(tabsModel?.tabsStates ?: emptyList()) }
+    private val tabsCopy = ArrayList<WebTabState>()
     var current: Int = 0
     var listener: Listener? = null
     val uiHandler = Handler(Looper.getMainLooper())

@@ -1,28 +1,41 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+import com.android.build.gradle.BaseExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 
-buildscript {
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.gms) apply false
+    alias(libs.plugins.crashlytics) apply false
+}
 
-    repositories {
-        google()
-        mavenCentral()
+subprojects {
+
+    plugins.withType<com.android.build.gradle.BasePlugin> {
+        configure<BaseExtension> {
+            compileSdkVersion(libs.versions.compileSdk.get().toInt())
+
+            defaultConfig {
+                minSdk = libs.versions.minSdk.get().toInt()
+                targetSdk = libs.versions.targetSdk.get().toInt()
+                consumerProguardFiles("consumer-rules.pro")
+            }
+
+            compileOptions {
+                sourceCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
+                targetCompatibility = JavaVersion.toVersion(libs.versions.jvmTarget.get())
+            }
+        }
     }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.5.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
-        classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.20-1.0.14")
-        classpath("com.google.gms:google-services:4.4.2")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.1")
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    pluginManager.withPlugin("org.jetbrains.kotlin.android") {
+        extensions.configure<KotlinBaseExtension> {
+            jvmToolchain(libs.versions.jvmTarget.get().toInt())
+        }
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { setUrl("https://jitpack.io") }
-        maven { setUrl("https://maven.mozilla.org/maven2/") }
-    }
+tasks.register("clean", Delete::class) {
+    delete(rootProject.layout.buildDirectory)
 }

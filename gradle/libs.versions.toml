@@ -1,0 +1,66 @@
+[versions]
+agp = "8.13.2"
+kotlin = "2.3.0"
+ksp = "2.3.0"
+jvmTarget = "21"
+compileSdk = "36"
+targetSdk = "36"
+minSdk = "24"
+versionCode = "61"
+versionName = "2.0.1"
+
+appcompat = "1.7.1"
+webkit = "1.14.0"
+constraintlayout = "2.2.1"
+recyclerview = "1.4.0"
+lifecycle = "2.10.0"
+room = "2.8.4"
+
+gms = "4.4.4"
+crashlytics-plugin = "3.0.6"
+firebase-core = "21.1.1"
+firebase-crashlytics = "19.0.1"
+
+coroutines = "1.10.2"
+segmented-button = "v1.0.0"
+ad-block = "v0.0.1-ci"
+pinned-section = "1.0.0"
+geckoview = "121.0.20240108143603"
+
+junit = "4.13.2"
+robolectric = "4.16"
+
+[libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Firebase
+firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "firebase-core" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
+
+# Third Party
+segmented-button = { group = "com.github.truefedex", name = "segmented-button", version.ref = "segmented-button" }
+ad-block = { group = "com.github.truefedex", name = "ad-block", version.ref = "ad-block" }
+pinned-section-listview = { group = "de.halfbit", name = "pinned-section-listview", version.ref = "pinned-section" }
+geckoview = { group = "org.mozilla.geckoview", name = "geckoview", version.ref = "geckoview" }
+
+# Test
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+gms = { id = "com.google.gms.google-services", version.ref = "gms" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics-plugin" }
