@@ -37,6 +37,13 @@ class CursorLayout @JvmOverloads constructor(context: Context, attrs: AttributeS
         cursorDrawerDelegate.init()
     }
 
+    fun consumeBackIfCursorModeActive(): Boolean {
+        // Delegate exits modes on ACTION_UP for BACK/ESC/B
+        return cursorDrawerDelegate.dispatchKeyEvent(
+            KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK)
+        )
+    }
+
     override fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) {
         super.onSizeChanged(w, h, ow, oh)
         if (isInEditMode || willNotDraw()) {

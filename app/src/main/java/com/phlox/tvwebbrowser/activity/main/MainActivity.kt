@@ -22,6 +22,8 @@ import android.webkit.*
 import android.widget.FrameLayout
 import android.widget.PopupMenu
 import android.widget.Toast
+import android.window.OnBackInvokedCallback
+import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -60,6 +62,9 @@ import java.net.URL
 import java.net.URLEncoder
 import java.util.*
 import kotlin.system.exitProcess
+import androidx.core.view.isVisible
+import androidx.core.view.isInvisible
+import androidx.core.net.toUri
 
 
 open class MainActivity : AppCompatActivity(), ActionBar.Callback {
@@ -95,6 +100,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     var openUrlInExternalAppDialog: AlertDialog? = null
     private var linkActionsMenu: PopupMenu? = null
 
+    private var backCallback: OnBackInvokedCallback? = null
+    private var lastBackHandledAtMs: Long = 0L
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -119,9 +127,21 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         tabsModel = ActiveModelsRepository.get(TabsModel::class, this)
         autoUpdateModel = ActiveModelsRepository.get(AutoUpdateModel::class, this)
         uiHandler = Handler()
-        prefs = getSharedPreferences(TVBro.MAIN_PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(TVBro.MAIN_PREFS_NAME, MODE_PRIVATE)
         vb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(vb.root)
+        EdgeToEdgeViews.enable(this, vb.rlRoot)
+
+        if (Build.VERSION.SDK_INT >= 33) {
+            val cb = OnBackInvokedCallback {
+                handleSystemBack()
+            }
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(
+                OnBackInvokedDispatcher.PRIORITY_OVERLAY,
+                cb
+            )
+            backCallback = cb
+        }
 
         vb.ivMiniatures.visibility = View.INVISIBLE
         vb.llBottomPanel.visibility = View.INVISIBLE
@@ -212,7 +232,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
     private val mConnectivityChangeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
             val activeNetwork = cm.activeNetworkInfo
             val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
             val tab = tabsModel.currentTab.value ?: return
@@ -342,6 +362,32 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         hideMenuOverlay()
     }
 
+    private fun handleSystemBack(): Boolean {
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastBackHandledAtMs < 200) return true
+        lastBackHandledAtMs = now
+
+        return when {
+            isFullscreen -> {
+                tabsModel.currentTab.value?.webEngine?.hideFullscreenView()
+                true
+            }
+            vb.llBottomPanel.isVisible && vb.rlActionBar.visibility != View.VISIBLE -> {
+                hideBottomPanel()
+                tabsModel.currentTab.value?.webEngine?.getView()?.requestFocus()
+                true
+            }
+            vb.flWebViewContainer.consumeBackIfCursorModeActive() -> {
+                return true
+            }
+            else -> {
+                // Old behavior: go back in history if possible; otherwise open/hide menu overlays.
+                navigateBack(goHomeIfNoHistory = false)
+                true
+            }
+        }
+    }
+
     fun navigateBack(goHomeIfNoHistory: Boolean = false) {
         val currentTab = tabsModel.currentTab.value
         if (currentTab != null && currentTab.webEngine.canGoBack()) {
@@ -447,7 +493,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         if (navigateImmediately) {
             navigate(url)
         }
-        if (needToHideMenuOverlay && vb.rlActionBar.visibility == View.VISIBLE) {
+        if (needToHideMenuOverlay && vb.rlActionBar.isVisible) {
             hideMenuOverlay(true)
         }
         return tab.webEngine
@@ -492,9 +538,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
                 val appPackageName = "com.google.android.webview"
                 val intent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName"))
+                    Intent(Intent.ACTION_VIEW, "market://details?id=$appPackageName".toUri())
                 val activities = packageManager.queryIntentActivities(intent, 0)
-                if (activities.size > 0) {
+                if (activities.isNotEmpty()) {
                     dialogBuilder.setPositiveButton(R.string.find_in_apps_store) { _, _ ->
                         try {
                             startActivity(intent)
@@ -608,7 +654,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             PICK_FILE_REQUEST_CODE -> {
                 tabsModel.currentTab.value?.webEngine?.onFilePicked(resultCode, data)
             }
-            REQUEST_CODE_HISTORY_ACTIVITY -> if (resultCode == Activity.RESULT_OK) {
+            REQUEST_CODE_HISTORY_ACTIVITY -> if (resultCode == RESULT_OK) {
                 val url = data?.getStringExtra(HistoryActivity.KEY_URL)
                 if (url != null) {
                     navigate(url)
@@ -625,7 +671,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
     override fun onStart() {
         super.onStart()
-        bindService(Intent(this, DownloadService::class.java), downloadServiceConnection, Context.BIND_AUTO_CREATE)
+        bindService(Intent(this, DownloadService::class.java), downloadServiceConnection,
+            BIND_AUTO_CREATE
+        )
     }
 
     override fun onStop() {
@@ -701,7 +749,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             }
             navigate(text)
         } else {
-            var query: String? = null
+            var query: String?
             try {
                 query = URLEncoder.encode(text, "utf-8")
             } catch (e1: UnsupportedEncodingException) {
@@ -763,7 +811,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     }
 
     fun toggleMenu() {
-        if (vb.rlActionBar.visibility == View.INVISIBLE) {
+        if (vb.rlActionBar.isInvisible) {
             showMenuOverlay()
         } else {
             hideMenuOverlay()
@@ -782,12 +830,12 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                 }
             }
             return true
-        } else if (keyCode == KeyEvent.KEYCODE_BACK && vb.llBottomPanel.visibility == View.VISIBLE && vb.rlActionBar.visibility != View.VISIBLE) {
+        } else if (keyCode == KeyEvent.KEYCODE_BACK && vb.llBottomPanel.isVisible && vb.rlActionBar.visibility != View.VISIBLE) {
             if (event.action == KeyEvent.ACTION_UP) {
                 uiHandler.post { hideBottomPanel() }
             }
             return true
-        } else if (keyCode == KeyEvent.KEYCODE_BACK && vb.vCursorMenu.visibility == View.VISIBLE) {
+        } else if (keyCode == KeyEvent.KEYCODE_BACK && vb.vCursorMenu.isVisible) {
             if (event.action == KeyEvent.ACTION_UP) {
                 uiHandler.post { vb.vCursorMenu.close(CursorMenuView.CloseAnimation.ROTATE_OUT) }
             }
@@ -872,7 +920,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     }
 
     private fun hideMenuOverlay(hideBottomButtons: Boolean = true) {
-        if (vb.rlActionBar.visibility == View.INVISIBLE) {
+        if (vb.rlActionBar.isInvisible) {
             return
         }
         if (hideBottomButtons) {
@@ -889,7 +937,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                 }
                 .start()
 
-        if (vb.llMiniaturePlaceholder.visibility == View.VISIBLE) {
+        if (vb.llMiniaturePlaceholder.isVisible) {
             vb.llMiniaturePlaceholder.visibility = View.INVISIBLE
             vb.ivMiniatures.visibility = View.VISIBLE
         }
@@ -978,7 +1026,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
         override fun onDownloadRequested(url: String) {
             Log.i(TAG, "onDownloadRequested url: $url")
-            val fileName = Uri.parse(url).lastPathSegment
+            val fileName = url.toUri().lastPathSegment
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url))
             onDownloadRequested(url, tab.url,
                 fileName, tab.webEngine.userAgentString, mimeType)
@@ -1224,7 +1272,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
 
         override fun onCopyTextToClipboardRequested(url: String) {
-            val clipBoard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipBoard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val clipData = ClipData.newPlainText("URL", url)
             clipBoard.setPrimaryClip(clipData)
             Toast.makeText(this@MainActivity, getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
@@ -1391,7 +1439,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
         override fun onSelectedTextActionRequested(selectedText: String, editable: Boolean) {
             //show alert dialog with actions: copy, [cut, delete, paste - if editable, paste only if clipboard contains text], share, [search - if one line]
-            val clipBoard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipBoard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val actions = mutableListOf(R.string.copy)
             var textInClipboard: String? = null
             if (editable) {
@@ -1478,7 +1526,8 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                 //so we will try to reconnect in a few seconds
                 uiHandler.postDelayed({
                     bindService(Intent(this@MainActivity, DownloadService::class.java),
-                        this, Context.BIND_AUTO_CREATE)
+                        this, BIND_AUTO_CREATE
+                    )
                 }, 1000)
                 return
             }
