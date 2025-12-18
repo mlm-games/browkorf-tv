@@ -9,9 +9,9 @@ import com.phlox.tvwebbrowser.R
  * Created by PDT on 06.08.2017.
  */
 
-enum class Shortcut private constructor(var titleResId: Int, var prefsKey: String,
-          var keyCode: Int, var modifiers: Int = 0, var longPressFlag: Boolean = false) {
-    MENU(R.string.toggle_main_menu, "shortcut_menu", KeyEvent.KEYCODE_BACK),
+enum class Shortcut(var titleResId: Int, var prefsKey: String,
+                    var keyCode: Int, var modifiers: Int = 0, var longPressFlag: Boolean = false) {
+    MENU(R.string.toggle_main_menu, "shortcut_menu", KeyEvent.KEYCODE_MENU),
     NAVIGATE_BACK(R.string.navigate_back,  "shortcut_nav_back", 0),
     NAVIGATE_HOME(R.string.navigate_home,  "shortcut_nav_home", 0),
     REFRESH_PAGE(R.string.refresh_page,  "shortcut_refresh_page", 285),//KEYCODE_REFRESH

@@ -14,6 +14,7 @@ import android.os.*
 import android.util.Log
 import android.util.Patterns
 import android.view.*
+import android.view.KeyEvent.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -24,6 +25,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -130,18 +132,10 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         prefs = getSharedPreferences(TVBro.MAIN_PREFS_NAME, MODE_PRIVATE)
         vb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(vb.root)
-        EdgeToEdgeViews.enable(this, vb.rlRoot)
-
-        if (Build.VERSION.SDK_INT >= 33) {
-            val cb = OnBackInvokedCallback {
-                handleSystemBack()
-            }
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(
-                OnBackInvokedDispatcher.PRIORITY_OVERLAY,
-                cb
-            )
-            backCallback = cb
+        onBackPressedDispatcher.addCallback(this) {
+            handleAppBackLogic()
         }
+        EdgeToEdgeViews.enable(this, vb.rlRoot)
 
         vb.ivMiniatures.visibility = View.INVISIBLE
         vb.llBottomPanel.visibility = View.INVISIBLE
@@ -336,8 +330,8 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
     private val bottomButtonsKeyListener = View.OnKeyListener { view, i, keyEvent ->
         when (keyEvent.keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP -> {
-                if (keyEvent.action == KeyEvent.ACTION_UP) {
+            KEYCODE_DPAD_UP -> {
+                if (keyEvent.action == ACTION_UP) {
                     hideBottomPanel()
                     tabsModel.currentTab.value?.webEngine?.getView()?.requestFocus()
                 }
@@ -362,30 +356,25 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         hideMenuOverlay()
     }
 
-    private fun handleSystemBack(): Boolean {
-        val now = SystemClock.elapsedRealtime()
-        if (now - lastBackHandledAtMs < 200) return true
-        lastBackHandledAtMs = now
-
-        return when {
-            isFullscreen -> {
-                tabsModel.currentTab.value?.webEngine?.hideFullscreenView()
-                true
-            }
-            vb.llBottomPanel.isVisible && vb.rlActionBar.visibility != View.VISIBLE -> {
-                hideBottomPanel()
-                tabsModel.currentTab.value?.webEngine?.getView()?.requestFocus()
-                true
-            }
-            vb.flWebViewContainer.consumeBackIfCursorModeActive() -> {
-                return true
-            }
-            else -> {
-                // Old behavior: go back in history if possible; otherwise open/hide menu overlays.
-                navigateBack(goHomeIfNoHistory = false)
-                true
-            }
+    private fun handleAppBackLogic() {
+        //  Exit Fullscreen
+        if (isFullscreen) {
+            tabsModel.currentTab.value?.webEngine?.hideFullscreenView()
+            return
         }
+
+        // Close Context Menus
+        if (vb.vCursorMenu.isVisible) {
+            vb.vCursorMenu.close(CursorMenuView.CloseAnimation.ROTATE_OUT)
+            return
+        }
+
+        // Exit Cursor Grab/Text Mode
+        if (vb.flWebViewContainer.consumeBackIfCursorModeActive()) {
+            return
+        }
+
+        toggleMenu()
     }
 
     fun navigateBack(goHomeIfNoHistory: Boolean = false) {
@@ -823,24 +812,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         val keyCode = if (event.keyCode != 0) event.keyCode else event.scanCode
         val shortcutMgr = ShortcutMgr.getInstance()
 
-        if (keyCode == KeyEvent.KEYCODE_BACK && isFullscreen) {
-            if (event.action == KeyEvent.ACTION_UP) {
-                uiHandler.post {
-                    tabsModel.currentTab.value?.webEngine?.hideFullscreenView()
-                }
-            }
-            return true
-        } else if (keyCode == KeyEvent.KEYCODE_BACK && vb.llBottomPanel.isVisible && vb.rlActionBar.visibility != View.VISIBLE) {
-            if (event.action == KeyEvent.ACTION_UP) {
-                uiHandler.post { hideBottomPanel() }
-            }
-            return true
-        } else if (keyCode == KeyEvent.KEYCODE_BACK && vb.vCursorMenu.isVisible) {
-            if (event.action == KeyEvent.ACTION_UP) {
-                uiHandler.post { vb.vCursorMenu.close(CursorMenuView.CloseAnimation.ROTATE_OUT) }
-            }
-            return true
-        } else if (shortcutMgr.handle(event, this, tabsModel.currentTab.value)) {
+        if (shortcutMgr.handle(event, this, tabsModel.currentTab.value)) {
             return true
         }
         return super.dispatchKeyEvent(event)

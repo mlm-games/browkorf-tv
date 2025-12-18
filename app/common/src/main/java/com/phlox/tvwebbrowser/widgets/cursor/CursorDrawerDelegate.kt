@@ -91,7 +91,7 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
 
     fun dispatchKeyEvent(event: KeyEvent): Boolean {
         when (event.keyCode) {
-            KeyEvent.KEYCODE_ESCAPE, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BACK -> {
+            KeyEvent.KEYCODE_ESCAPE, KeyEvent.KEYCODE_BUTTON_B -> {
                 if (grabMode || textSelectionMode) {
                     if (event.action == KeyEvent.ACTION_UP) {
                         if (grabMode) {
