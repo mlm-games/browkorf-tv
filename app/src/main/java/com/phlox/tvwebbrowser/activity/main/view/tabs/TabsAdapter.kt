@@ -1,7 +1,5 @@
 package com.phlox.tvwebbrowser.activity.main.view.tabs
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,30 +8,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.phlox.tvwebbrowser.R
-import com.phlox.tvwebbrowser.activity.main.TabsViewModel
-import com.phlox.tvwebbrowser.activity.main.view.tabs.TabsAdapter.TabViewHolder
 import com.phlox.tvwebbrowser.databinding.ViewHorizontalWebtabItemBinding
 import com.phlox.tvwebbrowser.model.WebTabState
-import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_PAGE_URL
-import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_URL_ALIAS
+import com.phlox.tvwebbrowser.settings.AppSettings
 import com.phlox.tvwebbrowser.singleton.FaviconsPool
-import com.phlox.tvwebbrowser.utils.activity
 import com.phlox.tvwebbrowser.widgets.CheckableContainer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
-class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabViewHolder>() {
+class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAdapter.TabViewHolder>() {
     private val tabsCopy = ArrayList<WebTabState>()
     var current: Int = 0
     var listener: Listener? = null
-    val uiHandler = Handler(Looper.getMainLooper())
     var checkedView: CheckableContainer? = null
-    var tabsModel: TabsViewModel? = null
-        set(value) {
-            field = value
-            onTabListChanged()
-        }
 
     interface Listener {
         fun onTitleChanged(index: Int)
@@ -57,16 +44,17 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabView
         return tabsCopy.size
     }
 
-    fun onTabListChanged() {
-        val newTabs = tabsModel?.tabsStates?.value ?: emptyList()
-
-        val tabsDiffUtilCallback =
-            TabsDiffUtillCallback(tabsCopy, newTabs)
-
+    // Accepts the list directly from the Activity/View
+    fun submitList(newList: List<WebTabState>) {
+        val tabsDiffUtilCallback = TabsDiffUtillCallback(tabsCopy, newList)
         val tabsDiffResult = DiffUtil.calculateDiff(tabsDiffUtilCallback)
-        tabsCopy.apply { clear() }.addAll(newTabs)
-
+        tabsCopy.clear()
+        tabsCopy.addAll(newList)
         tabsDiffResult.dispatchUpdatesTo(this)
+    }
+
+    fun getTabAt(position: Int): WebTabState? {
+        return if (position in 0 until tabsCopy.size) tabsCopy[position] else null
     }
 
     inner class TabViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -74,34 +62,35 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabView
 
         fun bind(tabState: WebTabState, position: Int) {
             vb.root.tag = tabState
-
             vb.tvTitle.text = tabState.title
 
             if (current == tabState.position) {
                 checkedView?.isChecked = false
                 vb.root.isChecked = true
                 checkedView = vb.root
+            } else {
+                vb.root.isChecked = false
             }
 
             vb.ivFavicon.setImageResource(R.drawable.ic_launcher)
 
             val url = tabState.url
-            if (url != HOME_PAGE_URL && url != HOME_URL_ALIAS) {
-                val scope = (itemView.activity as AppCompatActivity).lifecycleScope
-                scope.launch(Dispatchers.Main) {
+            if (url != AppSettings.HOME_PAGE_URL && url != AppSettings.HOME_URL_ALIAS) {
+                val scope = (itemView.context as? AppCompatActivity)?.lifecycleScope
+                scope?.launch(Dispatchers.Main) {
+                    val currentTag = vb.root.tag as? WebTabState
+                    if (currentTag != tabState) return@launch
+
                     val favicon = FaviconsPool.get(url)
-                    val ts = vb.root.tag as WebTabState
-                    if (url != ts.url) return@launch //url was changed while loading favicon
-                    if (!itemView.isAttachedToWindow) return@launch
-                    favicon?.let {
-                        vb.ivFavicon.setImageBitmap(it)
-                    } ?: run {
+                    if (favicon != null) {
+                        vb.ivFavicon.setImageBitmap(favicon)
+                    } else {
                         vb.ivFavicon.setImageResource(R.drawable.ic_launcher)
                     }
                 }
             }
 
-            vb.root.setOnFocusChangeListener { v, hasFocus ->
+            vb.root.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     if (current != tabState.position) {
                         current = tabState.position

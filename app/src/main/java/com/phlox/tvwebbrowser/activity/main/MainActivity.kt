@@ -191,6 +191,28 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                launch {
+                    tabsViewModel.tabsStates.collect { tabs ->
+                        vb.vTabs.setTabs(tabs) // Push data to view
+                        if (tabs.isEmpty() && !settings.isWebEngineGecko) {
+                            vb.flWebViewContainer.removeAllViews()
+                        }
+                    }
+                }
+
+                // 2. Update TabsView selection
+                launch {
+                    tabsViewModel.currentTab.collect { tab ->
+                        val tabs = tabsViewModel.tabsStates.value
+                        vb.vTabs.setCurrentTab(tab, tabs) // Push selection
+
+                        vb.vActionBar.setAddressBoxText(tab?.url ?: "")
+                        tab?.let { onWebViewUpdated(it) }
+                    }
+                }
+
+
                 // User Agent
                 launch {
                     settingsManager.userAgentFlow.collectLatest { userAgent ->
@@ -237,15 +259,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                         tab?.let { onWebViewUpdated(it) }
                     }
                 }
-
-                // Tab List Updates
-                launch {
-                    tabsViewModel.tabsStates.collect { tabs ->
-                        if (tabs.isEmpty() && !settings.isWebEngineGecko) {
-                            vb.flWebViewContainer.removeAllViews()
-                        }
-                    }
-                }
             }
         }
 
@@ -288,7 +301,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     private val tabsListener = object : Listener {
         override fun onTitleChanged(index: Int) {
             Log.d(TAG, "onTitleChanged: $index")
-            val tab = tabByTitleIndex(index)
+            val tabs = tabsViewModel.tabsStates.value
+            val tab = if (index in tabs.indices) tabs[index] else null
+
             vb.vActionBar.setAddressBoxText(tab?.url ?: "")
             uiHandler.removeCallbacks(displayThumbnailRunnable)
             displayThumbnailRunnable.tabState = tab
@@ -1094,7 +1109,10 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
         override fun onReceivedTitle(title: String) {
             tab.title = title
-            vb.vTabs.onTabTitleUpdated(tab)
+            val index = tabsViewModel.tabsStates.value.indexOf(tab)
+            if (index != -1) {
+                vb.vTabs.onTabTitleUpdated(tab, index)
+            }
             mainViewModel.onTabTitleUpdated(tab)
         }
 
@@ -1122,7 +1140,10 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
 
         override fun onReceivedIcon(icon: Bitmap) {
-            vb.vTabs.onFavIconUpdated(tab)
+            val index = tabsViewModel.tabsStates.value.indexOf(tab)
+            if (index != -1) {
+                vb.vTabs.onFavIconUpdated(tab, index)
+            }
         }
 
         override fun shouldOverrideUrlLoading(url: String): Boolean {

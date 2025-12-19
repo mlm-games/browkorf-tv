@@ -22,13 +22,18 @@ interface HistoryDao {
     suspend fun count(): Int
 
     @Query("SELECT * FROM history ORDER BY time DESC LIMIT :limit")
+    suspend fun last(limit: Int = 1): List<HistoryItem>
+
+    @Query("SELECT * FROM history ORDER BY time DESC LIMIT :limit")
     fun lastFlow(limit: Int = 1): Flow<List<HistoryItem>>
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT \"\" as id, title, url, favicon, count(url) as cnt, max(time) as time FROM history GROUP BY title, url, favicon ORDER BY cnt DESC, time DESC LIMIT 8")
+    suspend fun frequentlyUsedUrls(): List<HistoryItem>
+
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT \"\" as id, title, url, favicon, count(url) as cnt, max(time) as time FROM history GROUP BY title, url, favicon ORDER BY cnt DESC, time DESC LIMIT 8")
     fun frequentlyUsedUrlsFlow(): Flow<List<HistoryItem>>
-
-    @Query("SELECT \"\" as id, title, url, favicon, count(url) as cnt , max(time) as time FROM history GROUP BY title, url, favicon ORDER BY cnt DESC, time DESC LIMIT 8")
-    suspend fun frequentlyUsedUrls(): List<HistoryItem>
 
     @Query("SELECT * FROM history ORDER BY time DESC LIMIT 100 OFFSET :offset")
     suspend fun allByLimitOffset(offset: Long): List<HistoryItem>

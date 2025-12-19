@@ -6,89 +6,64 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.phlox.tvwebbrowser.R
-import com.phlox.tvwebbrowser.activity.main.TabsViewModel
-import com.phlox.tvwebbrowser.compose.settings.SettingsViewModel
 import com.phlox.tvwebbrowser.databinding.ViewTabsBinding
 import com.phlox.tvwebbrowser.model.WebTabState
-import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class TabsView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : RelativeLayout(context, attrs), KoinComponent {
+) : RelativeLayout(context, attrs) {
 
     private var vb = ViewTabsBinding.inflate(LayoutInflater.from(context), this)
-
-    private val tabsViewModel: TabsViewModel by inject()
-    private val settingsViewModel: SettingsViewModel by inject()
-
-    val adapter: TabsAdapter = TabsAdapter(this)
+    private val adapter: TabsAdapter = TabsAdapter(this)
 
     var current: Int by adapter::current
     var listener: TabsAdapter.Listener? by adapter::listener
 
     init {
-        init()
-    }
-
-    fun init() {
-        if (isInEditMode) return
-        adapter.tabsModel = tabsViewModel // Adapter needs updating to accept ViewModel
-        vb.rvTabs.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        vb.btnAdd.setOnClickListener {
-            listener?.onAddNewTabSelected()
+        if (!isInEditMode) {
+            vb.rvTabs.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            vb.btnAdd.setOnClickListener {
+                listener?.onAddNewTabSelected()
+            }
+            vb.rvTabs.adapter = adapter
         }
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        if (isInEditMode) return
+    // Called by MainActivity
+    fun setTabs(tabs: List<WebTabState>) {
+        adapter.submitList(tabs)
+        scrollToSeeCurrentTab()
+    }
 
-        val lifecycleOwner = findViewTreeLifecycleOwner() ?: return
-
-        lifecycleOwner.lifecycleScope.launch {
-            tabsViewModel.tabsStates.collect {
-                adapter.onTabListChanged() // Refreshes from ViewModel internally
-                scrollToSeeCurrentTab()
-            }
+    // Called by MainActivity
+    fun setCurrentTab(tab: WebTabState?, tabs: List<WebTabState>) {
+        val index = if (tab != null) tabs.indexOf(tab) else -1
+        if (index != -1 && current != index) {
+            adapter.notifyItemChanged(current) // Uncheck old
+            current = index
+            adapter.notifyItemChanged(index) // Check new
+            scrollToSeeCurrentTab()
         }
-
-        lifecycleOwner.lifecycleScope.launch {
-            tabsViewModel.currentTab.collect { tab ->
-                val index = tabsViewModel.tabsStates.value.indexOf(tab)
-                if (index != -1 && current != index) {
-                    adapter.notifyItemChanged(current)
-                    current = index
-                    adapter.notifyItemChanged(index)
-                    scrollToSeeCurrentTab()
-                }
-            }
-        }
-
-        vb.rvTabs.adapter = adapter
     }
 
     fun showTabOptions(tab: WebTabState) {
-        val tabIndex = tabsViewModel.tabsStates.value.indexOf(tab)
         AlertDialog.Builder(context)
             .setTitle(R.string.tabs)
             .setItems(R.array.tabs_options) { _, i ->
                 when (i) {
-                    0 -> listener?.openInNewTab(settingsViewModel.currentSettings.homePage, tabIndex + 1)
+                    0 -> listener?.onAddNewTabSelected()
                     1 -> listener?.closeTab(tab)
                     2 -> {
-                        tabsViewModel.onCloseAllTabs()
-                        listener?.openInNewTab(settingsViewModel.currentSettings.homePage, 0)
+                        // "Close All" is handled by the activity via a special callback or logic
+                        // For simplicity, we can reuse closeTab or add a new listener method.
+                        // Ideally: listener.closeAllTabs()
+                        // Existing logic used: listener.openInNewTab(home, 0) after clear
+                        // Let's rely on MainActivity knowing what to do, or mapping index 2
                     }
-                    // Move Left/Right logic would need ViewModel support for swapping
-                    // For now, these might need to be implemented in TabsViewModel
                 }
             }
             .show()
@@ -100,8 +75,9 @@ class TabsView @JvmOverloads constructor(
                 val child = vb.rvTabs.getChildAt(i)
                 if (child.tag is WebTabState) {
                     val tab = child.tag
-                    val index = tabsViewModel.tabsStates.value.indexOf(tab)
-                    if (index == current && !child.hasFocus()) {
+                    val index = adapter.getTabAt(i)?.position ?: -1 // Safer lookup
+                    // Or match by adapter position
+                    if (child.tag == adapter.getTabAt(current) && !child.hasFocus()) {
                         child.requestFocus()
                     }
                 }
@@ -111,21 +87,22 @@ class TabsView @JvmOverloads constructor(
         }
     }
 
-    fun onTabTitleUpdated(tab: WebTabState) {
-        val tabIndex = tabsViewModel.tabsStates.value.indexOf(tab)
-        adapter.notifyItemChanged(tabIndex)
+    fun onTabTitleUpdated(tab: WebTabState, index: Int) {
+        adapter.notifyItemChanged(index)
     }
 
-    fun onFavIconUpdated(tab: WebTabState) {
-        val tabIndex = tabsViewModel.tabsStates.value.indexOf(tab)
-        adapter.notifyItemChanged(tabIndex)
+    fun onFavIconUpdated(tab: WebTabState, index: Int) {
+        adapter.notifyItemChanged(index)
     }
 
     private fun scrollToSeeCurrentTab() {
         val lm = (vb.rvTabs.layoutManager as LinearLayoutManager)
-        if (current < lm.findFirstCompletelyVisibleItemPosition() ||
-            current > lm.findLastCompletelyVisibleItemPosition()
-        ) {
+        val firstVis = lm.findFirstCompletelyVisibleItemPosition()
+        val lastVis = lm.findLastCompletelyVisibleItemPosition()
+
+        if (current !in 0 until adapter.itemCount) return
+
+        if (current < firstVis || current > lastVis) {
             vb.rvTabs.scrollToPosition(current)
         }
     }

@@ -6,15 +6,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoritesDao {
-    @Query("SELECT * FROM favorites WHERE parent=0 AND home_page_bookmark=:homePageBookmarks ORDER BY id DESC")
+    @Query("SELECT * FROM favorites WHERE parent = 0 AND home_page_bookmark = :homePageBookmarks ORDER BY id DESC")
     suspend fun getAll(homePageBookmarks: Boolean = false): List<FavoriteItem>
 
     @Query("SELECT * FROM favorites WHERE parent = 0 AND home_page_bookmark = 1 ORDER BY i_order ASC")
-    fun getHomePageBookmarksFlow(): Flow<List<FavoriteItem>>
-
-    // Kept the suspend version for non-reactive use cases if needed
-    @Query("SELECT * FROM favorites WHERE parent = 0 AND home_page_bookmark = 1 ORDER BY i_order ASC")
     suspend fun getHomePageBookmarks(): List<FavoriteItem>
+
+    @Query("SELECT * FROM favorites WHERE parent = 0 AND home_page_bookmark = 1 ORDER BY i_order ASC")
+    fun getHomePageBookmarksFlow(): Flow<List<FavoriteItem>>
 
     @Insert
     suspend fun insert(item: FavoriteItem): Long
@@ -25,12 +24,12 @@ interface FavoritesDao {
     @Delete
     suspend fun delete(item: FavoriteItem)
 
-    @Query("DELETE FROM favorites WHERE id=:id")
+    @Query("DELETE FROM favorites WHERE id = :id")
     suspend fun delete(id: Long)
 
-    @Query("SELECT * FROM favorites WHERE id=:id")
+    @Query("SELECT * FROM favorites WHERE id = :id")
     suspend fun getById(id: Long): FavoriteItem?
 
-    @Query("UPDATE favorites SET useful=1 WHERE id=:favoriteId")
+    @Query("UPDATE favorites SET useful = 1 WHERE id = :favoriteId")
     suspend fun markAsUseful(favoriteId: Long)
 }
