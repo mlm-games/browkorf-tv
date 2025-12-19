@@ -11,8 +11,8 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.webkit.WebViewCompat
 import com.phlox.tvwebbrowser.AppContext
-import com.phlox.tvwebbrowser.Config
 import com.phlox.tvwebbrowser.model.WebTabState
+import com.phlox.tvwebbrowser.settings.Theme
 import com.phlox.tvwebbrowser.utils.Utils
 import com.phlox.tvwebbrowser.webengine.WebEngine
 import com.phlox.tvwebbrowser.webengine.WebEngineFactory
@@ -427,10 +427,6 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
     }
 
     companion object {
-        fun clearCache(ctx: Context) {
-            WebView(ctx).clearCache(true)
-        }
-
         init {
             WebEngineFactory.registerProvider(WebEngineProvider("WebView", object : WebEngineProviderCallback {
                 override suspend fun initialize(context: Context, webViewContainer: CursorLayout) {
@@ -442,10 +438,10 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
                 }
 
                 override suspend fun clearCache(ctx: Context) {
-                    clearCache(ctx)
+                    WebView(ctx).clearCache(true)
                 }
 
-                override fun onThemeSettingUpdated(value: Config.Theme) {
+                override fun onThemeSettingUpdated(value: Theme) {
                     //nop
                 }
 
