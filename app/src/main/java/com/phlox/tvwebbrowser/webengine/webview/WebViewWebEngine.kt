@@ -1,7 +1,8 @@
 package com.phlox.tvwebbrowser.webengine.webview
 
 import android.app.Activity
-import android.content.*
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -9,9 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import androidx.webkit.WebViewCompat
 import com.phlox.tvwebbrowser.AppContext
-import com.phlox.tvwebbrowser.model.WebTabState
+import com.phlox.tvwebbrowser.settings.SettingsManager
 import com.phlox.tvwebbrowser.settings.Theme
 import com.phlox.tvwebbrowser.utils.Utils
 import com.phlox.tvwebbrowser.webengine.WebEngine
@@ -19,24 +19,28 @@ import com.phlox.tvwebbrowser.webengine.WebEngineFactory
 import com.phlox.tvwebbrowser.webengine.WebEngineProvider
 import com.phlox.tvwebbrowser.webengine.WebEngineProviderCallback
 import com.phlox.tvwebbrowser.webengine.WebEngineWindowProviderCallback
+import com.phlox.tvwebbrowser.model.WebTabState
 import com.phlox.tvwebbrowser.widgets.cursor.CursorDrawerDelegate
 import com.phlox.tvwebbrowser.widgets.cursor.CursorLayout
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
+class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Callback, KoinComponent {
 
-class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Callback {
     private var webView: WebViewEx? = null
     internal var callback: WebEngineWindowProviderCallback? = null
     private var viewParent: CursorLayout? = null
     private var fullscreenViewParent: ViewGroup? = null
     private var fullScreenView: View? = null
-    private val permissionsRequests = HashMap<Int, Boolean>()//request code, isGeolocationPermissionRequest
+    private val permissionsRequests = HashMap<Int, Boolean>()
     private val jsInterface = AndroidJSInterface(this)
+
+    // Inject SettingsManager to pass to WebViewEx
+    private val settingsManager: SettingsManager by inject()
 
     override fun getWebEngineName(): String = "WebView"
 
-    override fun isSameSession(internalRepresentation: Any): Boolean {
-        return internalRepresentation == webView
-    }
+    override fun isSameSession(internalRepresentation: Any): Boolean = internalRepresentation == webView
 
     override val url: String?
         get() = webView?.url
@@ -106,14 +110,13 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
         webView?.setNetworkAvailable(connected)
     }
 
-    override fun getView(): View? {
-        return webView
-    }
+    override fun getView(): View? = webView
 
     @Throws(Exception::class)
     override fun getOrCreateView(activityContext: Context): View {
         if (webView == null) {
-            webView = WebViewEx(activityContext, webViewCallback, jsInterface)
+            // Pass injected settingsManager
+            webView = WebViewEx(activityContext, webViewCallback, jsInterface, settingsManager)
         }
         return webView!!
     }
@@ -304,7 +307,7 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
                 if (previousCursorPosition != null) {
                     (this as? CursorLayout)?.cursorDrawerDelegate?.cursorPosition?.set(previousCursorPosition)
                 }
-            }            
+            }
             fullScreenView = view
         }
 
@@ -429,24 +432,14 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
     companion object {
         init {
             WebEngineFactory.registerProvider(WebEngineProvider("WebView", object : WebEngineProviderCallback {
-                override suspend fun initialize(context: Context, webViewContainer: CursorLayout) {
-
-                }
-
-                override fun createWebEngine(tab: WebTabState): WebEngine {
-                    return WebViewWebEngine(tab)
-                }
-
+                override suspend fun initialize(context: Context, webViewContainer: CursorLayout) {}
+                override fun createWebEngine(tab: WebTabState): WebEngine = WebViewWebEngine(tab)
                 override suspend fun clearCache(ctx: Context) {
-                    WebView(ctx).clearCache(true)
+                    android.webkit.WebView(ctx).clearCache(true)
                 }
-
-                override fun onThemeSettingUpdated(value: Theme) {
-                    //nop
-                }
-
+                override fun onThemeSettingUpdated(value: Theme) {}
                 override fun getWebEngineVersionString(): String {
-                    val webViewPackage = WebViewCompat.getCurrentWebViewPackage(AppContext.get())
+                    val webViewPackage = androidx.webkit.WebViewCompat.getCurrentWebViewPackage(AppContext.get())
                     return (webViewPackage?.packageName ?: "unknown") + ":" + (webViewPackage?.versionName ?: "unknown")
                 }
             }))

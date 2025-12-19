@@ -1,25 +1,20 @@
 package com.phlox.tvwebbrowser.service.downloads
 
 import android.content.ContentValues
-import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor.AutoCloseOutputStream
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.webkit.CookieManager
-import androidx.webkit.URLUtilCompat
 import com.phlox.tvwebbrowser.TVBro
 import com.phlox.tvwebbrowser.model.Download
-import com.phlox.tvwebbrowser.singleton.AppDatabase
+import com.phlox.tvwebbrowser.model.dao.DownloadDao
 import com.phlox.tvwebbrowser.utils.DownloadUtils
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
-
-/**
- * Created by PDT on 23.01.2017.
- */
+import androidx.core.net.toUri
 
 const val MAX_CONNECT_RETRIES = 5
 
@@ -33,13 +28,18 @@ interface DownloadTask {
     }
 }
 
-class FileDownloadTask(override var downloadInfo: Download, private val userAgent: String?, val callback: DownloadTask.Callback) : Runnable, DownloadTask {
+class FileDownloadTask(
+    override var downloadInfo: Download,
+    private val userAgent: String?,
+    private val downloadDao: DownloadDao,
+    val callback: DownloadTask.Callback
+) : Runnable, DownloadTask {
     companion object {
         val TAG = FileDownloadTask::class.java.simpleName
     }
 
     override fun run() {
-        downloadInfo.id = AppDatabase.db.downloadDao().insert(downloadInfo)
+        downloadInfo.id = downloadDao.insert(downloadInfo)
 
         var input: InputStream? = null
         var output: OutputStream? = null
@@ -54,15 +54,12 @@ class FileDownloadTask(override var downloadInfo: Download, private val userAgen
                     readTimeout = 10000
                     connectTimeout = 20000
                     setRequestProperty("User-Agent", userAgent)
-                    if (downloadInfo.mimeType != null && downloadInfo.mimeType != "application/octet-stream") {
-                        setRequestProperty("Accept", downloadInfo.mimeType)
-                    }
+                    downloadInfo.mimeType?.apply { setRequestProperty("Content-Type", this) }
                     downloadInfo.referer?.apply { setRequestProperty("Referer", this) }
                     useCaches = false
                     val cookie = CookieManager.getInstance().getCookie(url.toString())
                     if (cookie != null) setRequestProperty("cookie", cookie)
                     if (retries > 0) {
-                        //trust me, sometimes this helps! Don't ask me how...
                         Thread.sleep(3000)
                     }
                     connect()
@@ -87,18 +84,18 @@ class FileDownloadTask(override var downloadInfo: Download, private val userAgen
                 }
             } while (true)
 
-            input = connection!!.inputStream
+            input = connection.inputStream
 
             val fileLength = connection.contentLength
             downloadInfo.size = fileLength.toLong()
 
             if (connection.headerFields.containsKey("Content-Disposition")) {
                 val mime = connection.getHeaderField("Content-Type")
-                downloadInfo.filename = URLUtilCompat.guessFileName(downloadInfo.url, connection.getHeaderField("Content-Disposition"), mime)
+                downloadInfo.filename = DownloadUtils.guessFileName(downloadInfo.url, connection.getHeaderField("Content-Disposition"), mime)
                 downloadInfo.filepath = File(File(downloadInfo.filepath).parentFile, downloadInfo.filename).absolutePath
             }
 
-            output = prepareDownloadOutput(downloadInfo)
+            output = prepareDownloadOutput(downloadInfo, downloadDao)
             Log.d(TAG, "URI: " + downloadInfo.filename)
             val data = ByteArray(4096)
             var total: Long = 0
@@ -135,15 +132,20 @@ class FileDownloadTask(override var downloadInfo: Download, private val userAgen
     }
 }
 
-class BlobDownloadTask(override var downloadInfo: Download, val blobBase64Data: String, val callback: DownloadTask.Callback) : Runnable, DownloadTask {
+class BlobDownloadTask(
+    override var downloadInfo: Download,
+    val blobBase64Data: String,
+    private val downloadDao: DownloadDao,
+    val callback: DownloadTask.Callback
+) : Runnable, DownloadTask {
 
     override fun run() {
-        downloadInfo.id = AppDatabase.db.downloadDao().insert(downloadInfo)
+        downloadInfo.id = downloadDao.insert(downloadInfo)
 
         try {
             val blobAsBytes: ByteArray = Base64.decode(blobBase64Data.replaceFirst("data:${downloadInfo.mimeType};base64,", ""), 0)
-            val output = prepareDownloadOutput(downloadInfo)
-            output.buffered().use{ it.write(blobAsBytes) }
+            val output = prepareDownloadOutput(downloadInfo, downloadDao)
+            output.buffered().use { it.write(blobAsBytes) }
             downloadInfo.size = blobAsBytes.size.toLong()
             downloadInfo.bytesReceived = downloadInfo.size
         } catch (e: Exception) {
@@ -157,13 +159,18 @@ class BlobDownloadTask(override var downloadInfo: Download, val blobBase64Data: 
     }
 }
 
-class StreamDownloadTask(override var downloadInfo: Download, val stream: InputStream, val callback: DownloadTask.Callback) : Runnable, DownloadTask {
+class StreamDownloadTask(
+    override var downloadInfo: Download,
+    val stream: InputStream,
+    private val downloadDao: DownloadDao,
+    val callback: DownloadTask.Callback
+) : Runnable, DownloadTask {
     override fun run() {
-        downloadInfo.id = AppDatabase.db.downloadDao().insert(downloadInfo)
+        downloadInfo.id = downloadDao.insert(downloadInfo)
 
         var output: OutputStream? = null
         try {
-            output = prepareDownloadOutput(downloadInfo)
+            output = prepareDownloadOutput(downloadInfo, downloadDao)
             val data = ByteArray(4096)
             var total: Long = 0
             var count = stream.read(data)
@@ -204,7 +211,7 @@ private fun cancelDownloadIfNeeded(downloadInfo: Download) {
     val contentResolver = TVBro.instance.contentResolver
     if (downloadInfo.cancelled) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val rowsDeleted = contentResolver.delete(Uri.parse(filePath), null)
+            val rowsDeleted = contentResolver.delete(filePath.toUri(), null)
             if (rowsDeleted < 1) {
                 Log.e(FileDownloadTask.TAG, "Download cancelled but content not deleted??")
             }
@@ -215,11 +222,11 @@ private fun cancelDownloadIfNeeded(downloadInfo: Download) {
         val downloadDetails = ContentValues().apply {
             put(MediaStore.Downloads.IS_PENDING, 0)
         }
-        contentResolver.update(Uri.parse(filePath), downloadDetails, null, null)
+        contentResolver.update(filePath.toUri(), downloadDetails, null, null)
     }
 }
 
-private fun prepareDownloadOutput(downloadInfo: Download): OutputStream {
+private fun prepareDownloadOutput(downloadInfo: Download, downloadDao: DownloadDao): OutputStream {
     val contentResolver = TVBro.instance.contentResolver
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val downloadsCollection =
@@ -235,11 +242,11 @@ private fun prepareDownloadOutput(downloadInfo: Download): OutputStream {
         val downloadUri = contentResolver
             .insert(downloadsCollection, newDownloadDetails)
         if (downloadUri == null) {
-            throw IllegalStateException("Can not create file")
+            throw IllegalStateException("Cannot create file")
         }
         val fd = contentResolver.openFileDescriptor(downloadUri, "w", null)
         downloadInfo.filepath = downloadUri.toString()
-        AppDatabase.db.downloadDao().update(downloadInfo)
+        downloadDao.update(downloadInfo)
         AutoCloseOutputStream(fd)
     } else {
         FileOutputStream(downloadInfo.filepath)

@@ -1,26 +1,24 @@
 package com.phlox.tvwebbrowser
 
-import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.phlox.tvwebbrowser.activity.main.MainActivity
+import com.phlox.tvwebbrowser.di.appModule
 import com.phlox.tvwebbrowser.model.HostConfig
+import com.phlox.tvwebbrowser.settings.SettingsManager
 import com.phlox.tvwebbrowser.settings.Theme
 import com.phlox.tvwebbrowser.singleton.AppDatabase
 import com.phlox.tvwebbrowser.singleton.FaviconsPool
-import com.phlox.tvwebbrowser.utils.activemodel.ActiveModelsRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.net.CookieHandler
-import java.net.CookieManager
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -39,35 +37,41 @@ class TVBro : Application(), Application.ActivityLifecycleCallbacks {
     var needToExitProcessAfterMainActivityFinish = false
     var needRestartMainActivityAfterExitingProcess = false
 
+    // Lazy inject for usage in onCreate
+    private val settingsManager: SettingsManager by inject()
+    private val database: AppDatabase by inject()
+
     override fun onCreate() {
-        Log.i(TAG, "onCreate")
         super.onCreate()
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            applicationInfo.targetSdkVersion = 32
-        }
-
         instance = this
 
-        // Initialize AppContext with new settings system
+        // 1. Start Koin
+        startKoin {
+            androidLogger()
+            androidContext(this@TVBro)
+            modules(appModule)
+        }
+
+        // 2. Initialize AppContext (Legacy bridge)
         AppContext.init(this)
 
+        // 3. Thread Pool
         val maxThreadsInOfflineJobsPool = Runtime.getRuntime().availableProcessors()
         threadPool = ThreadPoolExecutor(
             0, maxThreadsInOfflineJobsPool, 20,
             TimeUnit.SECONDS, ArrayBlockingQueue(maxThreadsInOfflineJobsPool)
         )
 
+        // 4. Initialize Engines and Channels
         initWebEngineStuff()
         initNotificationChannels()
-        ActiveModelsRepository.init(this)
 
-        // Apply initial theme
-        applyTheme(AppContext.settings.themeEnum)
+        // 5. Apply Theme
+        applyTheme(settingsManager.current.themeEnum)
 
         // Observe theme changes
         ProcessLifecycleOwner.get().lifecycleScope.launch {
-            AppContext.provideSettingsManager().themeFlow.collectLatest { theme ->
+            settingsManager.themeFlow.collectLatest { theme ->
                 applyTheme(theme)
             }
         }
@@ -83,10 +87,7 @@ class TVBro : Application(), Application.ActivityLifecycleCallbacks {
         }
     }
 
-    @Suppress("KotlinConstantConditions")
     private fun initWebEngineStuff() {
-        Log.i(TAG, "initWebEngineStuff")
-
         try {
             Class.forName("com.phlox.tvwebbrowser.webengine.webview.WebViewWebEngine")
         } catch (e: ClassNotFoundException) {
@@ -95,20 +96,24 @@ class TVBro : Application(), Application.ActivityLifecycleCallbacks {
         try {
             Class.forName("com.phlox.tvwebbrowser.webengine.gecko.GeckoWebEngine")
         } catch (e: ClassNotFoundException) {
-            Log.w(TAG, "GeckoWebEngine not found")
+            // GeckoWebEngine not found
         }
 
-        val cookieManager = CookieManager()
-        CookieHandler.setDefault(cookieManager)
+        val cookieManager = java.net.CookieManager()
+        java.net.CookieHandler.setDefault(cookieManager)
+
+        // Bridge Koin Database to Legacy FaviconsPool
         FaviconsPool.databaseDelegate = object : FaviconsPool.DatabaseDelegate {
             override fun findByHostName(host: String): HostConfig? {
-                return AppDatabase.db.hostsDao().findByHostName(host)
+                return database.hostsDao().findByHostName(host)
             }
+
             override suspend fun update(hostConfig: HostConfig) {
-                AppDatabase.db.hostsDao().update(hostConfig)
+                database.hostsDao().update(hostConfig)
             }
+
             override suspend fun insert(newHostConfig: HostConfig) {
-                AppDatabase.db.hostsDao().insert(newHostConfig)
+                database.hostsDao().insert(newHostConfig)
             }
         }
     }
@@ -117,29 +122,27 @@ class TVBro : Application(), Application.ActivityLifecycleCallbacks {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.downloads)
             val descriptionText = getString(R.string.downloads_notifications_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID_DOWNLOADS, name, importance)
-            channel.description = descriptionText
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val channel = NotificationChannel(CHANNEL_ID_DOWNLOADS, name, importance).apply {
+                description = descriptionText
+            }
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
 
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-    override fun onActivityStarted(activity: Activity) {}
-    override fun onActivityResumed(activity: Activity) {}
-    override fun onActivityPaused(activity: Activity) {}
-    override fun onActivityStopped(activity: Activity) {}
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+    override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {}
+    override fun onActivityStarted(activity: android.app.Activity) {}
+    override fun onActivityResumed(activity: android.app.Activity) {}
+    override fun onActivityPaused(activity: android.app.Activity) {}
+    override fun onActivityStopped(activity: android.app.Activity) {}
+    override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {}
 
-    override fun onActivityDestroyed(activity: Activity) {
-        Log.i(TAG, "onActivityDestroyed: " + activity.javaClass.simpleName)
-        if (needToExitProcessAfterMainActivityFinish && activity is MainActivity) {
-            Log.i(TAG, "onActivityDestroyed: exiting process")
+    override fun onActivityDestroyed(activity: android.app.Activity) {
+        if (needToExitProcessAfterMainActivityFinish && activity is com.phlox.tvwebbrowser.activity.main.MainActivity) {
             if (needRestartMainActivityAfterExitingProcess) {
-                Log.i(TAG, "onActivityDestroyed: restarting main activity")
-                val intent = Intent(this@TVBro, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                val intent = android.content.Intent(this, com.phlox.tvwebbrowser.activity.main.MainActivity::class.java)
+                intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             }
             exitProcess(0)

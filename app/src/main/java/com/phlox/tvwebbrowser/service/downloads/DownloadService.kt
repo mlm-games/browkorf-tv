@@ -6,7 +6,12 @@ import android.app.Service
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.os.*
+import android.os.Binder
+import android.os.Build
+import android.os.Environment
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
 import android.provider.Settings
 import android.text.format.Formatter
 import android.util.Log
@@ -16,20 +21,20 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.TVBro
-import com.phlox.tvwebbrowser.activity.downloads.ActiveDownloadsModel
+import com.phlox.tvwebbrowser.activity.downloads.DownloadsManager
 import com.phlox.tvwebbrowser.model.Download
-import com.phlox.tvwebbrowser.singleton.AppDatabase
-import com.phlox.tvwebbrowser.utils.activemodel.ActiveModelsRepository
+import com.phlox.tvwebbrowser.model.dao.DownloadDao
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.File
-import java.util.*
+import java.util.Date
 import java.util.concurrent.Executors
 
-/**
- * Created by PDT on 23.01.2017.
- */
+class DownloadService : Service(), KoinComponent {
 
-class DownloadService : Service() {
-    private lateinit var model: ActiveDownloadsModel
+    private val downloadsManager: DownloadsManager by inject()
+    private val downloadDao: DownloadDao by inject()
+
     private val executor = Executors.newCachedThreadPool()
     private val handler = Handler(Looper.getMainLooper())
     private var notificationBuilder: NotificationCompat.Builder? = null
@@ -38,29 +43,30 @@ class DownloadService : Service() {
     internal var downloadTasksListener: DownloadTask.Callback = object : DownloadTask.Callback {
         val MIN_NOTIFY_TIMEOUT = 100
         private var lastNotifyTime = System.currentTimeMillis()
+
         override fun onProgress(task: DownloadTask) {
             val now = System.currentTimeMillis()
             if (now - lastNotifyTime > MIN_NOTIFY_TIMEOUT) {
                 lastNotifyTime = now
                 handler.post {
-                    model.notifyListenersAboutDownloadProgress(task)
+                    downloadsManager.notifyListenersAboutDownloadProgress(task)
                     notificationManager.notify(DOWNLOAD_NOTIFICATION_ID, updateNotification())
                 }
             }
         }
 
         override fun onError(task: DownloadTask, responseCode: Int, responseMessage: String) {
-            AppDatabase.db.downloadDao().update(task.downloadInfo)
+            downloadDao.update(task.downloadInfo)
             handler.post {
-                model.notifyListenersAboutError(task, responseCode, responseMessage)
+                downloadsManager.notifyListenersAboutError(task, responseCode, responseMessage)
                 onTaskEnded(task)
             }
         }
 
         override fun onDone(task: DownloadTask) {
-            AppDatabase.db.downloadDao().update(task.downloadInfo)
+            downloadDao.update(task.downloadInfo)
             handler.post {
-                model.notifyListenersAboutDownloadProgress(task)
+                downloadsManager.notifyListenersAboutDownloadProgress(task)
                 onTaskEnded(task)
             }
         }
@@ -68,13 +74,7 @@ class DownloadService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        model = ActiveModelsRepository.get(ActiveDownloadsModel::class, this)
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    override fun onDestroy() {
-        ActiveModelsRepository.markAsNeedless(model, this)
-        super.onDestroy()
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -86,7 +86,8 @@ class DownloadService : Service() {
         var downloaded = 0L
         var total = 0L
         var hasUnknownSizedFiles = false
-        for (download in model.activeDownloads) {
+
+        for (download in downloadsManager.activeDownloads) {
             title += download.downloadInfo.filename + ","
             downloaded += download.downloadInfo.bytesReceived
             if (download.downloadInfo.size > 0) {
@@ -95,7 +96,7 @@ class DownloadService : Service() {
                 hasUnknownSizedFiles = true
             }
         }
-        title.trim(',')
+        title = title.trim(',')
         val description = if (hasUnknownSizedFiles) {
             Formatter.formatShortFileSize(this, downloaded)
         } else {
@@ -104,13 +105,13 @@ class DownloadService : Service() {
         }
         if (notificationBuilder == null) {
             notificationBuilder = NotificationCompat.Builder(this, TVBro.CHANNEL_ID_DOWNLOADS)
-                    .setOngoing(true)
-                    .setOnlyAlertOnce(true)
-                    .setSmallIcon(R.drawable.ic_launcher)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setSmallIcon(R.drawable.ic_launcher)
         }
         notificationBuilder!!.setContentTitle(title)
-                .setContentText(description)
-                .setSmallIcon(R.drawable.ic_launcher)
+            .setContentText(description)
+            .setSmallIcon(R.drawable.ic_launcher)
         if (hasUnknownSizedFiles || total == 0L) {
             notificationBuilder!!.setProgress(0, 0, true)
         } else {
@@ -120,7 +121,7 @@ class DownloadService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
-        return Binder(this)
+        return LocalBinder(this)
     }
 
     private fun onTaskEnded(task: DownloadTask) {
@@ -138,9 +139,9 @@ class DownloadService : Service() {
             Download.OperationAfterDownload.NOP -> {
             }
         }
-        model.onDownloadEnded(task)
-        if (model.activeDownloads.isEmpty()) {
-            stopForeground(true)
+        downloadsManager.onDownloadEnded(task)
+        if (downloadsManager.activeDownloads.isEmpty()) {
+            stopForeground(true) // TODO: Copy from fluffy
             stopSelf()
         }
     }
@@ -149,8 +150,9 @@ class DownloadService : Service() {
         val file = File(download.filepath)
         val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
         val apkURI = FileProvider.getUriForFile(
-                context,
-                context.applicationContext.packageName + ".provider", file)
+            context,
+            context.applicationContext.packageName + ".provider", file
+        )
 
         val install = Intent(Intent.ACTION_INSTALL_PACKAGE)
         install.setDataAndType(apkURI, mimeType)
@@ -174,12 +176,15 @@ class DownloadService : Service() {
             }
             var fileName = download.filename
             var i = 0
-            while (File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + File.separator + fileName).exists()) {
+            while (File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath + File.separator + fileName
+                ).exists()
+            ) {
                 i++
-                if (hasExt) {
-                    fileName = prefix + "_(" + i + ")." + ext
+                fileName = if (hasExt) {
+                    prefix + "_(" + i + ")." + ext
                 } else {
-                    fileName = download.filename + "_(" + i + ")"
+                    download.filename + "_(" + i + ")"
                 }
             }
             download.filename = fileName
@@ -200,21 +205,23 @@ class DownloadService : Service() {
 
         download.time = Date().time
         Log.d(TAG, "Start to downloading url: ${download.url}")
+
         val downloadTask = if (download.base64BlobData != null) {
-            BlobDownloadTask(download, download.base64BlobData!!, downloadTasksListener)
+            BlobDownloadTask(download, download.base64BlobData!!, downloadDao, downloadTasksListener)
         } else if (download.stream != null) {
-            StreamDownloadTask(download, download.stream!!, downloadTasksListener)
+            StreamDownloadTask(download, download.stream!!, downloadDao, downloadTasksListener)
         } else {
-            FileDownloadTask(download, download.userAgentString, downloadTasksListener)
+            FileDownloadTask(download, download.userAgentString, downloadDao, downloadTasksListener)
         }
-        model.activeDownloads.add(downloadTask)
+
+        downloadsManager.activeDownloads.add(downloadTask)
         executor.execute(downloadTask)
 
         startService(Intent(this, DownloadService::class.java))
         startForeground(DOWNLOAD_NOTIFICATION_ID, updateNotification())
     }
 
-    class Binder(val service: DownloadService) : android.os.Binder()
+    class LocalBinder(val service: DownloadService) : Binder()
 
     companion object {
         val TAG: String = DownloadService::class.java.simpleName

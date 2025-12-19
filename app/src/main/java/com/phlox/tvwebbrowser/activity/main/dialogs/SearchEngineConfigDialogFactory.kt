@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.activity.main.SettingsModel
 import com.phlox.tvwebbrowser.settings.AppSettings
+import androidx.core.view.isGone
 
 /**
  * Created by fedex on 18.01.17.
@@ -54,7 +55,7 @@ object SearchEngineConfigDialogFactory {
 
         spEngine.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                if (position == AppSettings.SearchEnginesTitles.size - 1 && llUrl.visibility == View.GONE) {
+                if (position == AppSettings.SearchEnginesTitles.size - 1 && llUrl.isGone) {
                     llUrl.visibility = View.VISIBLE
                     llUrl.startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.fade_in))
                     etUrl.requestFocus()

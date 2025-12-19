@@ -7,8 +7,7 @@ import java.io.InputStream
  * Created by PDT on 23.01.2017.
  */
 
-@Entity(tableName = "downloads", indices = arrayOf(Index(value = ["time"], name = "downloads_time_idx"),
-        Index(value = ["filename"], name = "downloads_filename_idx")))
+@Entity(tableName = "downloads", indices = [Index(value = ["time"], name = "downloads_time_idx"), Index(value = ["filename"], name = "downloads_filename_idx")])
 class Download() {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
@@ -61,8 +60,8 @@ class Download() {
     }
 
     companion object {
-        val BROKEN_MARK: Long = -2
-        val CANCELLED_MARK: Long = -3
+        const val BROKEN_MARK: Long = -2
+        const val CANCELLED_MARK: Long = -3
 
         fun createDateHeaderInfo(time: Long): Download {
             val download = Download()

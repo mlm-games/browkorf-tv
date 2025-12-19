@@ -20,32 +20,49 @@ import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.webkit.*
+import android.webkit.ConsoleMessage
+import android.webkit.GeolocationPermissions
+import android.webkit.HttpAuthHandler
+import android.webkit.JsPromptResult
+import android.webkit.JsResult
+import android.webkit.PermissionRequest
+import android.webkit.SslErrorHandler
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import android.webkit.WebChromeClient.CustomViewCallback
+import android.webkit.WebChromeClient.FileChooserParams
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.webkit.WebSettingsCompat
-import androidx.webkit.WebViewFeature
-import com.phlox.tvwebbrowser.AppContext
+import androidx.core.net.toUri
 import com.phlox.tvwebbrowser.BuildConfig
-import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.settings.AppSettings
-import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_PAGE_URL
-import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_URL_ALIAS
 import com.phlox.tvwebbrowser.settings.HomePageMode
 import com.phlox.tvwebbrowser.utils.LogUtils
 import java.net.URLEncoder
 import java.util.*
 import androidx.core.net.toUri
 import androidx.core.graphics.createBitmap
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
+import com.phlox.tvwebbrowser.R
+import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_PAGE_URL
+import com.phlox.tvwebbrowser.settings.SettingsManager
 
-
-/**
- * Copyright (c) 2016 Fedir Tsapana.
- */
 @SuppressLint("SetJavaScriptEnabled", "ViewConstructor")
-class WebViewEx(context: Context, val callback: Callback, val jsInterface: AndroidJSInterface) : WebView(context) {
+class WebViewEx(
+    context: Context,
+    val callback: Callback,
+    val jsInterface: AndroidJSInterface,
+    private val settingsManager: SettingsManager // Added constructor injection
+) : WebView(context) {
+
     companion object {
         val TAG = WebViewEx::class.java.simpleName
         const val WEB_VIEW_TAG = "TV Bro WebView"
@@ -57,7 +74,7 @@ class WebViewEx(context: Context, val callback: Callback, val jsInterface: Andro
 
     private var genericInjects: String? = null
     private var webChromeClient_: WebChromeClient
-    private var fullscreenViewCallback: WebChromeClient.CustomViewCallback? = null
+    private var fullscreenViewCallback: CustomViewCallback? = null
     private var pickFileCallback: ValueCallback<Array<Uri>>? = null
     private var permRequestDialog: AlertDialog? = null
     private var webPermissionsRequest: PermissionRequest? = null
@@ -226,50 +243,50 @@ class WebViewEx(context: Context, val callback: Callback, val jsInterface: Andro
                 val activity = callback.getActivity() ?: return
                 webPermissionsRequest = request
                 permRequestDialog = AlertDialog.Builder(activity)
-                        .setMessage(activity.getString(R.string.web_perm_request_confirmation, TextUtils.join("\n", request.resources)))
-                        .setCancelable(false)
-                        .setNegativeButton(R.string.deny) { _, _ ->
-                            webPermissionsRequest?.deny()
-                            permRequestDialog = null
-                            webPermissionsRequest = null
+                    .setMessage(activity.getString(R.string.web_perm_request_confirmation, TextUtils.join("\n", request.resources)))
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.deny) { _, _ ->
+                        webPermissionsRequest?.deny()
+                        permRequestDialog = null
+                        webPermissionsRequest = null
+                    }
+                    .setPositiveButton(R.string.allow) { dialog, which ->
+                        val webPermissionsRequest = this@WebViewEx.webPermissionsRequest
+                        this@WebViewEx.webPermissionsRequest = null
+                        if (webPermissionsRequest == null) {
+                            return@setPositiveButton
                         }
-                        .setPositiveButton(R.string.allow) { dialog, which ->
-                            val webPermissionsRequest = this@WebViewEx.webPermissionsRequest
-                            this@WebViewEx.webPermissionsRequest = null
-                            if (webPermissionsRequest == null) {
-                                return@setPositiveButton
-                            }
 
-                            val neededPermissions = ArrayList<String>()
-                            val resourcesThatDoNotNeedToGrantPerms = ArrayList<String>()
-                            for (resource in webPermissionsRequest.resources) {
-                                if (PermissionRequest.RESOURCE_AUDIO_CAPTURE == resource) {
-                                    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                                        neededPermissions.add(Manifest.permission.RECORD_AUDIO)
-                                    } else {
-                                        resourcesThatDoNotNeedToGrantPerms.add(resource)
-                                    }
-                                } else if (PermissionRequest.RESOURCE_VIDEO_CAPTURE == resource) {
-                                    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                                        neededPermissions.add(Manifest.permission.CAMERA)
-                                    } else {
-                                        resourcesThatDoNotNeedToGrantPerms.add(resource)
-                                    }
+                        val neededPermissions = ArrayList<String>()
+                        val resourcesThatDoNotNeedToGrantPerms = ArrayList<String>()
+                        for (resource in webPermissionsRequest.resources) {
+                            if (PermissionRequest.RESOURCE_AUDIO_CAPTURE == resource) {
+                                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                                    neededPermissions.add(Manifest.permission.RECORD_AUDIO)
                                 } else {
                                     resourcesThatDoNotNeedToGrantPerms.add(resource)
                                 }
-                            }
-
-                            if (neededPermissions.isNotEmpty()) {
-                                requestedWebResourcesThatDoNotNeedToGrantAndroidPermissions = resourcesThatDoNotNeedToGrantPerms
-                                callback.requestPermissions(neededPermissions.toTypedArray(), false)
+                            } else if (PermissionRequest.RESOURCE_VIDEO_CAPTURE == resource) {
+                                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                    neededPermissions.add(Manifest.permission.CAMERA)
+                                } else {
+                                    resourcesThatDoNotNeedToGrantPerms.add(resource)
+                                }
                             } else {
-                                webPermissionsRequest.grant(webPermissionsRequest.resources)
+                                resourcesThatDoNotNeedToGrantPerms.add(resource)
                             }
-
-                            permRequestDialog = null
                         }
-                        .create()
+
+                        if (neededPermissions.isNotEmpty()) {
+                            requestedWebResourcesThatDoNotNeedToGrantAndroidPermissions = resourcesThatDoNotNeedToGrantPerms
+                            callback.requestPermissions(neededPermissions.toTypedArray(), false)
+                        } else {
+                            webPermissionsRequest.grant(webPermissionsRequest.resources)
+                        }
+
+                        permRequestDialog = null
+                    }
+                    .create()
                 permRequestDialog!!.show()
             }
 
@@ -286,23 +303,23 @@ class WebViewEx(context: Context, val callback: Callback, val jsInterface: Andro
                 geoPermissionOrigin = origin
                 geoPermissionsCallback = callback
                 permRequestDialog = AlertDialog.Builder(activity)
-                        .setMessage(activity.getString(R.string.web_perm_request_confirmation, activity.getString(R.string.location)))
-                        .setCancelable(false)
-                        .setNegativeButton(R.string.deny) { dialog, which ->
-                            geoPermissionsCallback!!.invoke(geoPermissionOrigin, false, false)
-                            permRequestDialog = null
+                    .setMessage(activity.getString(R.string.web_perm_request_confirmation, activity.getString(R.string.location)))
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.deny) { dialog, which ->
+                        geoPermissionsCallback!!.invoke(geoPermissionOrigin, false, false)
+                        permRequestDialog = null
+                        geoPermissionsCallback = null
+                    }
+                    .setPositiveButton(R.string.allow) { dialog, which ->
+                        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            this@WebViewEx.callback.requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), true)
+                        } else {
+                            geoPermissionsCallback!!.invoke(geoPermissionOrigin, true, true)
                             geoPermissionsCallback = null
                         }
-                        .setPositiveButton(R.string.allow) { dialog, which ->
-                            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                this@WebViewEx.callback.requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), true)
-                            } else {
-                                geoPermissionsCallback!!.invoke(geoPermissionOrigin, true, true)
-                                geoPermissionsCallback = null
-                            }
-                            permRequestDialog = null
-                        }
-                        .create()
+                        permRequestDialog = null
+                    }
+                    .create()
                 permRequestDialog!!.show()
             }
 
@@ -486,11 +503,10 @@ class WebViewEx(context: Context, val callback: Callback, val jsInterface: Andro
     }
 
     override fun loadUrl(url: String) {
-
-        val settings: AppSettings = AppContext.settings
+        val settings = settingsManager.current
 
         when {
-            HOME_URL_ALIAS == url -> {
+            AppSettings.HOME_URL_ALIAS == url -> {
                 when (settings.homePageModeEnum) {
                     HomePageMode.BLANK -> {
                         loadDataWithBaseURL(null, "", "text/html", "UTF-8", null)
@@ -500,19 +516,14 @@ class WebViewEx(context: Context, val callback: Callback, val jsInterface: Andro
                             currentOriginalUrl = settings.homePage.toUri()
                             super.loadUrl(settings.homePage)
                         } catch (e: Exception) {
-                            Log.e(TAG, "LoadUrl error", e)
                             loadDataWithBaseURL(null, "", "text/html", "UTF-8", null)
                         }
-
                     }
                     HomePageMode.HOME_PAGE -> {
-                        currentOriginalUrl = HOME_PAGE_URL.toUri()
-                        super.loadUrl(HOME_PAGE_URL)
-                        //val data = context.assets.open("pages/home/index.html").bufferedReader().use { it.readText() }
-                        //loadDataWithBaseURL(Config.HOME_PAGE_URL, data, "text/html", "UTF-8", null)
+                        currentOriginalUrl = AppSettings.HOME_PAGE_URL.toUri()
+                        super.loadUrl(AppSettings.HOME_PAGE_URL)
                     }
                 }
-
             }
             url.startsWith(INTERNAL_SCHEME) -> {
                 val uri = url.toUri()

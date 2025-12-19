@@ -1,16 +1,12 @@
 package com.phlox.tvwebbrowser.compose.aux.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.*
-import com.phlox.tvwebbrowser.model.FavoriteItem
-import com.phlox.tvwebbrowser.singleton.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import com.phlox.tvwebbrowser.activity.main.FavoritesViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavoritesScreen(
@@ -19,25 +15,16 @@ fun FavoritesScreen(
     onAddBookmark: () -> Unit,
     onEditBookmark: (Long) -> Unit,
     onEditHomeSlot: (Int) -> Unit,
+    viewModel: FavoritesViewModel = koinViewModel()
 ) {
-    var loading by remember { mutableStateOf(true) }
-    var bookmarks by remember { mutableStateOf<List<FavoriteItem>>(emptyList()) }
-    var homeSlots by remember { mutableStateOf<List<FavoriteItem>>(emptyList()) }
+    val loading by viewModel.loading.collectAsState()
+    val bookmarks by viewModel.bookmarks.collectAsState()
+    val homeSlots by viewModel.homeSlots.collectAsState()
 
-    suspend fun load() {
-        loading = true
-        val dao = AppDatabase.db.favoritesDao()
-        homeSlots = withContext(Dispatchers.IO) { dao.getHomePageBookmarks() }
-        bookmarks = withContext(Dispatchers.IO) { dao.getAll(homePageBookmarks = false) }
-        loading = false
-    }
-
-    LaunchedEffect(Unit) { load() }
+    LaunchedEffect(Unit) { viewModel.loadData() }
 
     Column(
-        Modifier
-            .fillMaxSize()
-            .padding(24.dp),
+        Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -54,7 +41,6 @@ fun FavoritesScreen(
 
         Text("Home page slots", style = MaterialTheme.typography.titleMedium)
 
-        // Show 8 slots (0..7). Each opens the home-slot editor.
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             for (row in 0..1) {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -68,15 +54,8 @@ fun FavoritesScreen(
                         ) {
                             Column(Modifier.padding(12.dp)) {
                                 Text("Slot $order", style = MaterialTheme.typography.bodySmall)
-                                Text(
-                                    item?.title ?: "Empty",
-                                    maxLines = 1
-                                )
-                                Text(
-                                    item?.url ?: "",
-                                    maxLines = 1,
-                                    style = MaterialTheme.typography.bodySmall
-                                )
+                                Text(item?.title ?: "Empty", maxLines = 1)
+                                Text(item?.url ?: "", maxLines = 1, style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }
@@ -85,7 +64,6 @@ fun FavoritesScreen(
         }
 
         Spacer(Modifier.height(8.dp))
-
         Text("Bookmarks", style = MaterialTheme.typography.titleMedium)
 
         if (bookmarks.isEmpty()) {
@@ -93,7 +71,6 @@ fun FavoritesScreen(
             return
         }
 
-        // Minimal list (no lazy list needed for small sets; keep it simple for now)
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             bookmarks.take(40).forEach { b ->
                 Surface(onClick = { b.url?.let(onPickUrl) }) {
@@ -110,8 +87,5 @@ fun FavoritesScreen(
                 }
             }
         }
-
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = { runBlocking {launch {load()} } }) { Text("Reload") } // handy while iterating
     }
 }

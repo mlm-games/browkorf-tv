@@ -1,10 +1,10 @@
 package com.phlox.tvwebbrowser.activity.downloads
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.text.format.Formatter
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -13,11 +13,11 @@ import com.phlox.tvwebbrowser.model.Download
 import java.text.SimpleDateFormat
 import java.util.Date
 
-/**
- * Created by PDT on 24.01.2017.
- */
+class DownloadListItemView(
+    context: Context,
+    private val viewType: Int
+) : FrameLayout(context) {
 
-class DownloadListItemView(private val downloadsActivity: DownloadsActivity, private val viewType: Int) : FrameLayout(downloadsActivity), ActiveDownloadsModel.Listener {
     private var defaultTextColor: Int = 0
     private var tvDate: TextView? = null
     private var tvTitle: TextView? = null
@@ -26,31 +26,33 @@ class DownloadListItemView(private val downloadsActivity: DownloadsActivity, pri
     private var progressBar: ProgressBar? = null
     private var progressBar2: ProgressBar? = null
     private var tvSize: TextView? = null
+
     var download: Download? = null
-    set(value) {
-        field = value
-        if (field == null) return
-        when (viewType) {
-            DownloadListAdapter.VIEW_TYPE_HEADER -> {
-                val df = SimpleDateFormat.getDateInstance()
-                tvDate!!.text = df.format(Date(field!!.time))
-            }
-            DownloadListAdapter.VIEW_TYPE_DOWNLOAD_ITEM -> {
-                tvTitle!!.text = field!!.filename
-                tvURL!!.text = field!!.url
-                val sdf = SimpleDateFormat("HH:mm")
-                tvTime!!.text = sdf.format(Date(field!!.time))
-                updateUI(field!!)
+        set(value) {
+            field = value
+            if (field == null) return
+            when (viewType) {
+                DownloadListAdapter.VIEW_TYPE_HEADER -> {
+                    val df = SimpleDateFormat.getDateInstance()
+                    tvDate!!.text = df.format(Date(field!!.time))
+                }
+                DownloadListAdapter.VIEW_TYPE_DOWNLOAD_ITEM -> {
+                    tvTitle!!.text = field!!.filename
+                    tvURL!!.text = field!!.url
+                    val sdf = SimpleDateFormat("HH:mm")
+                    tvTime!!.text = sdf.format(Date(field!!.time))
+                    updateUI(field!!)
+                }
             }
         }
-    }
 
     init {
-        LayoutInflater.from(downloadsActivity).inflate(
-                if (viewType == DownloadListAdapter.VIEW_TYPE_HEADER)
-                    R.layout.view_history_header_item
-                else
-                    R.layout.view_download_item, this)
+        LayoutInflater.from(context).inflate(
+            if (viewType == DownloadListAdapter.VIEW_TYPE_HEADER)
+                R.layout.view_history_header_item
+            else
+                R.layout.view_download_item, this
+        )
         when (viewType) {
             DownloadListAdapter.VIEW_TYPE_HEADER -> tvDate = findViewById(R.id.tvDate)
             DownloadListAdapter.VIEW_TYPE_DOWNLOAD_ITEM -> {
@@ -66,7 +68,7 @@ class DownloadListItemView(private val downloadsActivity: DownloadsActivity, pri
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateUI(download: Download) {
+    fun updateUI(download: Download) {
         if (tvTitle?.text != download.filename) {
             tvTitle?.text = download.filename
         }
@@ -75,57 +77,33 @@ class DownloadListItemView(private val downloadsActivity: DownloadsActivity, pri
         tvSize!!.setTextColor(defaultTextColor)
         if (download.size == Download.CANCELLED_MARK) {
             tvSize!!.setText(R.string.cancelled)
-            progressBar!!.visibility = View.INVISIBLE
-            progressBar2!!.visibility = View.GONE
+            progressBar!!.visibility = INVISIBLE
+            progressBar2!!.visibility = GONE
         } else if (download.size == Download.BROKEN_MARK) {
             tvSize!!.setText(R.string.error)
             tvSize!!.setTextColor(Color.RED)
-            progressBar!!.visibility = View.INVISIBLE
-            progressBar2!!.visibility = View.GONE
+            progressBar!!.visibility = INVISIBLE
+            progressBar2!!.visibility = GONE
         } else if (download.size == 0L) {
             tvSize!!.text = Formatter.formatShortFileSize(context, download.bytesReceived)
-            progressBar!!.visibility = View.INVISIBLE
-            progressBar2!!.visibility = View.VISIBLE
+            progressBar!!.visibility = INVISIBLE
+            progressBar2!!.visibility = VISIBLE
         } else if (download.size > 0) {
             if (download.size == download.bytesReceived) {
                 tvSize!!.text = Formatter.formatShortFileSize(context, download.size)
-                progressBar!!.visibility = View.INVISIBLE
-                progressBar2!!.visibility = View.GONE
+                progressBar!!.visibility = INVISIBLE
+                progressBar2!!.visibility = GONE
             } else {
                 tvSize!!.text = Formatter.formatShortFileSize(context, download.bytesReceived) + "/\n" +
                         Formatter.formatShortFileSize(context, download.size)
-                progressBar!!.visibility = View.VISIBLE
-                progressBar2!!.visibility = View.GONE
+                progressBar!!.visibility = VISIBLE
+                progressBar2!!.visibility = GONE
                 if (download.bytesReceived > download.size) {
-                    download.size = 0L//wrong value from server - ignore it for future updates
+                    download.size = 0L // wrong value from server - ignore it for future updates
                 } else {
                     progressBar!!.progress = (download.bytesReceived * 100 / download.size).toInt()
                 }
             }
         }
     }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        downloadsActivity.registerListener(this)
-    }
-
-    override fun onDetachedFromWindow() {
-        downloadsActivity.unregisterListener(this)
-        super.onDetachedFromWindow()
-    }
-
-    override fun onDownloadUpdated(downloadInfo: Download) {
-        if (downloadInfo.id == this.download?.id) {
-            updateUI(downloadInfo)
-        }
-    }
-
-    override fun onDownloadError(downloadInfo: Download, responseCode: Int, responseMessage: String) {
-        if (downloadInfo.id == this.download?.id) {
-            updateUI(downloadInfo)
-        }
-    }
-
-    override fun onAllDownloadsComplete() {}
 }

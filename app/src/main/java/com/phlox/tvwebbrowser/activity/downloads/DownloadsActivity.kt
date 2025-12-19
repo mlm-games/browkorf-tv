@@ -2,7 +2,9 @@ package com.phlox.tvwebbrowser.activity.downloads
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.DialogInterface
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,34 +20,35 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.phlox.tvwebbrowser.BuildConfig
 import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.databinding.ActivityDownloadsBinding
 import com.phlox.tvwebbrowser.model.Download
 import com.phlox.tvwebbrowser.utils.Utils
-import com.phlox.tvwebbrowser.utils.activemodel.ActiveModelsRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
-import java.util.*
 
-class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, ActiveDownloadsModel.Listener, AdapterView.OnItemLongClickListener{
+class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener,
+    DownloadsManager.Listener, AdapterView.OnItemLongClickListener {
+
     private lateinit var vb: ActivityDownloadsBinding
     private lateinit var adapter: DownloadListAdapter
-    private val listeners = ArrayList<ActiveDownloadsModel.Listener>()
 
-    private lateinit var activeDownloadsModel: ActiveDownloadsModel
-    private lateinit var downloadsHistoryModel: DownloadsHistoryModel
+    // Koin Injections
+    private val downloadsManager: DownloadsManager by inject()
+    private val downloadsHistoryViewModel: DownloadsHistoryViewModel by viewModel()
 
     internal var onListScrollListener: AbsListView.OnScrollListener = object : AbsListView.OnScrollListener {
-        override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
-
-        }
+        override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {}
 
         override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
             if (totalItemCount != 0 && firstVisibleItem + visibleItemCount >= totalItemCount - 1) {
-                downloadsHistoryModel.loadNextItems()
+                downloadsHistoryViewModel.loadNextItems()
             }
         }
     }
@@ -56,9 +59,6 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
         vb = ActivityDownloadsBinding.inflate(layoutInflater)
         setContentView(vb.root)
 
-        activeDownloadsModel = ActiveModelsRepository.get(ActiveDownloadsModel::class, this)
-        downloadsHistoryModel = ActiveModelsRepository.get(DownloadsHistoryModel::class, this)
-
         adapter = DownloadListAdapter(this)
         vb.listView.adapter = adapter
 
@@ -66,30 +66,40 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
         vb.listView.onItemClickListener = this
         vb.listView.onItemLongClickListener = this
 
-        downloadsHistoryModel.lastLoadedItems.subscribe(this, false, {
-            if (it.isNotEmpty()) {
-                vb.tvPlaceholder.visibility = View.GONE
-                adapter.addItems(it)
-                vb.listView.requestFocus()
+        // Collect History Flow
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                downloadsHistoryViewModel.newlyLoadedItems.collect { items ->
+                    if (items.isNotEmpty()) {
+                        vb.tvPlaceholder.visibility = View.GONE
+                        adapter.addItems(items)
+                        // Only request focus if it's the first batch to avoid scrolling disruption
+                        if (adapter.realCount <= items.size) {
+                            vb.listView.requestFocus()
+                        }
+                    }
+                }
             }
-        })
+        }
 
-        if (downloadsHistoryModel.allItems.isEmpty()) {
-            downloadsHistoryModel.loadNextItems()
+        // Initial load
+        if (downloadsHistoryViewModel.allItems.isEmpty()) {
+            downloadsHistoryViewModel.loadNextItems()
         } else {
+            // Restore state if ViewModel already has data
             vb.tvPlaceholder.visibility = View.GONE
-            adapter.addItems(downloadsHistoryModel.allItems)
+            adapter.addItems(downloadsHistoryViewModel.allItems)
             vb.listView.requestFocus()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        activeDownloadsModel.registerListener(this)
+        downloadsManager.registerListener(this)
     }
 
     override fun onPause() {
-        activeDownloadsModel.unregisterListener(this@DownloadsActivity)
+        downloadsManager.unregisterListener(this)
         super.onPause()
     }
 
@@ -97,15 +107,11 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
         val v = view as DownloadListItemView
         val download = v.download ?: return
 
-        if (download.isDateHeader) {
-            return
-        }
+        if (download.isDateHeader) return
 
         if (download.size != download.bytesReceived) {
-            //file should be already marked in UI as broken
             return
         }
-
 
         val fileURI = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Uri.parse(download.filepath)
@@ -115,12 +121,12 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
                 Utils.showToast(this, R.string.file_not_found)
                 return
             }
-
-            FileProvider.getUriForFile(this@DownloadsActivity,
+            FileProvider.getUriForFile(
+                this@DownloadsActivity,
                 BuildConfig.APPLICATION_ID + ".provider",
-                file)
+                file
+            )
         }
-
 
         val openIntent = Intent(Intent.ACTION_VIEW)
         val mimeType = contentResolver.getType(fileURI)
@@ -131,7 +137,6 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
         } catch (e: ActivityNotFoundException) {
             Utils.showToast(this, getString(R.string.no_app_for_file_type))
         }
-
     }
 
     override fun onItemLongClick(adapterView: AdapterView<*>, view: View, i: Int, l: Long): Boolean {
@@ -141,7 +146,8 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
             return true
         }
         if (download.size == Download.BROKEN_MARK || download.size == Download.CANCELLED_MARK ||
-                download.size == download.bytesReceived) {
+            download.size == download.bytesReceived
+        ) {
             showFinishedDownloadOptionsPopup(v)
         } else {
             showUnfinishedDownloadOptionsPopup(v)
@@ -153,7 +159,7 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
         val pm = PopupMenu(this, v, Gravity.BOTTOM)
         pm.menu.add(R.string.cancel)
         pm.setOnMenuItemClickListener {
-            activeDownloadsModel.cancelDownload(v.download!!)
+            downloadsManager.cancelDownload(v.download!!)
             true
         }
         pm.show()
@@ -163,7 +169,8 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
         val download = v.download ?: return
         val pm = PopupMenu(this, v, Gravity.BOTTOM)
         if (download.filename.endsWith(".apk", true) &&
-            download.size == download.bytesReceived) {
+            download.size == download.bytesReceived
+        ) {
             pm.menu.add(0, 0, 0, R.string.install)
         }
         pm.menu.add(0, 1, 1, R.string.open_folder)
@@ -181,19 +188,21 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
 
     private fun installAPK(download: Download) {
         val canInstallFromOtherSources = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //packageManager.canRequestPackageInstalls()
-            true
+            packageManager.canRequestPackageInstalls()
         } else
             Settings.Secure.getInt(this.contentResolver, Settings.Secure.INSTALL_NON_MARKET_APPS) == 1
 
-        if(canInstallFromOtherSources) {
+        if (canInstallFromOtherSources) {
             launchInstallAPKActivity(this, download)
         } else {
             AlertDialog.Builder(this)
-                    .setTitle(R.string.app_name)
-                    .setMessage(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        R.string.turn_on_unknown_sources_for_app else R.string.turn_on_unknown_sources)
-                    .setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, which -> run {
+                .setTitle(R.string.app_name)
+                .setMessage(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        R.string.turn_on_unknown_sources_for_app else R.string.turn_on_unknown_sources
+                )
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    run {
                         val intentSettings = Intent()
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             intentSettings.action = Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES
@@ -208,14 +217,15 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
                             e.printStackTrace()
                             Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show()
                         }
-                    }})
-                    .show()
-
+                    }
+                }
+                .show()
         }
     }
 
     private fun openFolder(v: DownloadListItemView) {
-        val uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath)
+        val uri =
+            Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath)
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(uri, "resource/folder")
         if (intent.resolveActivityInfo(packageManager, 0) != null) {
@@ -225,33 +235,40 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
         }
     }
 
-    private fun deleteItem(v: DownloadListItemView) = lifecycleScope.launch(Dispatchers.Main) {
+    private fun deleteItem(v: DownloadListItemView) = lifecycleScope.launch {
         v.download?.let {
-            activeDownloadsModel.deleteItem(it)
+            downloadsManager.deleteItem(it)
             adapter.remove(it)
         }
     }
 
     override fun onDownloadUpdated(downloadInfo: Download) {
-        for (i in listeners.indices) {
-            listeners[i].onDownloadUpdated(downloadInfo)
-        }
+        // Find visible view and update it
+        // The DownloadListItemView subscribes to updates if it's attached,
+        // but passing the update event is handled by the Adapter logic/View logic.
+        // Actually, DownloadListItemView in the original code registered itself as a listener.
+        // In the new architecture, the View can observe data or we notify the adapter.
+        // For compatibility with the legacy View based adapter:
+        notifyViews(downloadInfo)
     }
 
     override fun onDownloadError(downloadInfo: Download, responseCode: Int, responseMessage: String) {
-        for (i in listeners.indices) {
-            listeners[i].onDownloadError(downloadInfo, responseCode, responseMessage)
-        }
+        notifyViews(downloadInfo)
     }
 
     override fun onAllDownloadsComplete() {}
 
-    fun registerListener(listener: ActiveDownloadsModel.Listener) {
-        listeners.add(listener)
-    }
-
-    fun unregisterListener(listener: ActiveDownloadsModel.Listener) {
-        listeners.remove(listener)
+    private fun notifyViews(downloadInfo: Download) {
+        // Iterate over visible views to find the one matching this download
+        for (i in 0 until vb.listView.childCount) {
+            val view = vb.listView.getChildAt(i)
+            if (view is DownloadListItemView && view.download?.id == downloadInfo.id) {
+                // Manually trigger update since we removed the direct Listener interface from the View class
+                // to decouple UI from Logic.
+                // However, we need to add a method to View to update it.
+                view.updateUI(downloadInfo)
+            }
+        }
     }
 
     companion object {
@@ -275,7 +292,10 @@ class DownloadsActivity : AppCompatActivity(), AdapterView.OnItemClickListener, 
             install.setDataAndType(apkURI, mimeType)
             install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             try {
-                activity.startActivityForResult(install, REQUEST_CODE_INSTALL_PACKAGE)//we are not using result for now
+                activity.startActivityForResult(
+                    install,
+                    REQUEST_CODE_INSTALL_PACKAGE
+                ) //we are not using result for now
             } catch (e: Exception) {
                 Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
             }

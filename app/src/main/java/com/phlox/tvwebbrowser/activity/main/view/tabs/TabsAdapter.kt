@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.phlox.tvwebbrowser.R
-import com.phlox.tvwebbrowser.activity.main.TabsModel
+import com.phlox.tvwebbrowser.activity.main.TabsViewModel
 import com.phlox.tvwebbrowser.activity.main.view.tabs.TabsAdapter.TabViewHolder
 import com.phlox.tvwebbrowser.databinding.ViewHorizontalWebtabItemBinding
 import com.phlox.tvwebbrowser.model.WebTabState
@@ -29,7 +29,7 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabView
     var listener: Listener? = null
     val uiHandler = Handler(Looper.getMainLooper())
     var checkedView: CheckableContainer? = null
-    var tabsModel: TabsModel? = null
+    var tabsModel: TabsViewModel? = null
         set(value) {
             field = value
             onTabListChanged()
@@ -58,10 +58,14 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabView
     }
 
     fun onTabListChanged() {
+        val newTabs = tabsModel?.tabsStates?.value ?: emptyList()
+
         val tabsDiffUtilCallback =
-            TabsDiffUtillCallback(tabsCopy, tabsModel?.tabsStates ?: emptyList())
+            TabsDiffUtillCallback(tabsCopy, newTabs)
+
         val tabsDiffResult = DiffUtil.calculateDiff(tabsDiffUtilCallback)
-        tabsCopy.apply { clear() }.addAll(tabsModel?.tabsStates ?: emptyList())
+        tabsCopy.apply { clear() }.addAll(newTabs)
+
         tabsDiffResult.dispatchUpdatesTo(this)
     }
 

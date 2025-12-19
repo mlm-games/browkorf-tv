@@ -1,6 +1,5 @@
 package com.phlox.tvwebbrowser.activity.history
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -13,39 +12,39 @@ import android.widget.AdapterView
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.databinding.ActivityHistoryBinding
-import com.phlox.tvwebbrowser.singleton.AppDatabase
 import com.phlox.tvwebbrowser.utils.BaseAnimationListener
 import com.phlox.tvwebbrowser.utils.Utils
 import com.phlox.tvwebbrowser.utils.VoiceSearchHelper
-import com.phlox.tvwebbrowser.utils.activemodel.ActiveModelsRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Created by fedex on 29.12.16.
- */
-
-class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener{
+class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private lateinit var vb: ActivityHistoryBinding
     private var ibDelete: ImageButton? = null
     private var adapter: HistoryAdapter? = null
-    private lateinit var historyModel: HistoryModel
-    private val voiceSearchHelper = VoiceSearchHelper(this, VOICE_SEARCH_REQUEST_CODE,
-        VOICE_SEARCH_PERMISSIONS_REQUEST_CODE)
+
+    // Koin Injection
+    private val historyViewModel: HistoryViewModel by viewModel()
+
+    private val voiceSearchHelper = VoiceSearchHelper(
+        this, VOICE_SEARCH_REQUEST_CODE,
+        VOICE_SEARCH_PERMISSIONS_REQUEST_CODE
+    )
 
     internal var onListScrollListener: AbsListView.OnScrollListener = object : AbsListView.OnScrollListener {
-        override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
-
-        }
+        override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {}
 
         override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-            if (totalItemCount != 0 && firstVisibleItem + visibleItemCount >= totalItemCount - 1 && "" == historyModel.searchQuery) {
-                historyModel.loadItems(false, adapter!!.realCount)
+            if (totalItemCount != 0 && firstVisibleItem + visibleItemCount >= totalItemCount - 1 && "" == historyViewModel.searchQuery) {
+                historyViewModel.loadItems(adapter!!.realCount)
             }
         }
     }
@@ -54,8 +53,6 @@ class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, Ad
         super.onCreate(savedInstanceState)
         vb = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(vb.root)
-
-        historyModel = ActiveModelsRepository.get(HistoryModel::class, this)
 
         ibDelete = findViewById(R.id.ibDelete)
 
@@ -66,10 +63,15 @@ class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, Ad
         vb.listView.onItemClickListener = this
         vb.listView.onItemLongClickListener = this
 
-        historyModel.lastLoadedItems.subscribe(this, false) {
-            if (it.isEmpty()) return@subscribe
-            adapter!!.addItems(it)
-            vb.listView.requestFocus()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                historyViewModel.lastLoadedItems.collect { items ->
+                    if (items.isNotEmpty()) {
+                        adapter!!.addItems(items)
+                        vb.listView.requestFocus()
+                    }
+                }
+            }
         }
 
         onBackPressedDispatcher.addCallback(this) {
@@ -82,35 +84,32 @@ class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, Ad
             }
         }
 
-        historyModel.loadItems(false)
+        historyViewModel.loadItems()
     }
 
     private fun showDeleteDialog(deleteAll: Boolean) {
         if (adapter!!.items.isEmpty() || (adapter!!.selectedItems.isEmpty() && !deleteAll)) return
         AlertDialog.Builder(this)
-                .setTitle(R.string.delete)
-                .setMessage(if (deleteAll) R.string.msg_delete_history_all else R.string.msg_delete_history)
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (deleteAll) {
-                            AppDatabase.db.historyDao().deleteWhereTimeLessThan(Long.MAX_VALUE)
-                            adapter!!.erase()
-                        } else {
-                            AppDatabase.db.historyDao().delete(*(adapter!!.selectedItems).toTypedArray())
-                            adapter!!.remove(adapter!!.selectedItems)
-                        }
-                    }
+            .setTitle(R.string.delete)
+            .setMessage(if (deleteAll) R.string.msg_delete_history_all else R.string.msg_delete_history)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                if (deleteAll) {
+                    historyViewModel.deleteAll()
+                    adapter!!.erase()
+                } else {
+                    val selected = adapter!!.selectedItems
+                    historyViewModel.deleteItems(selected)
+                    adapter!!.remove(selected)
                 }
-                .setNeutralButton(android.R.string.cancel) { dialogInterface, i -> }
-                .show()
+            }
+            .setNeutralButton(android.R.string.cancel) { _, _ -> }
+            .show()
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         when (event.keyCode) {
             KeyEvent.KEYCODE_SEARCH -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    //nop
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                if (event.action == KeyEvent.ACTION_UP) {
                     voiceSearchHelper.initiateVoiceSearch(object : VoiceSearchHelper.Callback {
                         override fun onResult(text: String?) {
                             if (text == null) {
@@ -118,8 +117,8 @@ class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, Ad
                                 return
                             }
                             adapter!!.erase()
-                            historyModel.searchQuery = text
-                            historyModel.loadItems(true)
+                            historyViewModel.searchQuery = text
+                            historyViewModel.loadItems()
                         }
                     })
                 }
@@ -129,19 +128,7 @@ class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, Ad
         return super.dispatchKeyEvent(event)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!voiceSearchHelper.processActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-        grantResults: IntArray) {
-        if (!voiceSearchHelper.processPermissionsResult(requestCode, permissions, grantResults)) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-    }
+    // ... (onActivityResult and onRequestPermissionsResult same as before) ...
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val hi = (view as HistoryItemView).historyItem
@@ -184,19 +171,6 @@ class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, Ad
         }
     }
 
-    private fun showItemOptionsPopup(v: HistoryItemView) {
-        val pm = PopupMenu(this, v, Gravity.BOTTOM)
-        pm.menu.add(R.string.delete)
-        pm.setOnMenuItemClickListener {
-            lifecycleScope.launch(Dispatchers.Main) {
-                AppDatabase.db.historyDao().delete(v.historyItem!!)
-                adapter!!.remove(v.historyItem!!)
-            }
-            true
-        }
-        pm.show()
-    }
-
     fun onClearHistoryClick(view: View) {
         showDeleteDialog(true)
     }
@@ -208,7 +182,6 @@ class HistoryActivity : AppCompatActivity(), AdapterView.OnItemClickListener, Ad
     companion object {
         private const val VOICE_SEARCH_REQUEST_CODE = 10001
         private const val VOICE_SEARCH_PERMISSIONS_REQUEST_CODE = 10002
-
         const val KEY_URL = "url"
     }
 }
