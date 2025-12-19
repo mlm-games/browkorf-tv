@@ -68,6 +68,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.isInvisible
 import androidx.core.net.toUri
 import com.phlox.tvwebbrowser.compose.aux.ComposeDownloadsActivity
+import com.phlox.tvwebbrowser.compose.aux.ComposeFavoritesActivity
 import com.phlox.tvwebbrowser.compose.aux.ComposeHistoryActivity
 import com.phlox.tvwebbrowser.compose.settings.ComposeSettingsActivity
 
@@ -84,6 +85,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         const val KEY_PROCESS_ID_TO_KILL = "proc_id_to_kill"
         private const val MY_PERMISSIONS_REQUEST_VOICE_SEARCH_PERMISSIONS = 10008
         private const val COMMON_REQUESTS_START_CODE = 10100
+        private const val REQUEST_CODE_FAVORITES_ACTIVITY = 10009
     }
 
     private lateinit var vb: ActivityMainBinding
@@ -104,9 +106,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     private var downloadIntent: Download? = null
     var openUrlInExternalAppDialog: AlertDialog? = null
     private var linkActionsMenu: PopupMenu? = null
-
-    private var backCallback: OnBackInvokedCallback? = null
-    private var lastBackHandledAtMs: Long = 0L
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -299,15 +298,20 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     }
 
     override fun showFavorites() {
-        val currentTab = tabsModel.currentTab.value
-        val currentPageTitle = currentTab?.title ?: ""
-        val currentPageUrl = currentTab?.url ?: ""
+        startActivityForResult(
+            Intent(this, ComposeFavoritesActivity::class.java),
+            REQUEST_CODE_FAVORITES_ACTIVITY
+        )
 
-        FavoritesDialog(this@MainActivity, lifecycleScope, object : FavoritesDialog.Callback {
-            override fun onFavoriteChoosen(item: FavoriteItem?) {
-                navigate(item!!.url!!)
-            }
-        }, currentPageTitle, currentPageUrl).show()
+//        val currentTab = tabsModel.currentTab.value
+//        val currentPageTitle = currentTab?.title ?: ""
+//        val currentPageUrl = currentTab?.url ?: ""
+//
+//        FavoritesDialog(this@MainActivity, lifecycleScope, object : FavoritesDialog.Callback {
+//            override fun onFavoriteChoosen(item: FavoriteItem?) {
+//                navigate(item!!.url!!)
+//            }
+//        }, currentPageTitle, currentPageUrl).show()
         hideMenuOverlay()
     }
 
@@ -659,6 +663,11 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             }
             REQUEST_CODE_UNKNOWN_APP_SOURCES -> if (autoUpdateModel.needToShowUpdateDlgAgain) {
                 autoUpdateModel.showUpdateDialogIfNeeded(this)
+            }
+            REQUEST_CODE_FAVORITES_ACTIVITY -> if (resultCode == Activity.RESULT_OK) {
+                val url = data?.getStringExtra(ComposeFavoritesActivity.KEY_URL)
+                if (!url.isNullOrBlank()) navigate(url)
+                hideMenuOverlay()
             }
 
             else -> super.onActivityResult(requestCode, resultCode, data)

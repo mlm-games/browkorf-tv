@@ -29,7 +29,7 @@ class TVBro : Application(), Application.ActivityLifecycleCallbacks {
     companion object {
         lateinit var instance: TVBro
         const val CHANNEL_ID_DOWNLOADS: String = "downloads"
-        const val MAIN_PREFS_NAME = "main.xml"
+        const val MAIN_PREFS_NAME = "main"
         val TAG = TVBro::class.simpleName
     }
 
