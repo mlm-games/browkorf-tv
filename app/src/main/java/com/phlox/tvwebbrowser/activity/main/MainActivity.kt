@@ -44,6 +44,7 @@ import com.phlox.tvwebbrowser.activity.main.dialogs.favorites.FavoriteEditorDial
 import com.phlox.tvwebbrowser.activity.main.view.ActionBar
 import com.phlox.tvwebbrowser.activity.main.view.CursorMenuView
 import com.phlox.tvwebbrowser.activity.main.view.tabs.TabsAdapter.Listener
+import com.phlox.tvwebbrowser.compose.ComposeMenuActivity
 import com.phlox.tvwebbrowser.compose.aux.ComposeDownloadsActivity
 import com.phlox.tvwebbrowser.compose.aux.ComposeFavoritesActivity
 import com.phlox.tvwebbrowser.compose.aux.ComposeHistoryActivity
@@ -89,6 +90,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         private const val MY_PERMISSIONS_REQUEST_VOICE_SEARCH_PERMISSIONS = 10008
         private const val COMMON_REQUESTS_START_CODE = 10100
         private const val REQUEST_CODE_FAVORITES_ACTIVITY = 10009
+        private const val REQUEST_CODE_MENU_ACTIVITY = 10010
     }
 
     private lateinit var vb: ActivityMainBinding
@@ -323,25 +325,31 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
     }
 
+    override fun showSettings() {
+        val intent = Intent(this, ComposeMenuActivity::class.java)
+        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_SETTINGS)
+        startActivity(intent)
+    }
+
     override fun showDownloads() {
-        startActivity(Intent(this@MainActivity, ComposeDownloadsActivity::class.java))
+        val intent = Intent(this, ComposeMenuActivity::class.java)
+        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_DOWNLOADS)
+        startActivity(intent)
     }
 
     override fun showHistory() {
+        val intent = Intent(this, ComposeMenuActivity::class.java)
+        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_HISTORY)
         @Suppress("DEPRECATION")
-        startActivityForResult(
-            Intent(this@MainActivity, ComposeHistoryActivity::class.java),
-            REQUEST_CODE_HISTORY_ACTIVITY
-        )
+        startActivityForResult(intent, REQUEST_CODE_MENU_ACTIVITY)
         hideMenuOverlay()
     }
 
     override fun showFavorites() {
+        val intent = Intent(this, ComposeMenuActivity::class.java)
+        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_FAVORITES)
         @Suppress("DEPRECATION")
-        startActivityForResult(
-            Intent(this, ComposeFavoritesActivity::class.java),
-            REQUEST_CODE_FAVORITES_ACTIVITY
-        )
+        startActivityForResult(intent, REQUEST_CODE_MENU_ACTIVITY)
         hideMenuOverlay()
     }
 
@@ -379,10 +387,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     private fun tabByTitleIndex(index: Int): WebTabState? {
         val tabs = tabsViewModel.tabsStates.value
         return if (index >= 0 && index < tabs.size) tabs[index] else null
-    }
-
-    override fun showSettings() {
-        startActivity(Intent(this, ComposeSettingsActivity::class.java))
     }
 
     override fun onExtendedAddressBarMode() {
@@ -711,6 +715,11 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             }
             REQUEST_CODE_FAVORITES_ACTIVITY -> if (resultCode == RESULT_OK) {
                 val url = data?.getStringExtra(ComposeFavoritesActivity.KEY_URL)
+                if (!url.isNullOrBlank()) navigate(url)
+                hideMenuOverlay()
+            }
+            REQUEST_CODE_MENU_ACTIVITY -> if (resultCode == RESULT_OK) {
+                val url = data?.getStringExtra(ComposeMenuActivity.KEY_PICKED_URL)
                 if (!url.isNullOrBlank()) navigate(url)
                 hideMenuOverlay()
             }

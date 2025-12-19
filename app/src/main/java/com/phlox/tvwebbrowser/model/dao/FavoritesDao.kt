@@ -2,13 +2,18 @@ package com.phlox.tvwebbrowser.model.dao
 
 import androidx.room.*
 import com.phlox.tvwebbrowser.model.FavoriteItem
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoritesDao {
     @Query("SELECT * FROM favorites WHERE parent=0 AND home_page_bookmark=:homePageBookmarks ORDER BY id DESC")
     suspend fun getAll(homePageBookmarks: Boolean = false): List<FavoriteItem>
 
-    @Query("SELECT * FROM favorites WHERE parent=0 AND home_page_bookmark=1 ORDER BY i_order ASC")
+    @Query("SELECT * FROM favorites WHERE parent = 0 AND home_page_bookmark = 1 ORDER BY i_order ASC")
+    fun getHomePageBookmarksFlow(): Flow<List<FavoriteItem>>
+
+    // Kept the suspend version for non-reactive use cases if needed
+    @Query("SELECT * FROM favorites WHERE parent = 0 AND home_page_bookmark = 1 ORDER BY i_order ASC")
     suspend fun getHomePageBookmarks(): List<FavoriteItem>
 
     @Insert

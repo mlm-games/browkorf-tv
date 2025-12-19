@@ -108,28 +108,10 @@
             android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
             android:screenOrientation="sensorLandscape"/>
         <activity
-            android:name=".compose.aux.ComposeHistoryActivity"
+            android:name=".compose.ComposeMenuActivity"
             android:exported="false"
             android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            android:screenOrientation="sensorLandscape" />
-
-        <activity
-            android:name=".compose.aux.ComposeDownloadsActivity"
-            android:exported="false"
-            android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            android:screenOrientation="sensorLandscape" />
-
-        <activity
-            android:name=".compose.aux.ComposeAboutActivity"
-            android:exported="false"
-            android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            android:screenOrientation="sensorLandscape" />
-        <activity
-            android:name=".compose.aux.ComposeFavoritesActivity"
-            android:exported="false"
-            android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            android:screenOrientation="sensorLandscape" />
-
+            android:screenOrientation="sensorLandscape"/>
         <activity
             android:name=".compose.aux.ComposeBookmarkEditorActivity"
             android:exported="false"

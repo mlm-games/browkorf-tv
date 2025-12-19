@@ -21,17 +21,16 @@ import com.phlox.tvwebbrowser.utils.LogUtils
 import com.phlox.tvwebbrowser.utils.UpdateChecker
 import com.phlox.tvwebbrowser.utils.deleteDirectory
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import java.io.File
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 class MainViewModel(
     private val historyDao: HistoryDao,
     private val favoritesDao: FavoritesDao,
     private val settingsManager: SettingsManager,
-    private val tabsViewModel: TabsViewModel // To listen to title updates if needed
+    private val tabsViewModel: TabsViewModel
 ) : ViewModel() {
 
     companion object {
@@ -46,8 +45,33 @@ class MainViewModel(
     var lastHistoryItem: HistoryItem? = null
     private var lastHistoryItemSaveJob: Job? = null
 
-    private val _homePageLinks = MutableStateFlow<List<HomePageLink>>(emptyList())
-    val homePageLinks: StateFlow<List<HomePageLink>> = _homePageLinks.asStateFlow()
+    // This Flow automatically updates whenever Settings OR Database changes
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val homePageLinks: StateFlow<List<HomePageLink>> = settingsManager.settingsState
+        .flatMapLatest { settings ->
+            if (settings.homePageModeEnum != HomePageMode.HOME_PAGE) {
+                flowOf(emptyList())
+            } else {
+                when (settings.homePageLinksModeEnum) {
+                    HomePageLinksMode.MOST_VISITED -> {
+                        historyDao.frequentlyUsedUrlsFlow().map { list ->
+                            list.map { HomePageLink.fromHistoryItem(it) }
+                        }
+                    }
+                    HomePageLinksMode.LATEST_HISTORY -> {
+                        historyDao.lastFlow(8).map { list ->
+                            list.map { HomePageLink.fromHistoryItem(it) }
+                        }
+                    }
+                    HomePageLinksMode.BOOKMARKS -> {
+                        favoritesDao.getHomePageBookmarksFlow().map { list ->
+                            list.map { HomePageLink.fromBookmarkItem(it) }
+                        }
+                    }
+                }
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val settings: AppSettings get() = settingsManager.current
 
@@ -55,7 +79,7 @@ class MainViewModel(
         if (loaded) return@launch
         checkVersionCodeAndRunMigrations()
         initHistory()
-        loadHomePageLinks()
+        // No need to manually loadHomePageLinks() anymore!
         loaded = true
     }
 
@@ -76,35 +100,13 @@ class MainViewModel(
             historyDao.deleteWhereTimeLessThan(c.time.time)
         }
         try {
-            val result = historyDao.last()
+            val result = historyDao.lastFlow().first()
             if (result.isNotEmpty()) {
                 lastHistoryItem = result[0]
             }
         } catch (e: Exception) {
             e.printStackTrace()
             LogUtils.recordException(e)
-        }
-    }
-
-    suspend fun loadHomePageLinks() {
-        val currentSettings = settingsManager.current
-
-        if (currentSettings.homePageModeEnum == HomePageMode.HOME_PAGE) {
-            val links = when (currentSettings.homePageLinksModeEnum) {
-                HomePageLinksMode.MOST_VISITED -> {
-                    historyDao.frequentlyUsedUrls().map { HomePageLink.fromHistoryItem(it) }
-                }
-                HomePageLinksMode.LATEST_HISTORY -> {
-                    historyDao.last(8).map { HomePageLink.fromHistoryItem(it) }
-                }
-                HomePageLinksMode.BOOKMARKS -> {
-                    // (Logic for loading recommendations and bookmarks copied from old ViewModel)
-                    val favorites = ArrayList(favoritesDao.getHomePageBookmarks())
-                    // ... (Implementation omitted for brevity, stick to the original logic here)
-                    favorites.map { HomePageLink.fromBookmarkItem(it) }
-                }
-            }
-            _homePageLinks.value = links
         }
     }
 
@@ -134,6 +136,8 @@ class MainViewModel(
             item.saved = true
         }
     }
+
+
 
     fun onTabTitleUpdated(tab: WebTabState) {
         if (settings.incognitoMode) return
@@ -232,38 +236,24 @@ class MainViewModel(
         }
     }
 
-    fun removeHomePageLink(bookmark: HomePageLink) = viewModelScope.launch {
-        val currentList = _homePageLinks.value.toMutableList()
-        currentList.remove(bookmark)
-        _homePageLinks.value = currentList
-        bookmark.favoriteId?.let {
-            favoritesDao.delete(it)
-        }
+    fun removeHomePageLink(bookmark: HomePageLink) = viewModelScope.launch(Dispatchers.IO) {
+        bookmark.favoriteId?.let { favoritesDao.delete(it) }
     }
 
-    fun onHomePageLinkEdited(item: FavoriteItem) = viewModelScope.launch {
+    fun onHomePageLinkEdited(item: FavoriteItem) = viewModelScope.launch(Dispatchers.IO) {
         if (item.id == 0L) {
-            val lastInsertRowId = favoritesDao.insert(item)
-            item.id = lastInsertRowId
-            val currentList = _homePageLinks.value.toMutableList()
-            currentList.add(HomePageLink.fromBookmarkItem(item))
-            _homePageLinks.value = currentList
+            favoritesDao.insert(item)
         } else {
             favoritesDao.update(item)
-            val currentList = _homePageLinks.value.toMutableList()
-            val index = currentList.indexOfFirst { it.favoriteId == item.id }
-            if (index != -1) {
-                currentList[index] = HomePageLink.fromBookmarkItem(item)
-                _homePageLinks.value = currentList
-            }
         }
     }
 
     fun markBookmarkRecommendationAsUseful(bookmarkOrder: Int) {
-        val link = _homePageLinks.value.find { it.order == bookmarkOrder } ?: return
+        // This needs to check the current value from the Flow
+        val link = homePageLinks.value.find { it.order == bookmarkOrder } ?: return
         val favoriteId = link.favoriteId ?: return
         if (link.validUntil == null) return
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             favoritesDao.markAsUseful(favoriteId)
         }
     }

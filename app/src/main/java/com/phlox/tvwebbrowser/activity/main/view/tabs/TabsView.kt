@@ -29,7 +29,7 @@ class TabsView @JvmOverloads constructor(
     private val tabsViewModel: TabsViewModel by inject()
     private val settingsViewModel: SettingsViewModel by inject()
 
-    private val adapter: TabsAdapter = TabsAdapter(this)
+    val adapter: TabsAdapter = TabsAdapter(this)
 
     var current: Int by adapter::current
     var listener: TabsAdapter.Listener? by adapter::listener
