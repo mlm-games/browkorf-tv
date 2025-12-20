@@ -90,10 +90,14 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = properties.getProperty("storeFile", null)?.let { rootProject.file(it) }
-            storePassword = properties.getProperty("storePassword", "")
-            keyAlias = properties.getProperty("keyAlias", "")
-            keyPassword = properties.getProperty("keyPassword", "")
+            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "${rootProject.projectDir}/release.keystore")
+            storePassword = System.getenv("STORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = false
+            enableV4Signing = false
         }
     }
 
