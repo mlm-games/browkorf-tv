@@ -116,7 +116,7 @@ fun BottomNavigationPanel(
             ),
             contentDescription = stringResource(R.string.toggle_ads_blocking),
             checked = adBlockEnabled,
-            badge = if (blockedAdsCount > 0) blockedAdsCount else null,
+            badgeCount = if (blockedAdsCount > 0) blockedAdsCount else null,
             modifier = Modifier.padding(3.dp)
         )
         
@@ -126,7 +126,7 @@ fun BottomNavigationPanel(
             painter = painterResource(R.drawable.ic_block_popups),
             contentDescription = stringResource(R.string.block_popups),
             checked = popupBlockEnabled,
-            badge = if (blockedPopupsCount > 0) blockedPopupsCount else null,
+            badgeCount = if (blockedPopupsCount > 0) blockedPopupsCount else null,
             modifier = Modifier.padding(3.dp)
         )
         

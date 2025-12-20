@@ -21,11 +21,6 @@ class SettingsViewModel(
 
     val currentSettings: AppSettings get() = settingsManager.current
 
-    val userAgentStringTitles = arrayOf(
-        "Default (recommended)", "Chrome (Desktop)", "Chrome (Mobile)",
-        "Firefox (Desktop)", "Firefox (Mobile)", "Edge (Desktop)", "Custom"
-    )
-
     fun setSearchEngineURL(url: String) {
         viewModelScope.launch {
             val index = AppSettings.SearchEnginesURLs.indexOf(url)

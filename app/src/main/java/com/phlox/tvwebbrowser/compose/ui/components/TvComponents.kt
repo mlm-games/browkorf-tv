@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,50 +25,37 @@ fun TvBroIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     checked: Boolean = false,
-    badge: Int? = null
+    badgeCount: Int? = null
 ) {
-    val colors = TvBroTheme.colors
-    var isFocused by remember { mutableStateOf(false) }
-
     Box(modifier = modifier) {
-        Surface(
+        IconButton(
             onClick = onClick,
             enabled = enabled,
-            modifier = Modifier
-                .size(48.dp)
-                .onFocusChanged { isFocused = it.isFocused },
-            shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(5.dp)),
-            colors = ClickableSurfaceDefaults.colors(
-                containerColor = if (checked) colors.buttonBackgroundFocused else colors.buttonBackground,
-                focusedContainerColor = colors.buttonBackgroundFocused,
-                pressedContainerColor = colors.buttonBackgroundPressed,
-                disabledContainerColor = colors.buttonBackgroundDisabled
-            )
+            colors = IconButtonDefaults.colors(
+                containerColor = if (checked) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+                contentColor = if (checked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                focusedContentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            modifier = Modifier.size(48.dp)
         ) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Icon(
-                    painter = painter,
-                    contentDescription = contentDescription,
-                    modifier = Modifier.size(24.dp),
-                    tint = if (enabled) colors.iconColor else colors.iconColorDisabled
-                )
-            }
+            Icon(
+                painter = painter,
+                contentDescription = contentDescription,
+                modifier = Modifier.size(24.dp)
+            )
         }
 
-        if (badge != null && badge > 0) {
-            Box(
+        if (badgeCount != null && badgeCount > 0) {
+            androidx.compose.material3.Badge(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = 4.dp, y = (-4).dp)
-                    .defaultMinSize(minWidth = 20.dp)
-                    .background(colors.badgeBackground, RoundedCornerShape(50))
-                    .padding(horizontal = 4.dp, vertical = 2.dp),
-                contentAlignment = Alignment.Center
+                    .offset(x = 4.dp, y = (-4).dp),
+                containerColor = MaterialTheme.colorScheme.error
             ) {
                 Text(
-                    text = badge.toString(),
-                    fontSize = 12.sp,
-                    color = colors.textPrimary
+                    text = badgeCount.toString(),
+                    style = MaterialTheme.typography.labelSmall
                 )
             }
         }
@@ -79,48 +69,38 @@ fun TvBroButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    val colors = TvBroTheme.colors
-    var isFocused by remember { mutableStateOf(false) }
-
-    Surface(
+    Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier
-            .onFocusChanged { isFocused = it.isFocused },
-        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(5.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = colors.buttonBackground,
-            focusedContainerColor = colors.buttonBackgroundFocused,
-            pressedContainerColor = colors.buttonBackgroundPressed,
-            disabledContainerColor = colors.buttonBackgroundDisabled
-        )
+        modifier = modifier,
+        colors = ButtonDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedContentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        // scale = ButtonDefaults.scale(focusedScale = 1.1f)
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-            color = if (enabled) colors.textPrimary else colors.textSecondary
+            modifier = Modifier.padding(vertical = 4.dp),
+            style = MaterialTheme.typography.labelLarge
         )
     }
 }
 
 @Composable
 fun TvBroProgressBar(
-    progress: Int,
+    progress: Float,
     modifier: Modifier = Modifier
 ) {
-    val colors = TvBroTheme.colors
-
-    Box(
+    LinearProgressIndicator(
+        progress = { progress },
         modifier = modifier
             .fillMaxWidth()
-            .height(3.dp)
-            .background(colors.topBarBackground)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(progress / 100f)
-                .background(colors.progressTint)
-        )
-    }
+            .height(4.dp)
+            .clip(RoundedCornerShape(4.dp)),
+        color = MaterialTheme.colorScheme.primary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+    )
 }

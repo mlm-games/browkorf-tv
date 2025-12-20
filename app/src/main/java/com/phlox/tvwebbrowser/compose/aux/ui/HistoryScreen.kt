@@ -3,10 +3,10 @@ package com.phlox.tvwebbrowser.compose.aux.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.tv.material3.*
 import com.phlox.tvwebbrowser.activity.history.HistoryViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
@@ -28,35 +28,39 @@ fun HistoryScreen(
     val dateFmt = remember { SimpleDateFormat.getDateInstance() }
 
     Column(
-        Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = 48.dp, vertical = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        // Header
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
             Text("History", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             Button(onClick = onBack) { Text("Back") }
         }
 
         if (rows.isEmpty()) {
-            Text("No history")
+            Box(Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+                Text("No history", style = MaterialTheme.typography.bodyLarge)
+            }
             return
         }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(bottom = 20.dp)
         ) {
             items(rows, key = { it.id }) { item ->
-                Surface(onClick = { onPickUrl(item.url) }) {
-                    Column(Modifier.fillMaxWidth().padding(12.dp)) {
-                        Text(item.title.ifBlank { item.url }, maxLines = 1)
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Text(timeFmt.format(Date(item.time)), style = MaterialTheme.typography.bodySmall)
-                            Text(dateFmt.format(Date(item.time)), style = MaterialTheme.typography.bodySmall)
-                        }
-                        Text(item.url, maxLines = 1, style = MaterialTheme.typography.bodySmall)
-                    }
-                }
+                TvBroListItem(
+                    onClick = { onPickUrl(item.url) },
+                    headline = item.title.ifBlank { item.url },
+                    supportingText = "${dateFmt.format(Date(item.time))} ${timeFmt.format(Date(item.time))} • ${item.url}"
+                )
             }
         }
     }

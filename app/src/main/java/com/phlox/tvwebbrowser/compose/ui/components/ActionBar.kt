@@ -3,6 +3,7 @@ package com.phlox.tvwebbrowser.compose.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.tv.material3.Text
 import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.compose.ui.theme.TvBroTheme
+import com.phlox.tvwebbrowser.compose.ui.theme.TvBroTheme.colors
 
 @Composable
 fun ActionBar(
@@ -37,7 +39,7 @@ fun ActionBar(
     onUrlSubmit: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val colors = TvBroTheme.colors
+    val colors = colors
     var urlText by remember(currentUrl) { mutableStateOf(currentUrl) }
     var isUrlFocused by remember { mutableStateOf(false) }
     
@@ -96,7 +98,8 @@ fun ActionBar(
         TvBroIconButton(
             onClick = onSettings,
             painter = painterResource(R.drawable.ic_settings_grey_900_24dp),
-            contentDescription = stringResource(R.string.settings)
+            contentDescription = stringResource(R.string.settings),
+            modifier = Modifier.selectedBackground(isIncognito)
         )
         
         // URL bar
@@ -144,5 +147,14 @@ fun ActionBar(
                 }
             )
         }
+    }
+}
+
+@Composable
+fun Modifier.selectedBackground(isSelected: Boolean): Modifier {
+    return if (isSelected) {
+        this.background(colors.textPrimary.copy(alpha = 0.2f), CircleShape)
+    } else {
+        this
     }
 }

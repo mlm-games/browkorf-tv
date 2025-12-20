@@ -6,14 +6,15 @@ import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.tv.material3.*
 import com.phlox.tvwebbrowser.BuildConfig
 import com.phlox.tvwebbrowser.activity.downloads.DownloadsHistoryViewModel
+import com.phlox.tvwebbrowser.compose.ui.theme.TvBroTheme
 import com.phlox.tvwebbrowser.model.Download
 import org.koin.androidx.compose.koinViewModel
 import java.io.File
@@ -26,24 +27,13 @@ fun DownloadsScreen(
     viewModel: DownloadsHistoryViewModel = koinViewModel()
 ) {
     val ctx = LocalContext.current
-
-    // Observe flows
     val newlyLoaded by viewModel.newlyLoadedItems.collectAsState()
 
-    // We combine already loaded + new loaded in UI state, or rely on ViewModel
-    // Here we just access allItems if ViewModel exposes it, or trigger load
-
-    // Simplified: Just trigger load and show what we have
     LaunchedEffect(Unit) {
         viewModel.loadNextItems()
     }
 
-    // Note: Ideally ViewModel exposes a single 'uiState' list.
-    // For this migration, we can assume 'newlyLoaded' updates when we page.
-    // But for a simple list, let's just use what's exposed.
-
-    val rows = viewModel.allItems // Warning: this list is mutable in VM, better to expose flow
-
+    val rows = viewModel.allItems
     val timeFmt = remember { SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()) }
 
     fun openDownload(d: Download) {
@@ -65,10 +55,16 @@ fun DownloadsScreen(
     }
 
     Column(
-        Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = 48.dp, vertical = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        // Header
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
             Text("Downloads", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             Button(onClick = onBack) { Text("Back") }
@@ -76,16 +72,61 @@ fun DownloadsScreen(
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(bottom = 20.dp)
         ) {
             items(rows, key = { it.id }) { d ->
-                Surface(onClick = { openDownload(d) }) {
-                    Column(Modifier.fillMaxWidth().padding(12.dp)) {
-                        Text(d.filename, maxLines = 1)
-                        Text(d.url, maxLines = 1, style = MaterialTheme.typography.bodySmall)
-                        Text("Time: ${timeFmt.format(Date(d.time))}", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
+                TvBroListItem(
+                    onClick = { openDownload(d) },
+                    headline = d.filename,
+                    supportingText = "${timeFmt.format(Date(d.time))} • ${d.url}"
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Reusable TV List Item
+ */
+@Composable
+fun TvBroListItem(
+    onClick: () -> Unit,
+    headline: String,
+    supportingText: String? = null,
+    modifier: Modifier = Modifier
+) {
+    val colors = TvBroTheme.colors
+
+    Surface(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = ClickableSurfaceDefaults.shape(shape = MaterialTheme.shapes.medium),
+        colors = ClickableSurfaceDefaults.colors(
+            containerColor = colors.buttonBackground, // Use your theme vars
+            focusedContainerColor = colors.buttonBackgroundFocused,
+            contentColor = colors.textPrimary,
+            focusedContentColor = colors.textPrimary
+        ),
+        scale = ClickableSurfaceDefaults.scale(focusedScale = 1.02f) // Subtle zoom on focus
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            Text(
+                text = headline,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1
+            )
+            if (supportingText != null) {
+                Text(
+                    text = supportingText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colors.textSecondary,
+                    maxLines = 1
+                )
             }
         }
     }

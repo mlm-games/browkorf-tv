@@ -96,7 +96,7 @@ class CursorMenuView @JvmOverloads constructor(
         visibility = VISIBLE
         vb.btnGrabMode.requestFocus()
         //set position
-        val params = layoutParams as ViewGroup.MarginLayoutParams
+        val params = layoutParams as MarginLayoutParams
         params.leftMargin = x - vb.root.width / 2
         params.topMargin = y - vb.root.height / 2
         layoutParams = params

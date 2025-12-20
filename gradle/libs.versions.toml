@@ -39,6 +39,7 @@ material3 = "1.4.0"
 koinBom = "4.1.1"
 navigation3Runtime = "1.0.0"
 koin-annotations = "2.3.1"
+ui = "1.10.0"
 
 
 [libraries]
@@ -95,6 +96,7 @@ geckoview = { group = "org.mozilla.geckoview", name = "geckoview", version.ref =
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

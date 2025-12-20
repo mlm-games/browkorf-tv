@@ -1,5 +1,6 @@
 package com.phlox.tvwebbrowser.activity.main
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -22,6 +23,7 @@ data class BrowserUiState(
     val blockedPopups: Int = 0,
     val isMenuVisible: Boolean = false,
     val isFullscreen: Boolean = false,
+    val currentThumbnail: Bitmap? = null
 )
 
 class BrowserUiViewModel : ViewModel() {
@@ -33,6 +35,15 @@ class BrowserUiViewModel : ViewModel() {
 
     fun updateUrl(url: String) {
         _uiState.update { it.copy(url = url) }
+    }
+
+    fun setIncognitoMode(enabled: Boolean) {
+        _uiState.update { it.copy(isIncognito = enabled) }
+    }
+
+    fun setAdBlockEnabled(enabled: Boolean) {
+        // counts (ads/popups) are usually updated by the Tab
+        _uiState.update { it.copy(isAdBlockEnabled = enabled) }
     }
 
     fun updateProgress(progress: Int) {
@@ -65,5 +76,9 @@ class BrowserUiViewModel : ViewModel() {
 
     fun toggleMenu() {
         _uiState.update { it.copy(isMenuVisible = !it.isMenuVisible) }
+    }
+
+    fun updateThumbnail(bitmap: Bitmap?) {
+        _uiState.update { it.copy(currentThumbnail = bitmap) }
     }
 }

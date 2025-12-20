@@ -5,18 +5,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.phlox.tvwebbrowser.compose.aux.ui.*
 import com.phlox.tvwebbrowser.compose.settings.ui.SettingsScreen
-import com.phlox.tvwebbrowser.compose.ui.theme.TvBroComposeTheme
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.phlox.tvwebbrowser.compose.ui.theme.TvBroTheme
+import com.phlox.tvwebbrowser.settings.SettingsManager
+import com.phlox.tvwebbrowser.settings.Theme
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ComposeMenuActivity : ComponentActivity() {
+class ComposeMenuActivity : ComponentActivity(), KoinComponent {
 
     companion object {
         const val EXTRA_START_ROUTE = "start_route"
@@ -29,9 +39,11 @@ class ComposeMenuActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val settingsManager: SettingsManager by inject()
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+
 
         val startRouteStr = intent.getStringExtra(EXTRA_START_ROUTE) ?: ROUTE_SETTINGS
         val startDest: MenuRoute = when (startRouteStr) {
@@ -42,15 +54,28 @@ class ComposeMenuActivity : ComponentActivity() {
         }
 
         setContent {
-            TvBroComposeTheme {
-                MenuNavigation(startDest)
+            val systemInDark = isSystemInDarkTheme()
+            val useDarkTheme = remember(settingsManager.current.themeEnum, systemInDark) {
+                when (settingsManager.current.themeEnum) {
+                    Theme.WHITE -> false
+                    Theme.BLACK -> true
+                    Theme.SYSTEM -> systemInDark
+                }
+            }
+            TvBroTheme((useDarkTheme)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(TvBroTheme.colors.topBarBackground)
+                ) {
+                    MenuNavigation(startDest)
+                }
             }
         }
     }
 
     @Composable
     fun MenuNavigation(startDestination: MenuRoute) {
-        // Navigation 3: The backstack is just a state object you control
         val backStack = rememberNavBackStack(startDestination)
 
         NavDisplay(
@@ -63,8 +88,6 @@ class ComposeMenuActivity : ComponentActivity() {
                 }
             },
             entryProvider = entryProvider {
-                // Map Keys (Routes) to UI Entries<!--citation:1-->
-
                 entry<Settings> {
                     SettingsScreen(onNavigateBack = { finish() })
                 }

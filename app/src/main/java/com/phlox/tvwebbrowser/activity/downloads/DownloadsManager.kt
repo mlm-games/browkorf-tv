@@ -16,8 +16,7 @@ import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
- * Manages active downloads. Replaces ActiveDownloadsModel.
- * Scoped as Single in Koin.
+ * Manages active downloads.
  */
 class DownloadsManager(
     private val downloadDao: DownloadDao,

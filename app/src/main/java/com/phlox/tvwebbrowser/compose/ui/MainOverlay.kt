@@ -1,10 +1,18 @@
 package com.phlox.tvwebbrowser.compose.ui
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.phlox.tvwebbrowser.activity.main.BrowserUiViewModel
 import com.phlox.tvwebbrowser.activity.main.TabsViewModel
@@ -29,7 +37,7 @@ fun MainOverlay(
     onToggleAdBlock: () -> Unit,
     onTogglePopupBlock: () -> Unit,
     onZoomIn: () -> Unit,
-    onZoomOut: () -> Unit
+    onZoomOut: () -> Unit,
 ) {
     val uiState by uiVm.uiState.collectAsStateWithLifecycle()
     val tabs by tabsVm.tabsStates.collectAsStateWithLifecycle()
@@ -39,7 +47,37 @@ fun MainOverlay(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // 1. Top Bar Area (ActionBar + Tabs)
+            AnimatedVisibility(
+                visible = uiState.isMenuVisible && !uiState.isFullscreen,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    // Thumbnail in center
+                    uiState.currentThumbnail?.let { bitmap ->
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .fillMaxWidth(),
+//                                .aspectRatio(16f / 9f)
+//                                .clip(RoundedCornerShape(8.dp))
+//                                .border(
+//                                    2.dp,
+//                                    Color.White.copy(alpha = 0.3f),
+//                                    RoundedCornerShape(8.dp)
+//                                ),
+//                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+            }
+
+            // Top Bar Area (ActionBar + Tabs)
             AnimatedVisibility(
                 visible = uiState.isMenuVisible && !uiState.isFullscreen,
                 enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
@@ -48,7 +86,7 @@ fun MainOverlay(
             ) {
                 Column {
                     // Progress Bar
-                    TvBroProgressBar(progress = uiState.progress)
+                    TvBroProgressBar(progress = (uiState.progress / 100).toFloat())
                     
                     // Action Bar
                     ActionBar(
@@ -74,7 +112,7 @@ fun MainOverlay(
                 }
             }
 
-            // 2. Bottom Bar Area
+            // Bottom Bar Area
             AnimatedVisibility(
                 visible = uiState.isMenuVisible && !uiState.isFullscreen,
                 enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),

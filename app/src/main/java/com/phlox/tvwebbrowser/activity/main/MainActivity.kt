@@ -108,8 +108,21 @@ open class MainActivity : AppCompatActivity() {
     var openUrlInExternalAppDialog: AlertDialog? = null
     private var linkActionsMenu: PopupMenu? = null
 
+    @OptIn(DelicateCoroutinesApi::class)
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        GlobalScope.launch {
+            settingsManager.incognitoModeFlow.collectLatest { isIncognito ->
+                browserUiViewModel.setIncognitoMode(isIncognito)
+            }
+        }
+
+        GlobalScope.launch {
+            settingsManager.adBlockEnabledFlow.collectLatest { isAdBlock ->
+                browserUiViewModel.setAdBlockEnabled(isAdBlock)
+            }
+        }
 
         val incognitoMode = settings.incognitoMode
         Log.d(TAG, "onCreate incognitoMode: $incognitoMode")
@@ -767,7 +780,11 @@ open class MainActivity : AppCompatActivity() {
         val currentTab = tabsViewModel.currentTab.value
         if (currentTab != null) {
             lifecycleScope.launch {
-                currentTab.thumbnail = currentTab.webEngine.renderThumbnail(currentTab.thumbnail)
+                val thumbnail = currentTab.webEngine.renderThumbnail(currentTab.thumbnail)
+                if (thumbnail != null) {
+                    currentTab.thumbnail = thumbnail
+                    browserUiViewModel.updateThumbnail(thumbnail)
+                }
                 displayThumbnail(currentTab)
             }
         }
@@ -792,6 +809,7 @@ open class MainActivity : AppCompatActivity() {
 
     private fun hideMenuOverlay(updateVm: Boolean = true) {
         if (updateVm) browserUiViewModel.setMenuVisibility(false)
+        browserUiViewModel.updateThumbnail(null)
         vb.flWebViewContainer.visibility = View.VISIBLE
         tabsViewModel.currentTab.value?.webEngine?.getView()?.requestFocus()
     }
