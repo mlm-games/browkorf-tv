@@ -7,6 +7,7 @@ import com.phlox.tvwebbrowser.activity.history.HistoryViewModel
 import com.phlox.tvwebbrowser.activity.main.AdBlockRepository
 import com.phlox.tvwebbrowser.activity.main.AutoUpdateViewModel
 import com.phlox.tvwebbrowser.activity.main.BookmarkEditorViewModel
+import com.phlox.tvwebbrowser.activity.main.BrowserUiViewModel
 import com.phlox.tvwebbrowser.activity.main.FavoritesViewModel
 import com.phlox.tvwebbrowser.activity.main.HomePageSlotEditorViewModel
 import com.phlox.tvwebbrowser.activity.main.MainViewModel
@@ -53,4 +54,5 @@ val appModule = module {
     viewModel { BookmarkEditorViewModel(it.get(), get()) }
     viewModel { HomePageSlotEditorViewModel(it.get(), get()) }
     viewModel { UpdateViewModel(get()) }
+    viewModel { BrowserUiViewModel() }
 }

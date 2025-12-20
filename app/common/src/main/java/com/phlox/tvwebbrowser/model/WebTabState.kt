@@ -39,9 +39,6 @@ data class WebTabState(@PrimaryKey(autoGenerate = true)
                        var faviconHash: String? = null,
                        var incognito: Boolean = false,
                        var position: Int = 0,
-                       @Deprecated("This field is not used anymore")
-                       @ColumnInfo(name = "wv_state", typeAffinity = ColumnInfo.BLOB)
-                       var wvState: ByteArray? = null,
                        @ColumnInfo(name = "wv_state_file")
                        var wvStateFileName: String? = null,
                        var adblock: Boolean? = null,

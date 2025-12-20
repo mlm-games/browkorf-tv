@@ -113,3 +113,25 @@ fun TvBroButton(
         )
     }
 }
+
+@Composable
+fun TvBroProgressBar(
+    progress: Int,
+    modifier: Modifier = Modifier
+) {
+    val colors = TvBroTheme.colors
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(3.dp)
+            .background(colors.topBarBackground)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(progress / 100f)
+                .background(colors.progressTint)
+        )
+    }
+}

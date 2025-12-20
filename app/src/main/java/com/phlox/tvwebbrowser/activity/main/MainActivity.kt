@@ -7,53 +7,41 @@ import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.*
-import android.provider.Settings
 import android.util.Log
 import android.util.Patterns
 import android.view.*
 import android.view.KeyEvent.*
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.view.animation.DecelerateInterpolator
 import android.webkit.*
 import android.widget.FrameLayout
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.webkit.URLUtilCompat
 import com.phlox.tvwebbrowser.R
-import com.phlox.tvwebbrowser.TVBro
 import com.phlox.tvwebbrowser.activity.IncognitoModeMainActivity
 import com.phlox.tvwebbrowser.activity.downloads.DownloadsManager
 import com.phlox.tvwebbrowser.activity.main.dialogs.favorites.FavoriteEditorDialog
-import com.phlox.tvwebbrowser.activity.main.view.ActionBar
 import com.phlox.tvwebbrowser.activity.main.view.CursorMenuView
-import com.phlox.tvwebbrowser.activity.main.view.tabs.TabsAdapter.Listener
 import com.phlox.tvwebbrowser.compose.ComposeMenuActivity
-import com.phlox.tvwebbrowser.compose.aux.ComposeFavoritesActivity
 import com.phlox.tvwebbrowser.compose.settings.SettingsViewModel
+import com.phlox.tvwebbrowser.compose.ui.MainOverlay
 import com.phlox.tvwebbrowser.databinding.ActivityMainBinding
 import com.phlox.tvwebbrowser.model.*
 import com.phlox.tvwebbrowser.service.downloads.DownloadService
 import com.phlox.tvwebbrowser.settings.AppSettings
 import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_PAGE_URL
 import com.phlox.tvwebbrowser.settings.SettingsManager
-import com.phlox.tvwebbrowser.settings.Theme
-import com.phlox.tvwebbrowser.singleton.AppDatabase
 import com.phlox.tvwebbrowser.singleton.shortcuts.ShortcutMgr
 import com.phlox.tvwebbrowser.utils.*
 import com.phlox.tvwebbrowser.webengine.WebEngine
@@ -73,19 +61,17 @@ import java.net.URLEncoder
 import java.util.*
 import kotlin.system.exitProcess
 
-open class MainActivity : AppCompatActivity(), ActionBar.Callback {
+open class MainActivity : AppCompatActivity() {
     companion object {
         private val TAG = MainActivity::class.java.simpleName
         const val VOICE_SEARCH_REQUEST_CODE = 10001
         const val MY_PERMISSIONS_REQUEST_POST_NOTIFICATIONS_ACCESS = 10003
         const val MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE_ACCESS = 10004
         const val PICK_FILE_REQUEST_CODE = 10005
-        private const val REQUEST_CODE_HISTORY_ACTIVITY = 10006
         const val REQUEST_CODE_UNKNOWN_APP_SOURCES = 10007
         const val KEY_PROCESS_ID_TO_KILL = "proc_id_to_kill"
         private const val MY_PERMISSIONS_REQUEST_VOICE_SEARCH_PERMISSIONS = 10008
         private const val COMMON_REQUESTS_START_CODE = 10100
-        private const val REQUEST_CODE_FAVORITES_ACTIVITY = 10009
         private const val REQUEST_CODE_MENU_ACTIVITY = 10010
     }
 
@@ -97,6 +83,8 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     private val tabsViewModel: TabsViewModel by viewModel()
     private val settingsViewModel: SettingsViewModel by viewModel()
     private val autoUpdateViewModel: AutoUpdateViewModel by viewModel()
+    private val browserUiViewModel: BrowserUiViewModel by viewModel()
+
     private val favoritesViewModel: FavoritesViewModel by viewModel()
 
     // Singletons / Managers
@@ -105,7 +93,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     private val settingsManager: SettingsManager by inject()
     private val shortcutMgr: ShortcutMgr by inject()
 
-    // Helper to access settings cleanly
     private val settings: AppSettings get() = settingsManager.current
 
     private var running: Boolean = false
@@ -138,7 +125,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             Process.killProcess(pidToKill)
         }
 
-        // ActiveModels logic replaced with ViewModel calls
         if (incognitoMode) {
             mainViewModel.prepareSwitchToIncognito()
         }
@@ -153,63 +139,52 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
         EdgeToEdgeViews.enable(this, vb.rlRoot)
 
-        vb.ivMiniatures.visibility = View.INVISIBLE
-        vb.llBottomPanel.visibility = View.INVISIBLE
-        vb.rlActionBar.visibility = View.INVISIBLE
-        vb.progressBar.visibility = View.GONE
+        vb.flWebViewContainer.visibility = View.VISIBLE
 
-        vb.vTabs.listener = tabsListener
-
-        vb.ibAdBlock.setOnClickListener { toggleAdBlockForTab() }
-        vb.ibPopupBlock.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.Main) { showPopupBlockOptions() }
+        vb.composeUiOverlay.setContent {
+            MainOverlay(
+                uiVm = browserUiViewModel,
+                tabsVm = tabsViewModel,
+                onNavigate = { url -> navigate(url); hideMenuOverlay() },
+                onMenuAction = { action ->
+                    when (action) {
+                        "history" -> showHistory()
+                        "downloads" -> showDownloads()
+                        "favorites" -> showFavorites()
+                        "settings" -> showSettings()
+                        "voice" -> initiateVoiceSearch()
+                        "close" -> closeWindow()
+                        "incognito" -> toggleIncognitoMode()
+                    }
+                },
+                onTabSelected = { tab ->
+                    tabsViewModel.changeTab(
+                        tab,
+                        { t -> createWebView(t) },
+                        vb.flWebViewContainer,
+                        vb.flFullscreenContainer,
+                        WebEngineCallback(tab)
+                    )
+                    hideMenuOverlay()
+                },
+                onCloseTab = { tab -> closeTab(tab) },
+                onAddTab = {
+                    openInNewTab(settings.homePage, tabsViewModel.tabsStates.value.size)
+                },
+                onBack = { navigateBack() },
+                onForward = { tabsViewModel.currentTab.value?.webEngine?.goForward() },
+                onRefresh = { refresh() },
+                onHome = { navigate(settings.homePage) },
+                onZoomIn = { tabsViewModel.currentTab.value?.webEngine?.zoomIn() },
+                onZoomOut = { tabsViewModel.currentTab.value?.webEngine?.zoomOut() },
+                onToggleAdBlock = { toggleAdBlockForTab() },
+                onTogglePopupBlock = { lifecycleScope.launch { showPopupBlockOptions() } }
+            )
         }
-        vb.ibHome.setOnClickListener { navigate(settings.homePage) }
-        vb.ibBack.setOnClickListener { navigateBack() }
-        vb.ibForward.setOnClickListener {
-            val tab = tabsViewModel.currentTab.value ?: return@setOnClickListener
-            if (tab.webEngine.canGoForward()) {
-                tab.webEngine.goForward()
-            }
-        }
-        vb.ibRefresh.setOnClickListener { refresh() }
-        vb.ibCloseTab.setOnClickListener { tabsViewModel.currentTab.value?.apply { closeTab(this) } }
-
-        vb.vActionBar.callback = this
-
-        vb.llBottomPanel.childs.forEach {
-            it.setOnTouchListener(bottomButtonsOnTouchListener)
-            it.onFocusChangeListener = bottomButtonsFocusListener
-            it.setOnKeyListener(bottomButtonsKeyListener)
-        }
-
-        // --- Observe ViewModel Flows ---
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                launch {
-                    tabsViewModel.tabsStates.collect { tabs ->
-                        vb.vTabs.setTabs(tabs) // Push data to view
-                        if (tabs.isEmpty() && !settings.isWebEngineGecko) {
-                            vb.flWebViewContainer.removeAllViews()
-                        }
-                    }
-                }
-
-                // 2. Update TabsView selection
-                launch {
-                    tabsViewModel.currentTab.collect { tab ->
-                        val tabs = tabsViewModel.tabsStates.value
-                        vb.vTabs.setCurrentTab(tab, tabs) // Push selection
-
-                        vb.vActionBar.setAddressBoxText(tab?.url ?: "")
-                        tab?.let { onWebViewUpdated(it) }
-                    }
-                }
-
-
-                // User Agent
+                // Settings Observers
                 launch {
                     settingsManager.userAgentFlow.collectLatest { userAgent ->
                         for (tab in tabsViewModel.tabsStates.value) {
@@ -218,15 +193,12 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                     }
                 }
 
-                // Theme
                 launch {
                     settingsManager.themeFlow.collectLatest { theme ->
-                        // AppTheme logic is handled in TVBro.kt, but we notify WebEngineFactory here
                         WebEngineFactory.onThemeSettingUpdated(theme)
                     }
                 }
 
-                // Keep Screen On
                 launch {
                     settingsManager.keepScreenOnFlow.collectLatest { keepOn ->
                         if (keepOn) {
@@ -237,10 +209,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                     }
                 }
 
-                // Home Page Links (Trigger reload if on home page)
+                // Logic Observers
                 launch {
                     mainViewModel.homePageLinks.collect {
-                        Log.i(TAG, "homePageLinks updated")
                         val currentUrl = tabsViewModel.currentTab.value?.url ?: return@collect
                         if (HOME_PAGE_URL == currentUrl) {
                             tabsViewModel.currentTab.value?.webEngine?.reload()
@@ -248,27 +219,35 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                     }
                 }
 
-                // Current Tab Updates
                 launch {
                     tabsViewModel.currentTab.collect { tab ->
-                        vb.vActionBar.setAddressBoxText(tab?.url ?: "")
                         tab?.let { onWebViewUpdated(it) }
+                    }
+                }
+
+                // Keep UI State Synced
+                launch {
+                    tabsViewModel.tabsStates.collect { tabs ->
+                        if (tabs.isEmpty() && !settings.isWebEngineGecko) {
+                            vb.flWebViewContainer.removeAllViews()
+                        }
+                    }
+                }
+
+                // Sync Menu Visibility back to Views
+                launch {
+                    browserUiViewModel.uiState.collect { state ->
+                        if (state.isMenuVisible) {
+                            showMenuOverlay(false)
+                        } else {
+                            hideMenuOverlay(false)
+                        }
                     }
                 }
             }
         }
 
         loadState()
-    }
-
-    private var progressBarHideRunnable: Runnable = Runnable {
-        val anim = AnimationUtils.loadAnimation(this@MainActivity, android.R.anim.fade_out)
-        anim.setAnimationListener(object : BaseAnimationListener() {
-            override fun onAnimationEnd(animation: Animation) {
-                vb.progressBar.visibility = View.GONE
-            }
-        })
-        vb.progressBar.startAnimation(anim)
     }
 
     private val mConnectivityChangeReceiver = object : BroadcastReceiver() {
@@ -283,50 +262,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
     }
 
-    private val displayThumbnailRunnable = object : Runnable {
-        var tabState: WebTabState? = null
-        override fun run() {
-            tabState?.let {
-                lifecycleScope.launch(Dispatchers.Main) {
-                    displayThumbnail(it)
-                }
-            }
-        }
-    }
-
-    private val tabsListener = object : Listener {
-        override fun onTitleChanged(index: Int) {
-            Log.d(TAG, "onTitleChanged: $index")
-            val tabs = tabsViewModel.tabsStates.value
-            val tab = if (index in tabs.indices) tabs[index] else null
-
-            vb.vActionBar.setAddressBoxText(tab?.url ?: "")
-            uiHandler.removeCallbacks(displayThumbnailRunnable)
-            displayThumbnailRunnable.tabState = tab
-            uiHandler.postDelayed(displayThumbnailRunnable, 200)
-        }
-
-        override fun onTitleSelected(index: Int) {
-            syncTabWithTitles()
-            hideMenuOverlay()
-        }
-
-        override fun onAddNewTabSelected() {
-            openInNewTab(settings.homePage, tabsViewModel.tabsStates.value.size)
-        }
-
-        override fun closeTab(tabState: WebTabState?) = this@MainActivity.closeTab(tabState)
-
-        override fun openInNewTab(url: String, tabIndex: Int) {
-            this@MainActivity.openInNewTab(
-                url, tabIndex,
-                needToHideMenuOverlay = false,
-                navigateImmediately = true
-            )
-        }
-    }
-
-    override fun closeWindow() {
+    fun closeWindow() {
         Log.d(TAG, "closeWindow")
         lifecycleScope.launch {
             if (settings.incognitoMode) {
@@ -336,76 +272,32 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
     }
 
-    override fun showSettings() {
-        val intent = Intent(this, ComposeMenuActivity::class.java)
-        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_SETTINGS)
-        startActivity(intent)
-    }
-
-    override fun showDownloads() {
+    fun showDownloads() {
         val intent = Intent(this, ComposeMenuActivity::class.java)
         intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_DOWNLOADS)
         startActivity(intent)
     }
 
-    override fun showHistory() {
+    fun showHistory() {
         val intent = Intent(this, ComposeMenuActivity::class.java)
         intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_HISTORY)
         @Suppress("DEPRECATION")
         startActivityForResult(intent, REQUEST_CODE_MENU_ACTIVITY)
-        hideMenuOverlay()
+        browserUiViewModel.setMenuVisibility(false)
     }
 
-    override fun showFavorites() {
+    fun showFavorites() {
         val intent = Intent(this, ComposeMenuActivity::class.java)
         intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_FAVORITES)
         @Suppress("DEPRECATION")
         startActivityForResult(intent, REQUEST_CODE_MENU_ACTIVITY)
-        hideMenuOverlay()
+        browserUiViewModel.setMenuVisibility(false)
     }
 
-    private val bottomButtonsOnTouchListener = View.OnTouchListener { v, e ->
-        when (e.action) {
-            MotionEvent.ACTION_DOWN -> return@OnTouchListener true
-            MotionEvent.ACTION_UP -> {
-                hideMenuOverlay(false)
-                v.performClick()
-                return@OnTouchListener true
-            }
-            else -> return@OnTouchListener false
-        }
-    }
-
-    private val bottomButtonsFocusListener = View.OnFocusChangeListener { _, hasFocus ->
-        if (hasFocus) {
-            hideMenuOverlay(false)
-        }
-    }
-
-    private val bottomButtonsKeyListener = View.OnKeyListener { _, _, keyEvent ->
-        when (keyEvent.keyCode) {
-            KEYCODE_DPAD_UP -> {
-                if (keyEvent.action == ACTION_UP) {
-                    hideBottomPanel()
-                    tabsViewModel.currentTab.value?.webEngine?.getView()?.requestFocus()
-                }
-                return@OnKeyListener true
-            }
-        }
-        false
-    }
-
-    private fun tabByTitleIndex(index: Int): WebTabState? {
-        val tabs = tabsViewModel.tabsStates.value
-        return if (index >= 0 && index < tabs.size) tabs[index] else null
-    }
-
-    override fun onExtendedAddressBarMode() {
-        vb.llBottomPanel.visibility = View.INVISIBLE
-    }
-
-    override fun onUrlInputDone() {
-        hideMenuOverlay()
+    fun showSettings() {
+        val intent = Intent(this, ComposeMenuActivity::class.java)
+        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_SETTINGS)
+        startActivity(intent)
     }
 
     private fun handleAppBackLogic() {
@@ -429,10 +321,10 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             currentTab.webEngine.goBack()
         } else if (goHomeIfNoHistory) {
             navigate(settings.homePage)
-        } else if (vb.rlActionBar.visibility != View.VISIBLE) {
-            showMenuOverlay()
+        } else if (!browserUiViewModel.uiState.value.isMenuVisible) {
+            browserUiViewModel.setMenuVisibility(true)
         } else {
-            hideMenuOverlay()
+            browserUiViewModel.setMenuVisibility(false)
         }
     }
 
@@ -509,7 +401,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
         val currentTab = tabsViewModel.currentTab.value
         if (currentTab == null || currentTab.url == settings.homePage) {
-            showMenuOverlay()
+            browserUiViewModel.setMenuVisibility(true)
         }
 
         if (autoUpdateViewModel.needAutoCheckUpdates &&
@@ -527,24 +419,21 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     private fun openInNewTab(
         url: String?,
         index: Int = 0,
+        navigateImmediately: Boolean = false,
         needToHideMenuOverlay: Boolean = true,
-        navigateImmediately: Boolean
     ): WebEngine? {
-        if (url == null) {
-            return null
-        }
+        if (url == null) return null
         val tab = WebTabState(url = url, incognito = settings.incognitoMode)
         createWebView(tab) ?: return null
 
-        // Use ViewModel to add tab
         tabsViewModel.addNewTab(tab, index)
         changeTab(tab)
 
         if (navigateImmediately) {
             navigate(url)
         }
-        if (needToHideMenuOverlay && vb.rlActionBar.isVisible) {
-            hideMenuOverlay(true)
+        if (needToHideMenuOverlay) {
+            browserUiViewModel.setMenuVisibility(false)
         }
         return tab.webEngine
     }
@@ -553,11 +442,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         if (tab == null) return
         val tabs = tabsViewModel.tabsStates.value
         val position = tabs.indexOf(tab)
-        if (tabsViewModel.currentTab.value == tab) {
-            // Logic handled in TabsViewModel logic or here before calling VM
-        }
 
-        // Determine next tab
         when {
             tabs.size == 1 -> openInNewTab(
                 settings.homePage, 0,
@@ -569,8 +454,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
 
         tabsViewModel.onCloseTab(tab)
-        hideMenuOverlay(true)
-        hideBottomPanel()
+        browserUiViewModel.setMenuVisibility(false)
     }
 
     private fun changeTab(newTab: WebTabState) {
@@ -590,27 +474,21 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             webView = tab.webEngine.getOrCreateView(this)
         } catch (e: Throwable) {
             e.printStackTrace()
-
             if (!settings.isWebEngineGecko) {
-                // ... Error handling for missing WebView ...
                 val dialogBuilder = AlertDialog.Builder(this)
                     .setTitle(R.string.error)
                     .setCancelable(false)
                     .setMessage(R.string.err_webview_can_not_link)
                     .setNegativeButton(R.string.exit) { _, _ -> finish() }
-
-                // ... intent to install webview ...
                 dialogBuilder.show()
             }
             return null
         }
 
-        // Apply user agent if set
         val ua = settings.effectiveUserAgent
         if (ua != null) {
             tab.webEngine.userAgentString = ua
         }
-
         return webView
     }
 
@@ -618,19 +496,16 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         vb.flWebViewContainer.cursorDrawerDelegate.textSelectionCallback = tab.webEngine
         vb.flFullscreenContainer.cursorDrawerDelegate.textSelectionCallback = tab.webEngine
 
-        vb.ibBack.isEnabled = tab.webEngine.canGoBack() == true
-        vb.ibForward.isEnabled = tab.webEngine.canGoForward() == true
-
-        val adblockEnabled = tab.adblock ?: settings.adBlockEnabled
-        vb.ibAdBlock.setImageResource(
-            if (adblockEnabled) R.drawable.ic_adblock_on else R.drawable.ic_adblock_off
+        browserUiViewModel.updateUrl(tab.url)
+        browserUiViewModel.updateNavState(
+            tab.webEngine.canGoBack(),
+            tab.webEngine.canGoForward()
         )
-        vb.tvBlockedAdCounter.visibility =
-            if (adblockEnabled && tab.blockedAds != 0) View.VISIBLE else View.GONE
-        vb.tvBlockedAdCounter.text = tab.blockedAds.toString()
-
-        vb.tvBlockedPopupCounter.visibility = if (tab.blockedPopups != 0) View.VISIBLE else View.GONE
-        vb.tvBlockedPopupCounter.text = tab.blockedPopups.toString()
+        browserUiViewModel.updateAdBlockStats(
+            tab.adblock ?: settings.adBlockEnabled,
+            tab.blockedAds,
+            tab.blockedPopups
+        )
     }
 
     private fun onDownloadRequested(
@@ -719,15 +594,10 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             REQUEST_CODE_UNKNOWN_APP_SOURCES -> {
                 autoUpdateViewModel.showUpdateDialogIfNeeded(this)
             }
-            REQUEST_CODE_FAVORITES_ACTIVITY -> if (resultCode == RESULT_OK) {
-                val url = data?.getStringExtra(ComposeFavoritesActivity.KEY_URL)
-                if (!url.isNullOrBlank()) navigate(url)
-                hideMenuOverlay()
-            }
             REQUEST_CODE_MENU_ACTIVITY -> if (resultCode == RESULT_OK) {
                 val url = data?.getStringExtra(ComposeMenuActivity.KEY_PICKED_URL)
                 if (!url.isNullOrBlank()) navigate(url)
-                hideMenuOverlay()
+                browserUiViewModel.setMenuVisibility(false)
             }
             else -> @Suppress("DEPRECATION") super.onActivityResult(requestCode, resultCode, data)
         }
@@ -802,9 +672,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     }
 
     fun navigate(url: String) {
-        vb.vActionBar.setAddressBoxTextColor(
-            ContextCompat.getColor(this@MainActivity, R.color.default_url_color)
-        )
         val tab = tabsViewModel.currentTab.value
         if (tab != null) {
             tab.url = url
@@ -814,7 +681,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
     }
 
-    override fun search(aText: String) {
+    fun search(aText: String) {
         var text = aText
         val trimmedLowercased = text.trim { it <= ' ' }.lowercase(Locale.ROOT)
         if (Patterns.WEB_URL.matcher(text).matches() ||
@@ -840,7 +707,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
     }
 
-    override fun toggleIncognitoMode() {
+    fun toggleIncognitoMode() {
         toggleIncognitoMode(true)
     }
 
@@ -861,7 +728,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             }
 
             tabsViewModel.onCloseAllTabs().join()
-            // tabsViewModel.currentTab.value = null // Handled in VM logic usually, but ok here
 
             if (!settings.isWebEngineGecko) {
                 mainViewModel.clearIncognitoData().join()
@@ -892,11 +758,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
     }
 
     fun toggleMenu() {
-        if (vb.rlActionBar.isInvisible) {
-            showMenuOverlay()
-        } else {
-            hideMenuOverlay()
-        }
+        browserUiViewModel.toggleMenu()
     }
 
     @SuppressLint("RestrictedApi")
@@ -907,10 +769,11 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         return super.dispatchKeyEvent(event)
     }
 
-    private fun showMenuOverlay() {
-        vb.ivMiniatures.visibility = View.VISIBLE
-        vb.llBottomPanel.visibility = View.VISIBLE
+    private fun showMenuOverlay(updateVm: Boolean = true) {
+        if (updateVm) browserUiViewModel.setMenuVisibility(true)
+
         vb.flWebViewContainer.visibility = View.INVISIBLE
+
         val currentTab = tabsViewModel.currentTab.value
         if (currentTab != null) {
             lifecycleScope.launch {
@@ -918,93 +781,29 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                 displayThumbnail(currentTab)
             }
         }
-
-        // ... Animations (Logic same as original) ...
-        vb.llBottomPanel.translationY = vb.llBottomPanel.height.toFloat()
-        vb.llBottomPanel.alpha = 0f
-        vb.llBottomPanel.animate().setDuration(300).setInterpolator(DecelerateInterpolator()).translationY(0f).alpha(1f).withEndAction { vb.vActionBar.catchFocus() }.start()
-        vb.vActionBar.dismissExtendedAddressBarMode()
-        vb.rlActionBar.visibility = View.VISIBLE
-        vb.rlActionBar.translationY = -vb.rlActionBar.height.toFloat()
-        vb.rlActionBar.alpha = 0f
-        vb.rlActionBar.animate().translationY(0f).alpha(1f).setDuration(300).setInterpolator(DecelerateInterpolator()).start()
-        vb.ivMiniatures.layoutParams = vb.ivMiniatures.layoutParams.apply { this.height = vb.flWebViewContainer.height }
-        vb.ivMiniatures.translationY = 0f
-        vb.ivMiniatures.animate().translationY(vb.rlActionBar.height.toFloat()).setDuration(300).setInterpolator(DecelerateInterpolator()).start()
     }
 
     private suspend fun displayThumbnail(currentTab: WebTabState?) {
         if (currentTab != null) {
-            if (tabByTitleIndex(vb.vTabs.current) != currentTab) return
-            vb.llMiniaturePlaceholder.visibility = View.INVISIBLE
-            vb.ivMiniatures.visibility = View.VISIBLE
-            if (currentTab.thumbnail != null) {
-                vb.ivMiniatures.setImageBitmap(currentTab.thumbnail)
-            } else if (currentTab.thumbnailHash != null) {
+            if (tabByTitleIndex(tabsViewModel.tabsStates.value.indexOf(currentTab)) != currentTab) return
+
+            if (currentTab.thumbnailHash != null) {
                 withContext(Dispatchers.IO) {
                     val thumbnail = currentTab.loadThumbnail()
                     withContext(Dispatchers.Main) {
                         if (thumbnail != null) {
-                            vb.ivMiniatures.setImageBitmap(currentTab.thumbnail)
-                        } else {
-                            vb.ivMiniatures.setImageResource(0)
+                            currentTab.thumbnail = thumbnail
                         }
                     }
                 }
-            } else {
-                vb.ivMiniatures.setImageResource(0)
             }
-        } else {
-            vb.llMiniaturePlaceholder.visibility = View.VISIBLE
-            vb.ivMiniatures.setImageResource(0)
-            vb.ivMiniatures.visibility = View.INVISIBLE
         }
     }
 
-    private fun hideMenuOverlay(hideBottomButtons: Boolean = true) {
-        if (vb.rlActionBar.isInvisible) return
-        if (hideBottomButtons) hideBottomPanel()
-
-        vb.rlActionBar.animate().translationY(-vb.rlActionBar.height.toFloat()).alpha(0f).setDuration(300).setInterpolator(DecelerateInterpolator()).withEndAction { vb.rlActionBar.visibility = View.INVISIBLE }.start()
-
-        if (vb.llMiniaturePlaceholder.isVisible) {
-            vb.llMiniaturePlaceholder.visibility = View.INVISIBLE
-            vb.ivMiniatures.visibility = View.VISIBLE
-        }
-
-        vb.ivMiniatures.translationY = vb.rlActionBar.height.toFloat()
-        vb.ivMiniatures.animate().translationY(0f).setDuration(300).setInterpolator(DecelerateInterpolator()).withEndAction {
-            vb.ivMiniatures.visibility = View.INVISIBLE
-            vb.rlActionBar.visibility = View.INVISIBLE
-            vb.ivMiniatures.setImageResource(0)
-            syncTabWithTitles()
-            vb.flWebViewContainer.visibility = View.VISIBLE
-            if (hideBottomButtons) {
-                tabsViewModel.currentTab.value?.webEngine?.getView()?.requestFocus()
-            }
-        }.start()
-    }
-
-    private fun syncTabWithTitles() {
-        val tab = tabByTitleIndex(vb.vTabs.current)
-        if (tab == null) {
-            openInNewTab(
-                settings.homePage,
-                if (vb.vTabs.current < 0) 0 else tabsViewModel.tabsStates.value.size,
-                needToHideMenuOverlay = true,
-                navigateImmediately = true
-            )
-        } else if (!tab.selected) {
-            changeTab(tab)
-        }
-    }
-
-    private fun hideBottomPanel() {
-        if (vb.llBottomPanel.visibility != View.VISIBLE) return
-        vb.llBottomPanel.animate().setDuration(300).setInterpolator(AccelerateInterpolator()).translationY(vb.llBottomPanel.height.toFloat()).withEndAction {
-            vb.llBottomPanel.translationY = 0f
-            vb.llBottomPanel.visibility = View.INVISIBLE
-        }.start()
+    private fun hideMenuOverlay(updateVm: Boolean = true) {
+        if (updateVm) browserUiViewModel.setMenuVisibility(false)
+        vb.flWebViewContainer.visibility = View.VISIBLE
+        tabsViewModel.currentTab.value?.webEngine?.getView()?.requestFocus()
     }
 
     private fun onDownloadStarted(fileName: String) {
@@ -1015,11 +814,11 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                     .toString() + File.separator + fileName
             )
         )
-        showMenuOverlay()
+        browserUiViewModel.setMenuVisibility(false)
     }
 
-    override fun initiateVoiceSearch() {
-        hideMenuOverlay()
+    fun initiateVoiceSearch() {
+        browserUiViewModel.setMenuVisibility(false)
         voiceSearchHelper.initiateVoiceSearch(object : VoiceSearchHelper.Callback {
             override fun onResult(text: String?) {
                 if (text == null) {
@@ -1027,7 +826,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                     return
                 }
                 search(text)
-                hideMenuOverlay()
+                browserUiViewModel.setMenuVisibility(false)
             }
         })
     }
@@ -1040,6 +839,12 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }, favoriteItem).show()
     }
 
+    // Helper to find tab by index
+    private fun tabByTitleIndex(index: Int): WebTabState? {
+        val tabs = tabsViewModel.tabsStates.value
+        return if (index >= 0 && index < tabs.size) tabs[index] else null
+    }
+
     private inner class WebEngineCallback(val tab: WebTabState) : WebEngineWindowProviderCallback {
         override fun getActivity(): Activity = this@MainActivity
 
@@ -1050,14 +855,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
 
         override fun onDownloadRequested(url: String) {
-            Log.i(TAG, "onDownloadRequested url: $url")
             val fileName = url.toUri().lastPathSegment
-            val mimeType = MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url))
-            this@MainActivity.onDownloadRequested(
-                url, tab.url,
-                fileName ?: "download", tab.webEngine.userAgentString, mimeType
-            )
+            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url))
+            this@MainActivity.onDownloadRequested(url, tab.url, fileName ?: "download", tab.webEngine.userAgentString, mimeType)
         }
 
         override fun onDownloadRequested(
@@ -1065,14 +865,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             mimeType: String?, operationAfterDownload: Download.OperationAfterDownload,
             base64BlobData: String?, stream: InputStream?, size: Long, contentDisposition: String?
         ) {
-            val fileName = (if (contentDisposition != null)
-                URLUtilCompat.getFilenameFromContentDisposition(contentDisposition) else null)
+            val fileName = (if (contentDisposition != null) URLUtilCompat.getFilenameFromContentDisposition(contentDisposition) else null)
                 ?: URLUtilCompat.guessFileName(url, null, mimeType)
-
-            this@MainActivity.onDownloadRequested(
-                url, referer, fileName,
-                userAgent, mimeType, operationAfterDownload, base64BlobData, stream, size
-            )
+            this@MainActivity.onDownloadRequested(url, referer, fileName, userAgent, mimeType, operationAfterDownload, base64BlobData, stream, size)
         }
 
         override fun onDownloadRequested(url: String, userAgent: String?, contentDisposition: String, mimetype: String?, contentLength: Long) {
@@ -1084,26 +879,11 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
 
         override fun onProgressChanged(newProgress: Int) {
-            vb.progressBar.visibility = View.VISIBLE
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                vb.progressBar.setProgress(newProgress, true)
-            } else {
-                vb.progressBar.progress = newProgress
-            }
-            uiHandler.removeCallbacks(progressBarHideRunnable)
-            if (newProgress == 100) {
-                uiHandler.postDelayed(progressBarHideRunnable, 1000)
-            } else {
-                uiHandler.postDelayed(progressBarHideRunnable, 5000)
-            }
+            browserUiViewModel.updateProgress(newProgress)
         }
 
         override fun onReceivedTitle(title: String) {
             tab.title = title
-            val index = tabsViewModel.tabsStates.value.indexOf(tab)
-            if (index != -1) {
-                vb.vTabs.onTabTitleUpdated(tab, index)
-            }
             mainViewModel.onTabTitleUpdated(tab)
         }
 
@@ -1118,63 +898,40 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                 @Suppress("DEPRECATION")
                 startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
             } catch (e: ActivityNotFoundException) {
-                try {
-                    intent.type = "*/*"
-                    @Suppress("DEPRECATION")
-                    startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
-                } catch (e: ActivityNotFoundException) {
-                    Utils.showToast(applicationContext, getString(R.string.err_cant_open_file_chooser))
-                    return false
-                }
+                return false
             }
             return true
         }
 
-        override fun onReceivedIcon(icon: Bitmap) {
-            val index = tabsViewModel.tabsStates.value.indexOf(tab)
-            if (index != -1) {
-                vb.vTabs.onFavIconUpdated(tab, index)
-            }
-        }
+        override fun onReceivedIcon(icon: Bitmap) { /* Handled by Flows */ }
 
         override fun shouldOverrideUrlLoading(url: String): Boolean {
             tab.lastLoadingUrl = url
             val uri = try { url.toUri() } catch (e: Exception) { return true }
             if (uri.scheme == null) return true
-
             if (URLUtil.isNetworkUrl(url) || uri.scheme.equals("javascript", true) ||
                 uri.scheme.equals("data", true) || uri.scheme.equals("about", true) ||
                 uri.scheme.equals("blob", true)
             ) return false
-
             if (uri.scheme.equals("intent", true)) {
                 onOpenInExternalAppRequested(url)
                 return true
             }
-
             return try {
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                if (intent.resolveActivity(TVBro.instance.packageManager) != null) {
+                if (intent.resolveActivity(packageManager) != null) {
                     runOnUiThread { askUserAndOpenInExternalApp(url, intent) }
                     true
-                } else {
-                    runOnUiThread { Utils.showToast(applicationContext, getString(R.string.err_no_app_to_handle_url)) }
-                    false
-                }
-            } catch (e: Exception) {
-                true
-            }
+                } else false
+            } catch (e: Exception) { true }
         }
 
         override fun onPageStarted(url: String?) {
             onWebViewUpdated(tab)
-            val webViewUrl = tab.webEngine.url
-            if (webViewUrl != null) tab.url = webViewUrl
+            if (tab.webEngine.url != null) tab.url = tab.webEngine.url!!
             else if (url != null) tab.url = url
-            if (tabByTitleIndex(vb.vTabs.current) == tab) {
-                vb.vActionBar.setAddressBoxText(tab.url)
-            }
+            browserUiViewModel.updateUrl(tab.url)
             tab.blockedAds = 0
             tab.blockedPopups = 0
         }
@@ -1182,17 +939,14 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         override fun onPageFinished(url: String?) {
             if (tabsViewModel.currentTab.value == null) return
             onWebViewUpdated(tab)
-            val webViewUrl = tab.webEngine.url
-            if (webViewUrl != null) tab.url = webViewUrl
+            if (tab.webEngine.url != null) tab.url = tab.webEngine.url!!
             else if (url != null) tab.url = url
-            if (tabByTitleIndex(vb.vTabs.current) == tab) {
-                vb.vActionBar.setAddressBoxText(tab.url)
-            }
+            browserUiViewModel.updateUrl(tab.url)
             lifecycleScope.launch {
                 val newThumbnail = tab.webEngine.renderThumbnail(tab.thumbnail)
                 if (newThumbnail != null) {
                     tab.updateThumbnail(this@MainActivity, newThumbnail)
-                    if (vb.rlActionBar.isVisible && tab == tabsViewModel.currentTab.value) {
+                    if (browserUiViewModel.uiState.value.isMenuVisible && tab == tabsViewModel.currentTab.value) {
                         displayThumbnail(tab)
                     }
                 }
@@ -1200,30 +954,22 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
 
         override fun onPageCertificateError(url: String?) {
-            vb.vActionBar.setAddressBoxTextColor(Color.RED)
+            // Can update UI state to show error color in address bar
         }
 
-        override fun isAd(url: Uri, acceptHeader: String?, baseUri: Uri): Boolean? {
-            return adBlockRepository.isAd(url, acceptHeader, baseUri)
-        }
+        override fun isAd(url: Uri, acceptHeader: String?, baseUri: Uri): Boolean? = adBlockRepository.isAd(url, acceptHeader, baseUri)
 
         override fun isAdBlockingEnabled(): Boolean {
             tabsViewModel.currentTab.value?.adblock?.apply { return this }
             return settings.adBlockEnabled
         }
 
-        override fun isDialogsBlockingEnabled(): Boolean {
-            if (tab.url == HOME_PAGE_URL) return false
-            return shouldBlockNewWindow(dialog = true, userGesture = false)
-        }
+        override fun isDialogsBlockingEnabled(): Boolean = if (tab.url == HOME_PAGE_URL) false else shouldBlockNewWindow(dialog = true, userGesture = false)
 
         override fun shouldBlockNewWindow(dialog: Boolean, userGesture: Boolean): Boolean {
-            val hostConfig = runBlocking(Dispatchers.Main.immediate) {
-                tabsViewModel.findHostConfig(tab, false)
-            }
-            val currentBlockPopupsLevelValue =
-                hostConfig?.popupBlockLevel ?: HostConfig.DEFAULT_BLOCK_POPUPS_VALUE
-            return when (currentBlockPopupsLevelValue) {
+            val hostConfig = runBlocking(Dispatchers.Main.immediate) { tabsViewModel.findHostConfig(tab, false) }
+            val level = hostConfig?.popupBlockLevel ?: HostConfig.DEFAULT_BLOCK_POPUPS_VALUE
+            return when (level) {
                 HostConfig.POPUP_BLOCK_NONE -> false
                 HostConfig.POPUP_BLOCK_DIALOGS -> dialog
                 HostConfig.POPUP_BLOCK_NEW_AUTO_OPENED_TABS -> dialog || !userGesture
@@ -1234,15 +980,13 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         override fun onBlockedAd(uri: String) {
             if (!settings.adBlockEnabled) return
             tab.blockedAds++
-            vb.tvBlockedAdCounter.visibility = if (tab.blockedAds > 0) View.VISIBLE else View.GONE
-            vb.tvBlockedAdCounter.text = tab.blockedAds.toString()
+            browserUiViewModel.updateAdBlockStats(true, tab.blockedAds, tab.blockedPopups)
         }
 
         override fun onBlockedDialog(newTab: Boolean) {
             tab.blockedPopups++
             runOnUiThread {
-                vb.tvBlockedPopupCounter.visibility = if (tab.blockedPopups > 0) View.VISIBLE else View.GONE
-                vb.tvBlockedPopupCounter.text = tab.blockedPopups.toString()
+                browserUiViewModel.updateAdBlockStats(true, tab.blockedAds, tab.blockedPopups)
                 val msg = getString(if (newTab) R.string.new_tab_blocked else R.string.popup_dialog_blocked)
                 NotificationView.showBottomRight(vb.rlRoot, R.drawable.ic_block_popups, msg)
             }
@@ -1257,8 +1001,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             val webView = createWebView(newTab) ?: return null
             val currentTab = this@MainActivity.tabsViewModel.currentTab.value ?: return null
             val index = tabsViewModel.tabsStates.value.indexOf(currentTab) + 1
-            tabsViewModel.tabsStates.value.toMutableList().add(index, newTab) // VM update needed here, but adapter observes flow
-            // Use VM method to ensure StateFlow updates
             tabsViewModel.addNewTab(newTab, index)
             changeTab(newTab)
             return webView
@@ -1279,37 +1021,32 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
         override fun onCopyTextToClipboardRequested(url: String) {
             val clipBoard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clipData = ClipData.newPlainText("URL", url)
-            clipBoard.setPrimaryClip(clipData)
+            clipBoard.setPrimaryClip(ClipData.newPlainText("URL", url))
             Toast.makeText(this@MainActivity, getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
         }
 
         override fun onShareUrlRequested(url: String) {
-            val share = Intent(Intent.ACTION_SEND)
-            share.type = "text/plain"
-            share.putExtra(Intent.EXTRA_SUBJECT, R.string.share_url)
-            share.putExtra(Intent.EXTRA_TEXT, url)
+            val share = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, R.string.share_url)
+                putExtra(Intent.EXTRA_TEXT, url)
+            }
             try {
                 startActivity(share)
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@MainActivity, R.string.external_app_open_error, Toast.LENGTH_SHORT).show()
             }
         }
 
         override fun onOpenInExternalAppRequested(url: String) {
             val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
             intent.addCategory(Intent.CATEGORY_BROWSABLE)
-            val activityComponent = intent.resolveActivity(this@MainActivity.packageManager)
-            if (activityComponent != null && activityComponent.packageName == this@MainActivity.packageName) {
-                Toast.makeText(this@MainActivity, R.string.external_app_open_error, Toast.LENGTH_SHORT).show()
-                return
-            }
-            try {
-                startActivity(intent)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(this@MainActivity, R.string.external_app_open_error, Toast.LENGTH_SHORT).show()
+            if (intent.resolveActivity(packageManager)?.packageName != packageName) {
+                try {
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
 
@@ -1319,7 +1056,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             lifecycleScope.launch {
                 val bookmark = mainViewModel.homePageLinks.value.firstOrNull { it.order == index }
                 var favoriteItem: FavoriteItem? = bookmark?.favoriteId?.let {
-                    // Direct DAO access can be replaced by ViewModel method if desired
                     favoritesViewModel.getFavoriteById(it)
                 }
 
@@ -1369,9 +1105,8 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         }
 
         override fun onVisited(url: String) {
-            val currentTab = tabsViewModel.currentTab.value ?: return
             if (!settings.incognitoMode) {
-                mainViewModel.logVisitedHistory(currentTab.title, url, currentTab.faviconHash)
+                mainViewModel.logVisitedHistory(tabsViewModel.currentTab.value?.title, url, tabsViewModel.currentTab.value?.faviconHash)
             }
         }
 
@@ -1381,12 +1116,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             title: String?, altText: String?, textContent: String?,
             x: Int, y: Int
         ) {
-            vb.vCursorMenu.show(
-                tab, this, cursorDrawer,
-                baseUri, linkUri, srcUri,
-                title, altText, textContent,
-                x, y
-            )
+            vb.vCursorMenu.show(tab, this, cursorDrawer, baseUri, linkUri, srcUri, title, altText, textContent, x, y)
         }
 
         override fun suggestActionsForLink(
@@ -1394,16 +1124,12 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             title: String?, altText: String?, textContent: String?,
             x: Int, y: Int
         ) {
-            var s = linkUri ?: srcUri
-            if (s != null && s.startsWith("\"") && s.endsWith("\"")) {
-                s = s.substring(1, s.length - 1)
-            }
-            val url = s
+            val url = (linkUri ?: srcUri)?.removePrefix("\"")?.removeSuffix("\"")
             val isHTTPUrl = url != null && (url.startsWith("http://") || url.startsWith("https://"))
-            val anchor = View(this@MainActivity)
-            val lp = FrameLayout.LayoutParams(1, 1)
-            lp.setMargins(x, y, 0, 0)
-            vb.flWebViewContainer.addView(anchor, lp)
+            val anchor = View(this@MainActivity).apply {
+                layoutParams = FrameLayout.LayoutParams(1, 1).apply { setMargins(x, y, 0, 0) }
+            }
+            vb.flWebViewContainer.addView(anchor)
             linkActionsMenu = PopupMenu(this@MainActivity, anchor, Gravity.BOTTOM).also {
                 it.inflate(R.menu.menu_link)
                 it.menu.findItem(R.id.miOpenInNewTab).isVisible = isHTTPUrl
@@ -1430,9 +1156,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
             }
         }
 
-        override fun markBookmarkRecommendationAsUseful(bookmarkOrder: Int) {
-            mainViewModel.markBookmarkRecommendationAsUseful(bookmarkOrder)
-        }
+        override fun markBookmarkRecommendationAsUseful(bookmarkOrder: Int) = mainViewModel.markBookmarkRecommendationAsUseful(bookmarkOrder)
 
         override fun onSelectedTextActionRequested(selectedText: String, editable: Boolean) {
             val clipBoard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
@@ -1471,7 +1195,9 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                             val share = Intent(Intent.ACTION_SEND)
                             share.type = "text/plain"
                             share.putExtra(Intent.EXTRA_TEXT, selectedText)
-                            try { startActivity(share) } catch (e: Exception) {
+                            try {
+                                startActivity(share)
+                            } catch (e: Exception) {
                                 e.printStackTrace()
                                 Toast.makeText(this@MainActivity, R.string.external_app_open_error, Toast.LENGTH_SHORT).show()
                             }
@@ -1493,7 +1219,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
                     startActivity(intent)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(this@MainActivity, R.string.external_app_open_error, Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton(R.string.no, null)
@@ -1503,14 +1228,7 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
 
     private val downloadServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            val binder = service as? DownloadService.LocalBinder
-            if (binder == null) {
-                Log.e(TAG, "Download service connection failed")
-                uiHandler.postDelayed({
-                    bindService(Intent(this@MainActivity, DownloadService::class.java), this, BIND_AUTO_CREATE)
-                }, 1000)
-                return
-            }
+            val binder = service as? DownloadService.LocalBinder ?: return
             downloadService = binder.service
         }
 
