@@ -1,0 +1,168 @@
+name: Android App Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_releases:
+        description: 'Upload GitHub release'
+        required: true
+        default: true
+        type: boolean
+      mark_prerelease:
+        description: 'Mark as prerelease'
+        required: true
+        default: false
+        type: boolean
+  schedule:
+    - cron: '0 0 1 */2 *'
+
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  APP_NAME: 'Browkorf TV'
+  APP_SLUG: 'browkorftv'
+  
+  GRADLE_MODULE: 'app' 
+  
+  VERSION_CATALOG_PATH: 'gradle/libs.versions.toml'
+  
+  BUILD_FLAVOR: 'GenericGeckoIncluded'
+  
+  JAVA_VERSION: '17'
+  JAVA_DISTRIBUTION: 'temurin'
+  ANDROID_API: '36'
+  ANDROID_BUILD_TOOLS: '36.0.0'
+
+jobs:
+  prepare-version:
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: write
+    outputs:
+      version_name: ${{ steps.ver.outputs.version_name }}
+      version_code: ${{ steps.ver.outputs.version_code }}
+      commit_sha:   ${{ steps.commit.outputs.commit_sha }}
+      release_notes: ${{ steps.notes.outputs.release-notes }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - id: ver
+        name: Bump versionCode/versionName in Version Catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Regex to find versions in TOML. Assumes format: version = "X.Y.Z" and code = "123"
+          # Adjust grep patterns if your TOML uses different naming (e.g. versionCode = "...")
+          
+          OLD_CODE=$(grep -m1 "versionCode" $VERSION_CATALOG_PATH | grep -oE '[0-9]+')
+          OLD_NAME=$(grep -m1 "versionName" $VERSION_CATALOG_PATH | grep -oE '"([^"]+)"' | tr -d '"')
+          
+          echo "Current Version: $OLD_NAME ($OLD_CODE)"
+          
+          IFS='.' read -r MAJ MIN PAT <<<"${OLD_NAME:-0.1.0}"
+          NEW_CODE=$(( ${OLD_CODE:-1} + 1 ))
+          NEW_NAME="$MAJ.$MIN.$(( ${PAT:-0} + 1 ))"
+          
+          # Update the TOML file
+          sed -i "s/versionCode = \"$OLD_CODE\"/versionCode = \"$NEW_CODE\"/" $VERSION_CATALOG_PATH
+          sed -i "s/versionCode = $OLD_CODE/versionCode = \"$NEW_CODE\"/" $VERSION_CATALOG_PATH # Fallback if no quotes
+          sed -i "s/versionName = \"$OLD_NAME\"/versionName = \"$NEW_NAME\"/" $VERSION_CATALOG_PATH
+          
+          echo "New Version: $NEW_NAME ($NEW_CODE)"
+          
+          echo "version_name=$NEW_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$NEW_CODE" >> $GITHUB_OUTPUT
+
+      - id: notes
+        name: Generate release notes
+        uses: mikepenz/release-changelog-builder-action@v4 # try once
+        with:
+          # configuration: "configuration.json" 
+          toTag: ${{ github.sha }}
+        continue-on-error: true
+
+      - id: commit
+        name: Commit and push version bump
+        shell: bash
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name  "github-actions[bot]"
+          git add $VERSION_CATALOG_PATH
+          git commit -m "chore: bump App to ${{ steps.ver.outputs.version_name }} [skip ci]" || true
+          git push
+          echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+  build:
+    needs: prepare-version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with: 
+          ref: ${{ needs.prepare-version.outputs.commit_sha }}
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE }}" > release.keystore.asc
+          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch release.keystore.asc > release.keystore
+
+      - name: Build AAB
+        env:
+          KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS:      ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD:   ${{ secrets.KEY_PASSWORD }}
+          run: ./gradlew :${{ env.GRADLE_MODULE }}:bundle${{ env.BUILD_FLAVOR }}Release -PenableApkSplits=false
+
+      - name: Prepare AAB artifact
+        run: |
+          mkdir -p artifacts
+          find ${{ env.GRADLE_MODULE }}/build/outputs/bundle/ -name "*release.aab" -exec cp {} "artifacts/${{ env.APP_SLUG }}-${{ needs.prepare-version.outputs.version_name }}.aab" \;
+      
+      - name: Clean before APK build
+        run: ./gradlew clean
+
+      - name: Build APKs
+        env:
+          KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS:      ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD:   ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew :${{ env.GRADLE_MODULE }}:assemble${{ env.BUILD_FLAVOR }}Release --no-daemon -PenableApkSplits=true -PincludeUniversalApk=true
+
+      - name: Prepare APKs
+        run: |
+          mkdir -p artifacts
+          # script outputs: tvbro-{flavour}-{version}({arch}).apk
+          find ${{ env.GRADLE_MODULE }}/build/outputs/apk/ -name "*.apk" -exec cp {} artifacts/ \;
+
+      - name: Upload artifacts (CI only)
+        if: inputs.upload_releases == false
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{ needs.prepare-version.outputs.version_name }}
+          path: artifacts/*
+
+      - name: Create GitHub Release
+        if: inputs.upload_releases == true
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          name: ${{ env.APP_NAME }} ${{ needs.prepare-version.outputs.version_name }}
+          tag_name: ${{ needs.prepare-version.outputs.version_name }}
+          target_commitish: ${{ needs.prepare-version.outputs.commit_sha }}
+          prerelease: ${{ inputs.mark_prerelease }}
+          body: ${{ needs.prepare-version.outputs.release_notes }}
