@@ -161,6 +161,8 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
     val contentBlockingDelegate = MyContentBlockingDelegate(this)
     val mediaSessionDelegate = MyMediaSessionDelegate()
     val selectionActionDelegate = MySelectionActionDelegate()
+
+    var appHomeContentScriptPortDelegate: AppHomeContentScriptPortDelegate? = null
     var appContentScriptPortDelegate: AppContentScriptPortDelegate? = null
     var appWebExtensionBackgroundPortDelegate: AppWebExtensionBackgroundPortDelegate? = null
     private var webExtObserver: (WebExtension?) -> Unit

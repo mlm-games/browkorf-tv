@@ -5,11 +5,13 @@ import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.mlm.browkorftv.AppContext
 import org.mlm.browkorftv.singleton.FaviconsPool
 import org.mlm.browkorftv.utils.Utils
 import org.mlm.browkorftv.webengine.gecko.GeckoWebEngine
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -17,6 +19,7 @@ import org.mozilla.geckoview.WebExtension
 import java.io.ByteArrayOutputStream
 
 class AppHomeContentScriptPortDelegate(val port: WebExtension.Port, val webEngine: GeckoWebEngine): WebExtension.PortDelegate {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onPortMessage(message: Any, port: WebExtension.Port) {
         //Log.d(TAG, "onPortMessage: $message")
         try {
@@ -28,31 +31,18 @@ class AppHomeContentScriptPortDelegate(val port: WebExtension.Port, val webEngin
                     }
                 }
                 "onHomePageLoaded" -> {
-                    val callback = webEngine.callback ?: return
-                    val cfg = AppContext.provideConfig()
-                    val jsArr = JSONArray()
-                    for (item in callback.getHomePageLinks()) {
-                        jsArr.put(item.toJsonObj())
-                    }
-                    var links = jsArr.toString()
-                    links = links.replace("'", "\\'")
+                    val s = AppContext.provideSettingsManager().current
                     if (Utils.isFireTV(AppContext.get())) {
                         webEngine.evaluateJavascript("hideVoiceSearchUI()")
                     }
-                    webEngine.evaluateJavascript("renderLinks('${cfg.homePageLinksMode.name}', $links)")
                     webEngine.evaluateJavascript(
-                        "applySearchEngine(\"${cfg.guessSearchEngineName()}\", \"${cfg.searchEngineURL.value}\")")
+                        "applySearchEngine(\"${s.guessSearchEngineName()}\", \"${s.searchEngineURL}\")")
                 }
                 "setSearchEngine" -> {
                     val data = msgJson.getJSONObject("data")
                     val engine = data.getString("engine")
                     val customSearchEngineURL = data.getString("customSearchEngineURL")
-                    AppContext.provideConfig().searchEngineURL.value = customSearchEngineURL
-                }
-                "onEditBookmark" -> {
-                    val index = msgJson.getInt("data")
-                    val callback = webEngine.callback ?: return
-                    callback.getActivity().runOnUiThread { callback.onEditHomePageBookmarkSelected(index) }
+                    GlobalScope.launch { AppContext.provideSettingsManager().setSearchEngine(-1, customSearchEngineURL) }
                 }
                 "requestFavicon" -> {
                     val url = msgJson.getString("data")
@@ -69,11 +59,6 @@ class AppHomeContentScriptPortDelegate(val port: WebExtension.Port, val webEngin
                             port.postMessage(msg)
                         }
                     }
-                }
-                "markBookmarkRecommendationAsUseful" -> {
-                    val bookmarkOrder = msgJson.getInt("data")
-                    val callback = webEngine.callback ?: return
-                    callback.markBookmarkRecommendationAsUseful(bookmarkOrder)
                 }
             }
         } catch (e: Exception) {

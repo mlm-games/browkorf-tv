@@ -89,7 +89,7 @@ class SettingsManager private constructor(context: Context) {
             }
             // Update home page if mode is SEARCH_ENGINE
             if (settings.homePageModeEnum == HomePageMode.SEARCH_ENGINE) {
-                val url = if (index < AppSettings.SearchEnginesURLs.size - 1) {
+                val url = if (0 <= index && index < AppSettings.SearchEnginesURLs.size - 1) {
                     AppSettings.SearchEnginesURLs[index]
                 } else {
                     customUrl ?: ""

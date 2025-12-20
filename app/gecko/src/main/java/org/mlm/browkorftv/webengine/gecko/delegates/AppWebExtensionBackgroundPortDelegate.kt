@@ -5,6 +5,7 @@ import android.util.Log
 import org.mlm.browkorftv.webengine.gecko.GeckoWebEngine
 import org.json.JSONObject
 import org.mozilla.geckoview.WebExtension
+import androidx.core.net.toUri
 
 class AppWebExtensionBackgroundPortDelegate(val port: WebExtension.Port, val webEngine: GeckoWebEngine): WebExtension.PortDelegate {
     override fun onPortMessage(message: Any, port: WebExtension.Port) {
@@ -13,7 +14,7 @@ class AppWebExtensionBackgroundPortDelegate(val port: WebExtension.Port, val web
             val msgJson = message as JSONObject
             when (msgJson.getString("action")) {
                 "onBeforeRequest" -> {
-                    Log.i(TAG, "onBeforeRequest: " + msgJson.toString())
+                    Log.i(TAG, "onBeforeRequest: $msgJson")
                     val data = msgJson.getJSONObject("details")
                     val requestId = data.getInt("requestId")
                     val url = data.getString("url")
@@ -23,7 +24,7 @@ class AppWebExtensionBackgroundPortDelegate(val port: WebExtension.Port, val web
                     val msg = JSONObject()
                     msg.put("action", "onResolveRequest")
                     val block = if (callback.isAdBlockingEnabled()) {
-                        callback.isAd(Uri.parse(url), type, Uri.parse(originUrl)) ?: false
+                        callback.isAd(url.toUri(), type, originUrl.toUri()) ?: false
                     } else {
                         false
                     }
