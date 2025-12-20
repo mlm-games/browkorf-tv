@@ -17,11 +17,6 @@ recyclerview = "1.4.0"
 lifecycle = "2.10.0"
 room = "2.8.4"
 
-gms = "4.4.4"
-crashlytics-plugin = "3.0.6"
-firebase-core = "21.1.1"
-firebase-crashlytics = "19.4.4"
-
 coroutines = "1.10.2"
 segmented-button = "v1.0.0"
 ad-block = "v0.0.1-ci"
@@ -82,10 +77,6 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
 
-# Firebase
-firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "firebase-core" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
-
 # Third Party
 segmented-button = { group = "com.github.truefedex", name = "segmented-button", version.ref = "segmented-button" }
 ad-block = { group = "com.github.truefedex", name = "ad-block", version.ref = "ad-block" }
@@ -104,7 +95,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
-gms = { id = "com.google.gms.google-services", version.ref = "gms" }
-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics-plugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

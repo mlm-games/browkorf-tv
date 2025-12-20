@@ -16,7 +16,6 @@ import com.phlox.tvwebbrowser.settings.AppSettings
 import com.phlox.tvwebbrowser.settings.HomePageLinksMode
 import com.phlox.tvwebbrowser.settings.HomePageMode
 import com.phlox.tvwebbrowser.settings.SettingsManager
-import com.phlox.tvwebbrowser.utils.LogUtils
 import com.phlox.tvwebbrowser.utils.UpdateChecker
 import com.phlox.tvwebbrowser.utils.deleteDirectory
 import kotlinx.coroutines.*
@@ -77,7 +76,6 @@ class MainViewModel(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            LogUtils.recordException(e)
         }
     }
 

@@ -8,9 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kotlin.serialization) apply false
-
-    alias(libs.plugins.gms) apply false
-    alias(libs.plugins.crashlytics) apply false
 }
 
 subprojects {

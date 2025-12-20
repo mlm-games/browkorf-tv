@@ -44,7 +44,6 @@ import androidx.core.net.toUri
 import com.phlox.tvwebbrowser.BuildConfig
 import com.phlox.tvwebbrowser.settings.AppSettings
 import com.phlox.tvwebbrowser.settings.HomePageMode
-import com.phlox.tvwebbrowser.utils.LogUtils
 import java.net.URLEncoder
 import java.util.*
 import androidx.core.net.toUri
@@ -557,12 +556,10 @@ class WebViewEx(
                 thumbnail = createBitmap(width, height)
             } catch (e: Throwable) {
                 e.printStackTrace()
-                LogUtils.recordException(e)
                 try {
                     thumbnail = createBitmap(width / 2, height / 2)
                 } catch (e: OutOfMemoryError) {
                     e.printStackTrace()
-                    LogUtils.recordException(e)
                 }
             }
         }

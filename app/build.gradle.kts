@@ -14,9 +14,6 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { properties.load(it) }
 }
 
-// To conditionally apply plugins
-var includeFirebase = true
-
 android {
     namespace = "com.phlox.tvwebbrowser"
     buildToolsVersion = "36.0.0"
@@ -93,7 +90,6 @@ android {
             dimension = "appstore"
             applicationIdSuffix = ".foss"
             buildConfigField("Boolean", "BUILT_IN_AUTO_UPDATE", "false")
-            includeFirebase = false
         }
 
         create("geckoIncluded") {
@@ -170,18 +166,6 @@ dependencies {
 
     implementation(libs.androidx.tv.material)
 
-    // Firebase (Conditional Logic handled below, but dependencies defined here)
-    "googleImplementation"(libs.firebase.core)
-    "googleImplementation"(libs.firebase.crashlytics)
-
-    "genericImplementation"(libs.firebase.core)
-    "genericImplementation"(libs.firebase.crashlytics)
-
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
-}
-
-if (includeFirebase) {
-    apply(plugin = "com.google.gms.google-services")
-    apply(plugin = "com.google.firebase.crashlytics")
 }
