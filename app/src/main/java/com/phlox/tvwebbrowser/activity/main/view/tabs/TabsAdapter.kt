@@ -1,5 +1,7 @@
 package com.phlox.tvwebbrowser.activity.main.view.tabs
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.databinding.ViewHorizontalWebtabItemBinding
 import com.phlox.tvwebbrowser.model.WebTabState
-import com.phlox.tvwebbrowser.settings.AppSettings
+import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_PAGE_URL
+import com.phlox.tvwebbrowser.settings.AppSettings.Companion.HOME_URL_ALIAS
 import com.phlox.tvwebbrowser.singleton.FaviconsPool
 import com.phlox.tvwebbrowser.widgets.CheckableContainer
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +23,7 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAda
     private val tabsCopy = ArrayList<WebTabState>()
     var current: Int = 0
     var listener: Listener? = null
+    val uiHandler = Handler(Looper.getMainLooper())
     var checkedView: CheckableContainer? = null
 
     interface Listener {
@@ -44,7 +48,6 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAda
         return tabsCopy.size
     }
 
-    // Accepts the list directly from the Activity/View
     fun submitList(newList: List<WebTabState>) {
         val tabsDiffUtilCallback = TabsDiffUtillCallback(tabsCopy, newList)
         val tabsDiffResult = DiffUtil.calculateDiff(tabsDiffUtilCallback)
@@ -53,8 +56,8 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAda
         tabsDiffResult.dispatchUpdatesTo(this)
     }
 
-    fun getTabAt(position: Int): WebTabState? {
-        return if (position in 0 until tabsCopy.size) tabsCopy[position] else null
+    fun getTabAt(index: Int): WebTabState? {
+        return if (index in tabsCopy.indices) tabsCopy[index] else null
     }
 
     inner class TabViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -64,10 +67,12 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAda
             vb.root.tag = tabState
             vb.tvTitle.text = tabState.title
 
-            if (current == tabState.position) {
-                checkedView?.isChecked = false
-                vb.root.isChecked = true
-                checkedView = vb.root
+            if (current == position) {
+                if (checkedView != vb.root) {
+                    checkedView?.isChecked = false
+                    vb.root.isChecked = true
+                    checkedView = vb.root
+                }
             } else {
                 vb.root.isChecked = false
             }
@@ -75,11 +80,10 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAda
             vb.ivFavicon.setImageResource(R.drawable.ic_launcher)
 
             val url = tabState.url
-            if (url != AppSettings.HOME_PAGE_URL && url != AppSettings.HOME_URL_ALIAS) {
+            if (url != HOME_PAGE_URL && url != HOME_URL_ALIAS) {
                 val scope = (itemView.context as? AppCompatActivity)?.lifecycleScope
                 scope?.launch(Dispatchers.Main) {
-                    val currentTag = vb.root.tag as? WebTabState
-                    if (currentTag != tabState) return@launch
+                    if (vb.root.tag != tabState) return@launch
 
                     val favicon = FaviconsPool.get(url)
                     if (favicon != null) {
@@ -92,8 +96,8 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAda
 
             vb.root.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    if (current != tabState.position) {
-                        current = tabState.position
+                    if (current != position) {
+                        current = position
                         listener?.onTitleChanged(position)
                         checkedView?.isChecked = false
                         vb.root.isChecked = true
@@ -103,7 +107,7 @@ class TabsAdapter(private val tabsView: TabsView) : RecyclerView.Adapter<TabsAda
             }
 
             vb.root.setOnClickListener {
-                listener?.onTitleSelected(tabState.position)
+                listener?.onTitleSelected(position)
             }
 
             vb.root.setOnLongClickListener {
