@@ -161,7 +161,6 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
     val contentBlockingDelegate = MyContentBlockingDelegate(this)
     val mediaSessionDelegate = MyMediaSessionDelegate()
     val selectionActionDelegate = MySelectionActionDelegate()
-    var appHomeContentScriptPortDelegate: AppHomeContentScriptPortDelegate? = null
     var appContentScriptPortDelegate: AppContentScriptPortDelegate? = null
     var appWebExtensionBackgroundPortDelegate: AppWebExtensionBackgroundPortDelegate? = null
     private var webExtObserver: (WebExtension?) -> Unit
@@ -232,9 +231,6 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
 
                 override fun onConnect(port: WebExtension.Port) {
                     Log.d(TAG, "onConnect: $port")
-                    appHomeContentScriptPortDelegate = AppHomeContentScriptPortDelegate(port, this@GeckoWebEngine).also {
-                        port.setDelegate(it)
-                    }
                 }
             }, "tvbro")
 
