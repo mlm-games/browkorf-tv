@@ -1,7 +1,8 @@
-package com.phlox.tvwebbrowser.compose.theme
+package com.phlox.tvwebbrowser.compose.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -110,7 +111,7 @@ fun TvBroTheme(
 ) {
     val colors = if (darkTheme) DarkTvBroColors else LightTvBroColors
 
-    androidx.compose.runtime.CompositionLocalProvider(
+    CompositionLocalProvider(
         LocalTvBroColors provides colors
     ) {
         MaterialTheme {

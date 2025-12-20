@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import com.phlox.tvwebbrowser.compose.aux.ui.BookmarkEditorScreen
-import com.phlox.tvwebbrowser.compose.theme.TvBroComposeTheme
+import com.phlox.tvwebbrowser.compose.ui.theme.TvBroComposeTheme
 
 class ComposeBookmarkEditorActivity : ComponentActivity() {
 

@@ -103,34 +103,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".compose.settings.ComposeSettingsActivity"
-            android:exported="false"
-            android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            android:screenOrientation="sensorLandscape"/>
-        <activity
             android:name=".compose.ComposeMenuActivity"
             android:exported="false"
             android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
             android:screenOrientation="sensorLandscape"/>
-        <activity
-            android:name=".compose.aux.ComposeBookmarkEditorActivity"
-            android:exported="false"
-            android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            android:screenOrientation="sensorLandscape" />
-
-        <activity
-            android:name=".activity.history.HistoryActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize"
-            tools:ignore="DiscouragedApi" />
-
-        <activity android:name=".activity.downloads.DownloadsActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize"
-            tools:ignore="DiscouragedApi"/>
-
         <activity android:name=".activity.IncognitoModeMainActivity"
             android:process=":incognito"
             android:exported="false"

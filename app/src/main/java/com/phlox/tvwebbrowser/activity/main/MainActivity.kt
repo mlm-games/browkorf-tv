@@ -39,16 +39,12 @@ import com.phlox.tvwebbrowser.R
 import com.phlox.tvwebbrowser.TVBro
 import com.phlox.tvwebbrowser.activity.IncognitoModeMainActivity
 import com.phlox.tvwebbrowser.activity.downloads.DownloadsManager
-import com.phlox.tvwebbrowser.activity.history.HistoryActivity
 import com.phlox.tvwebbrowser.activity.main.dialogs.favorites.FavoriteEditorDialog
 import com.phlox.tvwebbrowser.activity.main.view.ActionBar
 import com.phlox.tvwebbrowser.activity.main.view.CursorMenuView
 import com.phlox.tvwebbrowser.activity.main.view.tabs.TabsAdapter.Listener
 import com.phlox.tvwebbrowser.compose.ComposeMenuActivity
-import com.phlox.tvwebbrowser.compose.aux.ComposeDownloadsActivity
 import com.phlox.tvwebbrowser.compose.aux.ComposeFavoritesActivity
-import com.phlox.tvwebbrowser.compose.aux.ComposeHistoryActivity
-import com.phlox.tvwebbrowser.compose.settings.ComposeSettingsActivity
 import com.phlox.tvwebbrowser.compose.settings.SettingsViewModel
 import com.phlox.tvwebbrowser.databinding.ActivityMainBinding
 import com.phlox.tvwebbrowser.model.*
@@ -719,11 +715,6 @@ open class MainActivity : AppCompatActivity(), ActionBar.Callback {
         when (requestCode) {
             PICK_FILE_REQUEST_CODE -> {
                 tabsViewModel.currentTab.value?.webEngine?.onFilePicked(resultCode, data)
-            }
-            REQUEST_CODE_HISTORY_ACTIVITY -> if (resultCode == RESULT_OK) {
-                val url = data?.getStringExtra(HistoryActivity.KEY_URL)
-                if (url != null) navigate(url)
-                hideMenuOverlay()
             }
             REQUEST_CODE_UNKNOWN_APP_SOURCES -> {
                 autoUpdateViewModel.showUpdateDialogIfNeeded(this)

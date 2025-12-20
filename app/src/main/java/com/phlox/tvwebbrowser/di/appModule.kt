@@ -6,9 +6,12 @@ import com.phlox.tvwebbrowser.activity.downloads.DownloadsManager
 import com.phlox.tvwebbrowser.activity.history.HistoryViewModel
 import com.phlox.tvwebbrowser.activity.main.AdBlockRepository
 import com.phlox.tvwebbrowser.activity.main.AutoUpdateViewModel
+import com.phlox.tvwebbrowser.activity.main.BookmarkEditorViewModel
 import com.phlox.tvwebbrowser.activity.main.FavoritesViewModel
+import com.phlox.tvwebbrowser.activity.main.HomePageSlotEditorViewModel
 import com.phlox.tvwebbrowser.activity.main.MainViewModel
 import com.phlox.tvwebbrowser.activity.main.TabsViewModel
+import com.phlox.tvwebbrowser.activity.main.UpdateViewModel
 import com.phlox.tvwebbrowser.compose.settings.SettingsViewModel
 import com.phlox.tvwebbrowser.settings.SettingsManager
 import com.phlox.tvwebbrowser.singleton.AppDatabase
@@ -47,4 +50,7 @@ val appModule = module {
     viewModel { HistoryViewModel(get()) }
     viewModel { DownloadsHistoryViewModel(get()) }
     viewModel { FavoritesViewModel(get()) }
+    viewModel { BookmarkEditorViewModel(it.get(), get()) }
+    viewModel { HomePageSlotEditorViewModel(it.get(), get()) }
+    viewModel { UpdateViewModel(get()) }
 }

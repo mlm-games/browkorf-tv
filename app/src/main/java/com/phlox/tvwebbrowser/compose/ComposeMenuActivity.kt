@@ -1,6 +1,5 @@
 package com.phlox.tvwebbrowser.compose
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.core.view.WindowCompat
 import com.phlox.tvwebbrowser.compose.aux.ui.*
 import com.phlox.tvwebbrowser.compose.settings.ui.SettingsScreen
-import com.phlox.tvwebbrowser.compose.theme.TvBroComposeTheme
+import com.phlox.tvwebbrowser.compose.ui.theme.TvBroComposeTheme
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 import androidx.navigation3.runtime.entryProvider
