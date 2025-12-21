@@ -15,9 +15,9 @@ android {
                 "proguard-rules.pro"
             )
         }
-        defaultConfig {
-            consumerProguardFiles("consumer-rules.pro") // to prevent minify issues
-        }
+    }
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro") // to prevent minify issues
     }
 
     ksp {

@@ -19,7 +19,6 @@ subprojects {
             defaultConfig {
                 minSdk = libs.versions.minSdk.get().toInt()
                 targetSdk = libs.versions.targetSdk.get().toInt()
-                consumerProguardFiles("consumer-rules.pro")
             }
 
             compileOptions {

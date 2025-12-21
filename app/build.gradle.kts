@@ -76,11 +76,6 @@ android {
                     outputFileName = "browkorftv-${flavour}-${verName}(universal).apk"
                 }
             }
-
-            ksp {
-                arg("room.schemaLocation", "$projectDir/schemas")
-                arg("room.incremental", "true")
-            }
         }
     }
 
@@ -153,6 +148,11 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+}
+
 // Configure all tasks that are instances of AbstractArchiveTask (From Target)
 tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
@@ -202,7 +202,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.process)
 
-    implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.kmp.settings.ui.compose)

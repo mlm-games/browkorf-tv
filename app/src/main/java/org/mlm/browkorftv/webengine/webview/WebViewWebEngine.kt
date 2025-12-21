@@ -426,22 +426,4 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
             )
         }
     }
-
-    companion object : KoinComponent {
-        private val context: Context by inject()
-        init {
-            WebEngineFactory.registerProvider(WebEngineProvider("WebView", object : WebEngineProviderCallback {
-                override suspend fun initialize(context: Context, webViewContainer: CursorLayout) {}
-                override fun createWebEngine(tab: WebTabState): WebEngine = WebViewWebEngine(tab)
-                override suspend fun clearCache(ctx: Context) {
-                    WebView(ctx).clearCache(true)
-                }
-                override fun onThemeSettingUpdated(value: Theme) {}
-                override fun getWebEngineVersionString(): String {
-                    val webViewPackage = WebViewCompat.getCurrentWebViewPackage(context)
-                    return (webViewPackage?.packageName ?: "unknown") + ":" + (webViewPackage?.versionName ?: "unknown")
-                }
-            }))
-        }
-    }
 }

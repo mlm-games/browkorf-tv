@@ -46,9 +46,8 @@ class SettingsManager private constructor(context: Context) {
     /** Main settings flow */
     val settings: Flow<AppSettings> = repository.flow
     
-    /** Current settings value (blocking - use sparingly) */
-    val current: AppSettings
-        get() = runBlocking { settings.first() }
+    /** Current settings value */
+    val current: AppSettings get() = settingsState.value
     
     /** StateFlow for Compose/reactive usage */
     val settingsState: StateFlow<AppSettings> = settings

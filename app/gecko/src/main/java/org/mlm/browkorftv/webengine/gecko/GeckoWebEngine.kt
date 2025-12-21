@@ -11,31 +11,46 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import kotlinx.coroutines.CoroutineScope
-import org.mlm.browkorftv.widgets.cursor.CursorLayout
-import org.mlm.browkorftv.model.WebTabState
-import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_PAGE_URL
-import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_URL_ALIAS
-import org.mlm.browkorftv.settings.HomePageMode
-import org.mlm.browkorftv.settings.Theme
-import org.mlm.browkorftv.settings.toGeckoPreferredColorScheme
-import org.mlm.browkorftv.utils.observable.ObservableValue
-import org.mlm.browkorftv.webengine.WebEngine
-import org.mlm.browkorftv.webengine.WebEngineFactory
-import org.mlm.browkorftv.webengine.WebEngineProvider
-import org.mlm.browkorftv.webengine.WebEngineProviderCallback
-import org.mlm.browkorftv.webengine.WebEngineWindowProviderCallback
-import org.mlm.browkorftv.webengine.gecko.delegates.*
-import org.mlm.browkorftv.widgets.cursor.CursorDrawerDelegate
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.mlm.browkorftv.settings.SettingsManager
 import org.koin.core.component.inject
+import org.mlm.browkorftv.model.WebTabState
 import org.mlm.browkorftv.settings.AppSettings
-import org.mozilla.geckoview.*
+import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_PAGE_URL
+import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_URL_ALIAS
+import org.mlm.browkorftv.settings.HomePageMode
+import org.mlm.browkorftv.settings.SettingsManager
+import org.mlm.browkorftv.settings.Theme
+import org.mlm.browkorftv.settings.toGeckoPreferredColorScheme
+import org.mlm.browkorftv.utils.observable.ObservableValue
+import org.mlm.browkorftv.webengine.WebEngine
+import org.mlm.browkorftv.webengine.WebEngineWindowProviderCallback
+import org.mlm.browkorftv.webengine.gecko.delegates.AppContentScriptPortDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.AppWebExtensionBackgroundPortDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyContentBlockingDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyContentDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyHistoryDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyMediaSessionDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyNavigationDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyPermissionDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyProgressDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MyPromptDelegate
+import org.mlm.browkorftv.webengine.gecko.delegates.MySelectionActionDelegate
+import org.mlm.browkorftv.widgets.cursor.CursorDrawerDelegate
+import org.mlm.browkorftv.widgets.cursor.CursorLayout
+import org.mozilla.geckoview.BuildConfig
+import org.mozilla.geckoview.ContentBlocking
+import org.mozilla.geckoview.GeckoResult
+import org.mozilla.geckoview.GeckoRuntime
+import org.mozilla.geckoview.GeckoRuntimeSettings
+import org.mozilla.geckoview.GeckoSession
 import org.mozilla.geckoview.GeckoSession.SessionState
+import org.mozilla.geckoview.GeckoSessionSettings
+import org.mozilla.geckoview.StorageController
+import org.mozilla.geckoview.WebExtension
 import org.mozilla.geckoview.WebExtension.MessageDelegate
 import java.lang.ref.WeakReference
 import kotlin.coroutines.resume
@@ -126,33 +141,6 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
 
         fun onThemeSettingUpdated(theme: Theme) {
             runtime.settings.preferredColorScheme = theme.toGeckoPreferredColorScheme()
-        }
-
-        init {
-            WebEngineFactory.registerProvider(WebEngineProvider(ENGINE_NAME, object : WebEngineProviderCallback {
-                override suspend fun initialize(context: Context, webViewContainer: CursorLayout) {
-                    GeckoWebEngine.initialize(context, webViewContainer)
-                }
-
-                override fun createWebEngine(tab: WebTabState): WebEngine {
-                    return GeckoWebEngine(tab)
-                }
-
-                override suspend fun clearCache(ctx: Context) {
-                    clearCache()
-                }
-
-                override fun onThemeSettingUpdated(value: Theme) {
-                    GeckoWebEngine.onThemeSettingUpdated(value)
-                }
-
-                override fun getWebEngineVersionString(): String {
-                    return BuildConfig.LIBRARY_PACKAGE_NAME + ":" +
-                            BuildConfig.MOZ_APP_VERSION + "." +
-                            BuildConfig.MOZ_APP_BUILDID + "-" +
-                            BuildConfig.MOZ_UPDATE_CHANNEL
-                }
-            }))
         }
     }
 
