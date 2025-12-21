@@ -16,7 +16,6 @@ import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.HomePageLinksMode
 import org.mlm.browkorftv.settings.HomePageMode
 import org.mlm.browkorftv.settings.SettingsManager
-import org.mlm.browkorftv.utils.UpdateChecker
 import org.mlm.browkorftv.utils.deleteDirectory
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -56,9 +55,6 @@ class MainViewModel(
     private suspend fun checkVersionCodeAndRunMigrations() {
         if (settings.appVersionCodeMark != BuildConfig.VERSION_CODE) {
             settingsManager.setAppVersionCodeMark(BuildConfig.VERSION_CODE)
-            withContext(Dispatchers.IO) {
-                UpdateChecker.clearTempFilesIfAny(BrowkorfTV.instance)
-            }
         }
     }
 

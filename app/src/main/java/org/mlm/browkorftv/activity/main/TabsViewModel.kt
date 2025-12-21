@@ -19,9 +19,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.mlm.browkorftv.settings.AppSettings
-import org.mlm.browkorftv.settings.HomePageLinksMode
-import org.mlm.browkorftv.settings.HomePageMode
 import java.net.URL
 
 class TabsViewModel(
@@ -141,13 +138,16 @@ class TabsViewModel(
         } catch (_: Exception) {
             return null
         }
+
         var hostConfig = tab.cachedHostConfig
         if (hostConfig == null || hostConfig.hostName != currentHostName) {
-            hostConfig = hostsDao.findByHostName(currentHostName)
+            hostConfig = withContext(Dispatchers.IO) {
+                hostsDao.findByHostName(currentHostName)
+            }
 
             if (hostConfig == null && createIfNotFound) {
                 hostConfig = HostConfig(currentHostName)
-                hostConfig.id = hostsDao.insert(hostConfig)
+                hostConfig.id = withContext(Dispatchers.IO) { hostsDao.insert(hostConfig) }
             }
             tab.cachedHostConfig = hostConfig
         }
@@ -157,7 +157,7 @@ class TabsViewModel(
     suspend fun changePopupBlockingLevel(newLevel: Int, tab: WebTabState) {
         val hostConfig = findHostConfig(tab, true) ?: return
         hostConfig.popupBlockLevel = newLevel
-        hostsDao.update(hostConfig)
+        withContext(Dispatchers.IO) { hostsDao.update(hostConfig) }
     }
 
     fun addNewTab(tab: WebTabState, index: Int) {

@@ -51,6 +51,9 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.mlm.browkorftv.compose.ui.components.CursorMenuAction
 import org.mlm.browkorftv.compose.ui.components.LinkAction
+import org.mlm.browkorftv.updates.UpdateDialogs
+import org.mlm.browkorftv.updates.UpdatesEvent
+import org.mlm.browkorftv.updates.UpdatesViewModel
 import java.io.File
 import java.io.InputStream
 import java.io.UnsupportedEncodingException
@@ -77,7 +80,7 @@ open class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
     private val tabsViewModel: TabsViewModel by viewModel()
     private val settingsViewModel: SettingsViewModel by viewModel()
-    private val autoUpdateViewModel: AutoUpdateViewModel by viewModel()
+    private val updatesViewModel: UpdatesViewModel by viewModel()
     private val browserUiViewModel: BrowserUiViewModel by viewModel()
 
     private val favoritesViewModel: FavoritesViewModel by viewModel()
@@ -396,6 +399,43 @@ open class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
+
+                launch {
+                    updatesViewModel.events.collectLatest { e ->
+                        when (e) {
+                            is UpdatesEvent.ShowUpdateAvailable -> {
+                                UpdateDialogs.showUpdateAvailableDialog(
+                                    activity = this@MainActivity,
+                                    info = e.info,
+                                    onDownload = {
+                                        // show a progress dialog while VM downloads
+                                        val (dlg, pb) = UpdateDialogs.showDownloadProgressDialog(this@MainActivity)
+
+                                        // keep it updated from state
+                                        val job = lifecycleScope.launch {
+                                            updatesViewModel.state.collect { st ->
+                                                UpdateDialogs.updateProgressBar(pb, st.downloadProgress)
+                                                if (!st.isDownloading) {
+                                                    dlg.dismiss()
+                                                    this.cancel()
+                                                }
+                                            }
+                                        }
+                                        dlg.setOnDismissListener { job.cancel() }
+
+                                        updatesViewModel.downloadAndRequestInstall(e.info)
+                                    }
+                                )
+                            }
+                            is UpdatesEvent.RequestInstallApk -> {
+                                handleInstallRequest(e.file) // your existing method
+                            }
+                            is UpdatesEvent.ToastMessage -> {
+                                UpdateDialogs.toast(this@MainActivity, e.message)
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -553,16 +593,7 @@ open class MainActivity : AppCompatActivity() {
             browserUiViewModel.setMenuVisibility(true)
         }
 
-        if (autoUpdateViewModel.needAutoCheckUpdates &&
-            autoUpdateViewModel.updateChecker.versionCheckResult == null &&
-            !autoUpdateViewModel.lastUpdateNotificationTime.sameDay(Calendar.getInstance())
-        ) {
-            autoUpdateViewModel.checkUpdate(false) {
-                if (autoUpdateViewModel.updateChecker.hasUpdate()) {
-                    autoUpdateViewModel.showUpdateDialogIfNeeded(this@MainActivity)
-                }
-            }
-        }
+        updatesViewModel.checkAutoIfNeeded()
     }
 
     private fun openInNewTab(
