@@ -1,34 +1,30 @@
-package org.mlm.browkorftv.compose.settings
+package org.mlm.browkorftv.activity.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.HomePageLinksMode
 import org.mlm.browkorftv.settings.HomePageMode
 import org.mlm.browkorftv.settings.SettingsManager
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val settingsManager: SettingsManager
 ) : ViewModel() {
 
-    // Expose settings as a StateFlow
     val settingsState: StateFlow<AppSettings> = settingsManager.settingsState
 
     val currentSettings: AppSettings get() = settingsManager.current
 
     fun setSearchEngineURL(url: String) {
         viewModelScope.launch {
-            val index = AppSettings.SearchEnginesURLs.indexOf(url)
-            if (index >= 0 && index < AppSettings.SearchEnginesURLs.size - 1) {
+            val index = AppSettings.Companion.SearchEnginesURLs.indexOf(url)
+            if (index >= 0 && index < AppSettings.Companion.SearchEnginesURLs.size - 1) {
                 settingsManager.setSearchEngine(index)
             } else {
                 settingsManager.setSearchEngine(
-                    index = AppSettings.SearchEnginesURLs.size - 1,
+                    index = AppSettings.Companion.SearchEnginesURLs.size - 1,
                     customUrl = url
                 )
             }

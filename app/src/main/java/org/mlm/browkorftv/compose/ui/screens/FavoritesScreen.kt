@@ -1,9 +1,10 @@
-package org.mlm.browkorftv.compose.aux.ui
+package org.mlm.browkorftv.compose.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
@@ -33,7 +34,7 @@ fun FavoritesScreen(
         // Header with Actions
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text("Favorites", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
@@ -42,14 +43,14 @@ fun FavoritesScreen(
         }
 
         if (loading) {
-            Box(Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("Loading...")
             }
             return
         }
 
         if (bookmarks.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("No bookmarks yet")
             }
             return
@@ -97,7 +98,7 @@ private fun FavoriteItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Column(Modifier.weight(1f)) {
                 Text(title, style = MaterialTheme.typography.titleMedium, maxLines = 1)

@@ -19,6 +19,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.mlm.browkorftv.settings.AppSettings
+import org.mlm.browkorftv.settings.HomePageLinksMode
+import org.mlm.browkorftv.settings.HomePageMode
 import java.net.URL
 
 class TabsViewModel(

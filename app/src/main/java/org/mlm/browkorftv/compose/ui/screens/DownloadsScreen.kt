@@ -1,4 +1,4 @@
-package org.mlm.browkorftv.compose.aux.ui
+package org.mlm.browkorftv.compose.ui.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -7,13 +7,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.tv.material3.*
 import org.mlm.browkorftv.BuildConfig
-import org.mlm.browkorftv.activity.downloads.DownloadsHistoryViewModel
+import org.mlm.browkorftv.activity.main.DownloadsHistoryViewModel
 import org.mlm.browkorftv.compose.ui.theme.AppTheme
 import org.mlm.browkorftv.model.Download
 import org.koin.androidx.compose.koinViewModel
@@ -63,7 +64,7 @@ fun DownloadsScreen(
         // Header
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text("Downloads", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))

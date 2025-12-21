@@ -1,4 +1,4 @@
-package org.mlm.browkorftv.compose.settings.ui
+package org.mlm.browkorftv.compose.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -24,6 +24,7 @@ import io.github.mlmgames.settings.ui.CategoryConfig
 import io.github.mlmgames.settings.ui.ProvideStringResources
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import org.mlm.browkorftv.compose.ui.components.BrowkorfTopBar
 import org.mlm.browkorftv.settings.SettingsManager
 
 @Composable
@@ -36,25 +37,12 @@ fun SettingsScreen(
     val scope = rememberCoroutineScope()
 
     ProvideStringResources(AndroidStringResourceProvider(context)) {
-        // Replaced Mobile Scaffold with TV-optimized Column layout
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 48.dp, vertical = 24.dp)
         ) {
-            // TV Header
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-                Button(onClick = onNavigateBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    Spacer(Modifier.width(8.dp))
-                    Text("Back")
-                }
-                Text("Settings", style = MaterialTheme.typography.headlineSmall)
-            }
+            BrowkorfTopBar(title = "Settings", onBack = onNavigateBack)
 
             // Settings Content
             Box(modifier = Modifier.weight(1f)) {

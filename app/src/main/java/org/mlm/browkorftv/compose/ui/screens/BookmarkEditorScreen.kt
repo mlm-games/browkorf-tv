@@ -1,6 +1,9 @@
-package org.mlm.browkorftv.compose.aux.ui
+package org.mlm.browkorftv.compose.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -8,9 +11,10 @@ import androidx.tv.material3.*
 import org.mlm.browkorftv.activity.main.FavoritesViewModel
 import org.mlm.browkorftv.model.FavoriteItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
+import org.mlm.browkorftv.compose.ui.components.TextEntryDialog
+import org.mlm.browkorftv.compose.ui.components.BrowkorfTopBar
 
 @Composable
 fun BookmarkEditorScreen(
@@ -53,10 +57,41 @@ fun BookmarkEditorScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Header
-        Text(
-            text = if (id == null) "New Bookmark" else "Edit Bookmark",
-            style = MaterialTheme.typography.headlineSmall
+        BrowkorfTopBar(
+            title = if (id == null) "New Bookmark" else "Edit Bookmark",
+            onBack = onDone,
+            actions = {
+                // Save
+                IconButton(onClick = {
+                    val norm = normalizeUrl(url)
+                    if (norm.isNotBlank()) {
+                        val item = FavoriteItem().apply {
+                            this.id = existingId ?: 0L
+                            this.title = title.trim().ifBlank { norm }
+                            this.url = norm
+                            this.parent = 0
+                            this.homePageBookmark = false
+                        }
+                        viewModel.saveFavorite(item)
+                        onDone()
+                    }
+                }) {
+                    Icon(Icons.Filled.Check, contentDescription = "Save")
+                }
+
+                // Delete (only if editing)
+                if (existingId != null) {
+                    IconButton(onClick = {
+                        viewModel.deleteFavorite(existingId!!)
+                        onDone()
+                    }) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete")
+                    }
+                }
+            }
         )
+
+        Spacer(Modifier.height(16.dp))
 
         if (loading) {
             Text("Loading…")
@@ -80,37 +115,6 @@ fun BookmarkEditorScreen(
 
         // Action Buttons
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = {
-                val norm = normalizeUrl(url)
-                if (norm.isNotBlank()) {
-                    val item = FavoriteItem().apply {
-                        this.id = existingId ?: 0L
-                        this.title = title.trim().ifBlank { norm }
-                        this.url = norm
-                        this.parent = 0
-                        this.homePageBookmark = false
-                    }
-                    viewModel.saveFavorite(item)
-                    onDone()
-                }
-            }) {
-                Text("Save")
-            }
-
-            if (existingId != null) {
-                Button(
-                    onClick = {
-                        viewModel.deleteFavorite(existingId!!)
-                        onDone()
-                    },
-                    colors = ButtonDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError
-                    )
-                ) {
-                    Text("Delete")
-                }
-            }
 
             Button(
                 onClick = onDone,

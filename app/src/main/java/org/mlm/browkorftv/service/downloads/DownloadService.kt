@@ -23,7 +23,7 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.BrowkorfTV
-import org.mlm.browkorftv.activity.downloads.DownloadsManager
+import org.mlm.browkorftv.activity.main.DownloadsManager
 import org.mlm.browkorftv.activity.main.MainActivity
 import org.mlm.browkorftv.model.Download
 import org.mlm.browkorftv.model.dao.DownloadDao

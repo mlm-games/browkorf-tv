@@ -1,14 +1,14 @@
-package org.mlm.browkorftv.activity.history
+package org.mlm.browkorftv.activity.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import org.mlm.browkorftv.model.HistoryItem
-import org.mlm.browkorftv.model.dao.HistoryDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.mlm.browkorftv.model.HistoryItem
+import org.mlm.browkorftv.model.dao.HistoryDao
 
 class HistoryViewModel(
     private val historyDao: HistoryDao

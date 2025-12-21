@@ -26,7 +26,7 @@ robolectric = "4.16"
 composeBom = "2025.12.01"
 activityCompose = "1.12.2"
 tvMaterial = "1.0.1"
-kmpSettingsCore = "0.2.0"
+kmpSettingsCore = "0.2.1"
 material3 = "1.4.0"
 
 koinBom = "4.1.1"

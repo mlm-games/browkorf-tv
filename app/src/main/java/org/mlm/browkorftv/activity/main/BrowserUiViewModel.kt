@@ -23,7 +23,13 @@ data class BrowserUiState(
     val blockedPopups: Int = 0,
     val isMenuVisible: Boolean = false,
     val isFullscreen: Boolean = false,
-    val currentThumbnail: Bitmap? = null
+    val currentThumbnail: Bitmap? = null,
+    val notification: NotificationUi? = null,
+
+    val isCursorMenuVisible: Boolean = false,
+    val cursorMenuX: Int = 0, // px
+    val cursorMenuY: Int = 0, // px
+    val isLinkActionsVisible: Boolean = false,
 )
 
 class BrowserUiViewModel : ViewModel() {
@@ -81,4 +87,37 @@ class BrowserUiViewModel : ViewModel() {
     fun updateThumbnail(bitmap: Bitmap?) {
         _uiState.update { it.copy(currentThumbnail = bitmap) }
     }
+
+    fun showNotification(iconRes: Int, message: String) {
+        _uiState.update { it.copy(notification = NotificationUi(iconRes, message)) }
+
+        // auto-dismiss
+        viewModelScope.launch {
+            delay(3000)
+            _uiState.update { s ->
+                if (s.notification?.message == message) s.copy(notification = null) else s
+            }
+        }
+    }
+
+    fun showCursorMenu(x: Int, y: Int) {
+        _uiState.update { it.copy(isCursorMenuVisible = true, cursorMenuX = x, cursorMenuY = y) }
+    }
+
+    fun hideCursorMenu() {
+        _uiState.update { it.copy(isCursorMenuVisible = false) }
+    }
+
+    fun showLinkActions() {
+        _uiState.update { it.copy(isLinkActionsVisible = true, isCursorMenuVisible = false) }
+    }
+
+    fun hideLinkActions() {
+        _uiState.update { it.copy(isLinkActionsVisible = false) }
+    }
 }
+
+data class NotificationUi(
+    val iconRes: Int,
+    val message: String
+)

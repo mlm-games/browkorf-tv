@@ -1,4 +1,4 @@
-package org.mlm.browkorftv.compose.ui
+package org.mlm.browkorftv.compose.ui.screens
 
 import android.view.KeyEvent
 import androidx.compose.foundation.background

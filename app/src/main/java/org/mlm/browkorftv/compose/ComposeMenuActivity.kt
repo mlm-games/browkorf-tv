@@ -15,8 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.mlm.browkorftv.compose.aux.ui.*
-import org.mlm.browkorftv.compose.settings.ui.SettingsScreen
+import org.mlm.browkorftv.compose.ui.screens.SettingsScreen
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 import androidx.navigation3.runtime.entryProvider
@@ -27,6 +26,10 @@ import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.mlm.browkorftv.compose.ui.screens.BookmarkEditorScreen
+import org.mlm.browkorftv.compose.ui.screens.DownloadsScreen
+import org.mlm.browkorftv.compose.ui.screens.FavoritesScreen
+import org.mlm.browkorftv.compose.ui.screens.HistoryScreen
 
 class ComposeMenuActivity : ComponentActivity(), KoinComponent {
 

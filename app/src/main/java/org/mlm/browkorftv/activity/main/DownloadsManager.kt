@@ -1,4 +1,4 @@
-package org.mlm.browkorftv.activity.downloads
+package org.mlm.browkorftv.activity.main
 
 import android.content.Context
 import android.net.Uri

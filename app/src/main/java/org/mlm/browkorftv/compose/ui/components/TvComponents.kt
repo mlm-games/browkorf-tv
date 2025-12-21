@@ -2,7 +2,12 @@ package org.mlm.browkorftv.compose.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
+import org.mlm.browkorftv.compose.ui.theme.AppTheme
 
 @Composable
 fun BrowkorfTvIconButton(
@@ -97,5 +103,34 @@ fun BrowkorfTvProgressBar(
             .clip(RoundedCornerShape(4.dp)),
         color = MaterialTheme.colorScheme.primary,
         trackColor = MaterialTheme.colorScheme.surfaceVariant,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BrowkorfTopBar(
+    title: String,
+    onBack: () -> Unit,
+    actions: @Composable RowScope.() -> Unit = {}
+) {
+    val c = AppTheme.colors
+    TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        title = { Text(title) },
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+        },
+        actions = actions,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = c.topBarBackground,
+            titleContentColor = c.textPrimary,
+            navigationIconContentColor = c.textPrimary,
+            actionIconContentColor = c.textPrimary,
+        )
     )
 }

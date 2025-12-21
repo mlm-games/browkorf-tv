@@ -1,4 +1,4 @@
-package org.mlm.browkorftv.activity.downloads
+package org.mlm.browkorftv.activity.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

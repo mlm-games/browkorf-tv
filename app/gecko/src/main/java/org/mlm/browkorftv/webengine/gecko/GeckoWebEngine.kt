@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.CoroutineScope
 import org.mlm.browkorftv.widgets.cursor.CursorLayout
 import org.mlm.browkorftv.model.WebTabState
@@ -31,7 +30,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.mlm.browkorftv.settings.SettingsManager
 import org.koin.core.component.inject
@@ -158,8 +156,11 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
         }
     }
 
-    val settingsManager: SettingsManager = koinInject()
-    val settings = settingsManager.settings.collectAsStateWithLifecycle(AppSettings()).value
+    private val settingsManager: SettingsManager by inject()
+
+    private val settings: AppSettings
+        get() = settingsManager.current
+
     private var webView: GeckoViewWithVirtualCursor? = null
     var session: GeckoSession
     var callback: WebEngineWindowProviderCallback? = null
@@ -341,7 +342,7 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
     }
 
     override fun zoomBy(zoomBy: Float) {
-        
+
     }
 
     override fun evaluateJavascript(script: String) {

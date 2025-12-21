@@ -1,18 +1,17 @@
 package org.mlm.browkorftv.di
 
 import androidx.room.Room
-import org.mlm.browkorftv.activity.downloads.DownloadsHistoryViewModel
-import org.mlm.browkorftv.activity.downloads.DownloadsManager
-import org.mlm.browkorftv.activity.history.HistoryViewModel
+import org.mlm.browkorftv.activity.main.DownloadsHistoryViewModel
+import org.mlm.browkorftv.activity.main.DownloadsManager
+import org.mlm.browkorftv.activity.main.HistoryViewModel
 import org.mlm.browkorftv.activity.main.AdBlockRepository
 import org.mlm.browkorftv.activity.main.AutoUpdateViewModel
-import org.mlm.browkorftv.activity.main.BookmarkEditorViewModel
 import org.mlm.browkorftv.activity.main.BrowserUiViewModel
 import org.mlm.browkorftv.activity.main.FavoritesViewModel
 import org.mlm.browkorftv.activity.main.MainViewModel
 import org.mlm.browkorftv.activity.main.TabsViewModel
 import org.mlm.browkorftv.activity.main.UpdateViewModel
-import org.mlm.browkorftv.compose.settings.SettingsViewModel
+import org.mlm.browkorftv.activity.main.SettingsViewModel
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.singleton.AppDatabase
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr

@@ -1,4 +1,4 @@
-package org.mlm.browkorftv.compose.aux.ui
+package org.mlm.browkorftv.compose.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -8,7 +8,6 @@ import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import androidx.webkit.WebViewCompat
 import org.mlm.browkorftv.BuildConfig
-import org.mlm.browkorftv.BrowkorfTV
 
 @Composable
 fun AboutScreen(

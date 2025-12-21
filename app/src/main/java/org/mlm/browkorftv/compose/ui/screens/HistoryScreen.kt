@@ -1,13 +1,14 @@
-package org.mlm.browkorftv.compose.aux.ui
+package org.mlm.browkorftv.compose.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
-import org.mlm.browkorftv.activity.history.HistoryViewModel
+import org.mlm.browkorftv.activity.main.HistoryViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,7 +37,7 @@ fun HistoryScreen(
         // Header
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text("History", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
@@ -44,7 +45,7 @@ fun HistoryScreen(
         }
 
         if (rows.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("No history", style = MaterialTheme.typography.bodyLarge)
             }
             return

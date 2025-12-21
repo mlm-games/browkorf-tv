@@ -8,6 +8,8 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
@@ -23,18 +25,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.webkit.URLUtilCompat
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.activity.IncognitoModeMainActivity
-import org.mlm.browkorftv.activity.downloads.DownloadsManager
-import org.mlm.browkorftv.activity.main.dialogs.favorites.FavoriteEditorDialog
-import org.mlm.browkorftv.activity.main.view.CursorMenuView
 import org.mlm.browkorftv.compose.ComposeMenuActivity
-import org.mlm.browkorftv.compose.settings.SettingsViewModel
 import org.mlm.browkorftv.compose.ui.MainOverlay
 import org.mlm.browkorftv.databinding.ActivityMainBinding
 import org.mlm.browkorftv.model.*
@@ -47,12 +44,13 @@ import org.mlm.browkorftv.utils.*
 import org.mlm.browkorftv.webengine.WebEngine
 import org.mlm.browkorftv.webengine.WebEngineFactory
 import org.mlm.browkorftv.webengine.WebEngineWindowProviderCallback
-import org.mlm.browkorftv.widgets.NotificationView
 import org.mlm.browkorftv.widgets.cursor.CursorDrawerDelegate
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.mlm.browkorftv.compose.ui.components.CursorMenuAction
+import org.mlm.browkorftv.compose.ui.components.LinkAction
 import java.io.File
 import java.io.InputStream
 import java.io.UnsupportedEncodingException
@@ -137,6 +135,57 @@ open class MainActivity : AppCompatActivity() {
 
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
+    private data class ContextMenuCtx(
+        val tab: WebTabState,
+        val windowProvider: WebEngineWindowProviderCallback,
+        val cursorDrawer: CursorDrawerDelegate,
+        val baseUri: String?,
+        val linkUri: String?,
+        val srcUri: String?
+    )
+
+    val cursorActionHandler: (CursorMenuAction) -> Unit = { action ->
+        val ctx = lastCtxMenu
+        when (action) {
+            CursorMenuAction.Dismiss -> {
+                browserUiViewModel.hideCursorMenu()
+                lastCtxMenu = null
+            }
+            CursorMenuAction.Grab -> {
+                ctx?.cursorDrawer?.goToGrabMode()
+                browserUiViewModel.hideCursorMenu()
+            }
+            CursorMenuAction.TextSelect -> {
+                ctx?.cursorDrawer?.goToTextSelectionMode()
+                browserUiViewModel.hideCursorMenu()
+            }
+            CursorMenuAction.ZoomIn -> ctx?.tab?.webEngine?.zoomIn()
+            CursorMenuAction.ZoomOut -> ctx?.tab?.webEngine?.zoomOut()
+            CursorMenuAction.LinkActions -> browserUiViewModel.showLinkActions()
+        }
+    }
+
+    val linkActionHandler: (LinkAction) -> Unit = let@{ action ->
+        val ctx = lastCtxMenu ?: return@let
+        val url = currentLinkUrl()
+        when (action) {
+            LinkAction.Refresh -> ctx.tab.webEngine.reload()
+            LinkAction.OpenInNewTab -> if (url != null) ctx.windowProvider.onOpenInNewTabRequested(url, true)
+            LinkAction.OpenExternal -> if (url != null) ctx.windowProvider.onOpenInExternalAppRequested(url)
+            LinkAction.Download -> if (url != null) ctx.windowProvider.onDownloadRequested(url)
+            LinkAction.Copy -> if (url != null) ctx.windowProvider.onCopyTextToClipboardRequested(url)
+            LinkAction.Share -> if (url != null) ctx.windowProvider.onShareUrlRequested(url)
+        }
+        browserUiViewModel.hideLinkActions()
+    }
+
+    private var lastCtxMenu: ContextMenuCtx? = null
+
+    private fun currentLinkUrl(): String? {
+        val ctx = lastCtxMenu ?: return null
+        return (ctx.linkUri ?: ctx.srcUri)?.trim('"')
+    }
+
     private fun handleInstallRequest(file: File) {
         if (!packageManager.canRequestPackageInstalls()) {
             pendingApkToInstall = file
@@ -175,8 +224,8 @@ open class MainActivity : AppCompatActivity() {
         val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
         val cb = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: android.net.Network) = updateNetworkState(true)
-            override fun onLost(network: android.net.Network) = updateNetworkState(false)
+            override fun onAvailable(network: Network) = updateNetworkState(true)
+            override fun onLost(network: Network) = updateNetworkState(false)
         }
         networkCallback = cb
         cm.registerDefaultNetworkCallback(cb)
@@ -192,7 +241,7 @@ open class MainActivity : AppCompatActivity() {
         } else {
             val network = cm.activeNetwork ?: return false
             val capabilities = cm.getNetworkCapabilities(network) ?: return false
-            return capabilities.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         }
     }
 
@@ -278,7 +327,15 @@ open class MainActivity : AppCompatActivity() {
                 onZoomIn = { tabsViewModel.currentTab.value?.webEngine?.zoomIn() },
                 onZoomOut = { tabsViewModel.currentTab.value?.webEngine?.zoomOut() },
                 onToggleAdBlock = { toggleAdBlockForTab() },
-                onTogglePopupBlock = { lifecycleScope.launch { showPopupBlockOptions() } }
+                onTogglePopupBlock = { lifecycleScope.launch { showPopupBlockOptions() } },
+                onCursorMenuAction = cursorActionHandler,
+                onDismissLinkActions = { browserUiViewModel.hideLinkActions() },
+                onLinkAction = linkActionHandler,
+                getLinkCapabilities = { val ctx = lastCtxMenu
+                    val url = (ctx?.linkUri ?: ctx?.srcUri)?.trim('"')
+                    val hasUrl = !url.isNullOrBlank()
+                    val isWebUrl = hasUrl && (url.startsWith("http://") || url.startsWith("https://"))
+                    Pair(isWebUrl, hasUrl) },
             )
         }
 
@@ -393,8 +450,14 @@ open class MainActivity : AppCompatActivity() {
             tabsViewModel.currentTab.value?.webEngine?.hideFullscreenView()
             return
         }
-        if (vb.vCursorMenu.isVisible) {
-            vb.vCursorMenu.close(CursorMenuView.CloseAnimation.ROTATE_OUT)
+        val state = browserUiViewModel.uiState.value
+        if (state.isLinkActionsVisible) {
+            browserUiViewModel.hideLinkActions()
+            return
+        }
+        if (state.isCursorMenuVisible) {
+            browserUiViewModel.hideCursorMenu()
+            lastCtxMenu = null
             return
         }
         if (vb.flWebViewContainer.consumeBackIfCursorModeActive()) {
@@ -908,14 +971,6 @@ open class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun onEditHomePageBookmark(favoriteItem: FavoriteItem) {
-        FavoriteEditorDialog(this, object : FavoriteEditorDialog.Callback {
-            override fun onDone(item: FavoriteItem) {
-                mainViewModel.onHomePageLinkEdited(item)
-            }
-        }, favoriteItem).show()
-    }
-
     // Helper to find tab by index
     private fun tabByTitleIndex(index: Int): WebTabState? {
         val tabs = tabsViewModel.tabsStates.value
@@ -1065,7 +1120,7 @@ open class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 browserUiViewModel.updateAdBlockStats(true, tab.blockedAds, tab.blockedPopups)
                 val msg = getString(if (newTab) R.string.new_tab_blocked else R.string.popup_dialog_blocked)
-                NotificationView.showBottomRight(vb.rlRoot, R.drawable.ic_block_popups, msg)
+                browserUiViewModel.showNotification(R.drawable.ic_block_popups, msg)
             }
         }
 
@@ -1163,7 +1218,8 @@ open class MainActivity : AppCompatActivity() {
             title: String?, altText: String?, textContent: String?,
             x: Int, y: Int
         ) {
-            vb.vCursorMenu.show(tab, this, cursorDrawer, baseUri, linkUri, srcUri, title, altText, textContent, x, y)
+            lastCtxMenu = ContextMenuCtx(tab, this, cursorDrawer, baseUri, linkUri, srcUri)
+            browserUiViewModel.showCursorMenu(x, y)
         }
 
         override fun suggestActionsForLink(

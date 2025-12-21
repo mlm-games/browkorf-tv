@@ -31,6 +31,10 @@ fun MainOverlay(
     onTogglePopupBlock: () -> Unit,
     onZoomIn: () -> Unit,
     onZoomOut: () -> Unit,
+    onCursorMenuAction: (CursorMenuAction) -> Unit,
+    onDismissLinkActions: () -> Unit,
+    onLinkAction: (LinkAction) -> Unit,
+    getLinkCapabilities: () -> Pair<Boolean, Boolean>, // (canOpenUrlActions, canCopyShare)
 ) {
     val uiState by uiVm.uiState.collectAsStateWithLifecycle()
     val tabs by tabsVm.tabsStates.collectAsStateWithLifecycle()
@@ -79,7 +83,7 @@ fun MainOverlay(
             ) {
                 Column {
                     // Progress Bar
-                    BrowkorfTvProgressBar(progress = (uiState.progress / 100).toFloat())
+                    BrowkorfTvProgressBar(progress = uiState.progress / 100f)
                     
                     // Action Bar
                     ActionBar(
@@ -130,6 +134,26 @@ fun MainOverlay(
                     onToggleAdBlock = onToggleAdBlock,
                     onTogglePopupBlock = onTogglePopupBlock,
                     onHome = onHome
+                )
+            }
+            NotificationHost(uiState.notification)
+
+            if (uiState.isCursorMenuVisible && uiState.isMenuVisible && !uiState.isFullscreen) {
+                CursorRadialMenu(
+                    xPx = uiState.cursorMenuX,
+                    yPx = uiState.cursorMenuY,
+                    onAction = { action -> onCursorMenuAction(action) }
+                )
+            }
+
+            val linkCaps = getLinkCapabilities()
+
+            if (uiState.isLinkActionsVisible && !uiState.isFullscreen) {
+                LinkActionsDialog(
+                    canOpenUrlActions = linkCaps.first,   // computed by activity based on last link url
+                    canCopyShare = linkCaps.second,
+                    onDismiss = { onDismissLinkActions() },
+                    onAction = { onLinkAction(it) }
                 )
             }
         }
