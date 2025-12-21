@@ -1,23 +1,16 @@
 package org.mlm.browkorftv.compose.ui.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.*
-import org.mlm.browkorftv.settings.AdBlock
-import org.mlm.browkorftv.settings.AppSettingsSchema
-import org.mlm.browkorftv.settings.General
-import org.mlm.browkorftv.settings.HomePage
-import org.mlm.browkorftv.settings.Search
-import org.mlm.browkorftv.settings.Updates
-import org.mlm.browkorftv.settings.UserAgent
-import org.mlm.browkorftv.settings.WebEngine
 import io.github.mlmgames.settings.core.resources.AndroidStringResourceProvider
 import io.github.mlmgames.settings.ui.AutoSettingsScreen
 import io.github.mlmgames.settings.ui.CategoryConfig
@@ -25,7 +18,15 @@ import io.github.mlmgames.settings.ui.ProvideStringResources
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.mlm.browkorftv.compose.ui.components.BrowkorfTopBar
+import org.mlm.browkorftv.settings.AdBlock
+import org.mlm.browkorftv.settings.AppSettingsSchema
+import org.mlm.browkorftv.settings.General
+import org.mlm.browkorftv.settings.HomePage
+import org.mlm.browkorftv.settings.Search
 import org.mlm.browkorftv.settings.SettingsManager
+import org.mlm.browkorftv.settings.Updates
+import org.mlm.browkorftv.settings.UserAgent
+import org.mlm.browkorftv.settings.WebEngine
 
 @Composable
 fun SettingsScreen(

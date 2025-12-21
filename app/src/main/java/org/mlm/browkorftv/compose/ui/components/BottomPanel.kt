@@ -46,7 +46,7 @@ fun BottomNavigationPanel(
         // Close tab
         BrowkorfTvIconButton(
             onClick = onCloseTab,
-            painter = painterResource(R.drawable.ic_close_grey_900_24dp),
+            painter = painterResource(R.drawable.outline_close_24),
             contentDescription = stringResource(R.string.close_tab),
             modifier = Modifier.padding(3.dp)
         )
@@ -55,7 +55,7 @@ fun BottomNavigationPanel(
         BrowkorfTvIconButton(
             onClick = onBack,
             painter = painterResource(
-                if (canGoBack) R.drawable.ic_arrow_back_grey_900_24dp 
+                if (canGoBack) R.drawable.ic_arrow_back_grey_900_24dp
                 else R.drawable.ic_arrow_back_grey_400_24dp
             ),
             contentDescription = stringResource(R.string.navigate_back),
@@ -78,7 +78,7 @@ fun BottomNavigationPanel(
         // Refresh
         BrowkorfTvIconButton(
             onClick = onRefresh,
-            painter = painterResource(R.drawable.ic_refresh_grey_900_24dp),
+            painter = painterResource(R.drawable.outline_refresh_24),
             contentDescription = stringResource(R.string.refresh_page),
             modifier = Modifier.padding(3.dp)
         )
@@ -87,7 +87,7 @@ fun BottomNavigationPanel(
         BrowkorfTvIconButton(
             onClick = onZoomIn,
             painter = painterResource(
-                if (canZoomIn) R.drawable.ic_zoom_in_black_24dp 
+                if (canZoomIn) R.drawable.ic_zoom_in_black_24dp
                 else R.drawable.ic_zoom_in_gray_24dp
             ),
             contentDescription = stringResource(R.string.zoom_in),

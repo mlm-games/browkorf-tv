@@ -1,6 +1,8 @@
 package org.mlm.browkorftv.compose.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -45,7 +47,7 @@ fun CursorRadialMenu(
                     onClick = { onAction(CursorMenuAction.Dismiss) },
                     modifier = Modifier.align(androidx.compose.ui.Alignment.Center)
                 ) {
-                    Icon(painterResource(R.drawable.ic_circle_plus), contentDescription = "Close")
+                    Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
                 }
 
                 // Zoom out (left)
@@ -55,7 +57,7 @@ fun CursorRadialMenu(
                         .align(androidx.compose.ui.Alignment.Center)
                         .offset(x = -radius, y = 0.dp)
                 ) {
-                    Icon(painterResource(R.drawable.ic_zoom_out_gray_24dp), contentDescription = "Zoom Out")
+                    Icon(painterResource(R.drawable.outline_zoom_out_24), contentDescription = "Zoom Out")
                 }
 
                 // Zoom in (right)
@@ -65,7 +67,7 @@ fun CursorRadialMenu(
                         .align(androidx.compose.ui.Alignment.Center)
                         .offset(x = radius, y = 0.dp)
                 ) {
-                    Icon(painterResource(R.drawable.ic_zoom_in_gray_24dp), contentDescription = "Zoom In")
+                    Icon(painterResource(R.drawable.outline_zoom_in_24), contentDescription = "Zoom In")
                 }
 
                 // Text select (bottom)
@@ -85,10 +87,10 @@ fun CursorRadialMenu(
                         .align(androidx.compose.ui.Alignment.Center)
                         .offset(x = 0.dp, y = -radius)
                 ) {
-                    Icon(painterResource(R.drawable.ic_menu_24), contentDescription = "Link Actions")
+                    Icon(painterResource(R.drawable.outline_menu_open_24), contentDescription = "Link Actions")
                 }
 
-                // Grab mode (optional: make long-press or add as extra icon)
+                // Grab mode (not needed rn?: make long-press or add as extra icon)
                 // If you want it visible, add one more direction.
                 IconButton(
                     onClick = { onAction(CursorMenuAction.Grab) },
@@ -96,7 +98,7 @@ fun CursorRadialMenu(
                         .align(androidx.compose.ui.Alignment.Center)
                         .offset(x = -radius, y = -radius / 2)
                 ) {
-                    Icon(painterResource(R.drawable.ic_circle_plus), contentDescription = "Grab Mode")
+                    Icon(painterResource(R.drawable.outline_grab_24), contentDescription = "Grab Mode")
                 }
             }
         }

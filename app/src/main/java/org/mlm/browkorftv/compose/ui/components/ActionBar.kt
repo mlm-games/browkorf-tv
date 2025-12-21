@@ -53,35 +53,35 @@ fun ActionBar(
         // Close/Menu button
         BrowkorfTvIconButton(
             onClick = onClose,
-            painter = painterResource(R.drawable.ic_close_grey_900_36dp),
+            painter = painterResource(R.drawable.outline_close_24),
             contentDescription = stringResource(R.string.close_application)
         )
         
         // Voice search
         BrowkorfTvIconButton(
             onClick = onVoiceSearch,
-            painter = painterResource(R.drawable.ic_mic_none_grey_900_36dp),
+            painter = painterResource(R.drawable.outline_mic_24),
             contentDescription = stringResource(R.string.voice_search)
         )
         
         // History
         BrowkorfTvIconButton(
             onClick = onHistory,
-            painter = painterResource(R.drawable.ic_history_grey_900_36dp),
+            painter = painterResource(R.drawable.outline_history_2_24),
             contentDescription = stringResource(R.string.history)
         )
         
         // Favorites
         BrowkorfTvIconButton(
             onClick = onFavorites,
-            painter = painterResource(R.drawable.ic_star_border_grey_900_36dp),
+            painter = painterResource(R.drawable.outline_favorite_24),
             contentDescription = stringResource(R.string.favorites)
         )
         
         // Downloads
         BrowkorfTvIconButton(
             onClick = onDownloads,
-            painter = painterResource(R.drawable.ic_file_download_grey_900),
+            painter = painterResource(R.drawable.outline_download_24),
             contentDescription = stringResource(R.string.downloads)
         )
         
@@ -96,7 +96,7 @@ fun ActionBar(
         // Settings
         BrowkorfTvIconButton(
             onClick = onSettings,
-            painter = painterResource(R.drawable.ic_settings_grey_900_24dp),
+            painter = painterResource(R.drawable.outline_settings_24),
             contentDescription = stringResource(R.string.settings),
             modifier = Modifier.selectedBackground(isIncognito)
         )
