@@ -43,7 +43,6 @@ class DownloadService : Service(), KoinComponent {
     private var notificationBuilder: NotificationCompat.Builder? = null
     private lateinit var notificationManager: NotificationManager
 
-    // ... (Keep existing downloadTasksListener) ...
     internal var downloadTasksListener: DownloadTask.Callback = object : DownloadTask.Callback {
         val MIN_NOTIFY_TIMEOUT = 100
         private var lastNotifyTime = System.currentTimeMillis()
@@ -157,7 +156,7 @@ class DownloadService : Service(), KoinComponent {
         val uri: Uri
         val mimeType: String
 
-        // Handle MediaStore URIs (Android 11+) vs File Paths (Legacy)
+        // Handle MediaStore URIs (Android 11+) & File Paths (Legacy)
         if (download.filepath.startsWith("content://")) {
             uri = download.filepath.toUri()
             mimeType = "application/vnd.android.package-archive"
