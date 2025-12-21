@@ -42,9 +42,6 @@ interface WebEngineWindowProviderCallback {
     fun onPrepareForFullscreen()
     fun onExitFullscreen()
     fun onVisited(url: String)
-    fun suggestActionsForLink(baseUri: String?, linkUri: String?, srcUri: String?,
-                              title: String?, altText: String?, textContent: String?,
-                              x: Int, y: Int)
     fun onContextMenu(
         cursorDrawer: CursorDrawerDelegate, baseUri: String?, linkUri: String?, srcUri: String?,
         title: String?, altText: String?,

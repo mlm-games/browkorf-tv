@@ -1212,43 +1212,6 @@ open class MainActivity : AppCompatActivity() {
             browserUiViewModel.showCursorMenu(x, y)
         }
 
-        override fun suggestActionsForLink(
-            baseUri: String?, linkUri: String?, srcUri: String?,
-            title: String?, altText: String?, textContent: String?,
-            x: Int, y: Int
-        ) {
-            val url = (linkUri ?: srcUri)?.removePrefix("\"")?.removeSuffix("\"")
-            val isHTTPUrl = url != null && (url.startsWith("http://") || url.startsWith("https://"))
-            val anchor = View(this@MainActivity).apply {
-                layoutParams = FrameLayout.LayoutParams(1, 1).apply { setMargins(x, y, 0, 0) }
-            }
-            vb.flWebViewContainer.addView(anchor)
-            linkActionsMenu = PopupMenu(this@MainActivity, anchor, Gravity.BOTTOM).also {
-                it.inflate(R.menu.menu_link)
-                it.menu.findItem(R.id.miOpenInNewTab).isVisible = isHTTPUrl
-                it.menu.findItem(R.id.miOpenInExternalApp).isVisible = isHTTPUrl
-                it.menu.findItem(R.id.miDownload).isVisible = isHTTPUrl
-                it.menu.findItem(R.id.miCopyToClipboard).isVisible = url != null
-                it.menu.findItem(R.id.miShare).isVisible = url != null
-                it.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.miRefreshPage -> tab.webEngine.reload()
-                        R.id.miOpenInNewTab -> onOpenInNewTabRequested(url!!, true)
-                        R.id.miOpenInExternalApp -> onOpenInExternalAppRequested(url!!)
-                        R.id.miDownload -> onDownloadRequested(url!!)
-                        R.id.miCopyToClipboard -> onCopyTextToClipboardRequested(url!!)
-                        R.id.miShare -> onShareUrlRequested(url!!)
-                    }
-                    true
-                }
-                it.setOnDismissListener {
-                    vb.flWebViewContainer.removeView(anchor)
-                    linkActionsMenu = null
-                }
-                it.show()
-            }
-        }
-
         override fun onSelectedTextActionRequested(selectedText: String, editable: Boolean) {
             val clipBoard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val actions = mutableListOf(R.string.copy)

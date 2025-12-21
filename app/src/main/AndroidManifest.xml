@@ -72,7 +72,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:screenOrientation="sensor"
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:requestLegacyExternalStorage="true"
         tools:ignore="DiscouragedApi">
 

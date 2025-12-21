@@ -96,12 +96,6 @@ private fun TabItem(
         else -> colors.tabBackground
     }
 
-    val borderColor = when {
-        isFocused -> colors.focusBorder
-        isSelected -> colors.buttonCorner
-        else -> colors.buttonCorner
-    }
-
     Surface(
         onClick = onClick,
         modifier = Modifier

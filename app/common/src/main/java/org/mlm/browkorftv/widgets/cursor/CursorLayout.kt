@@ -2,19 +2,9 @@ package org.mlm.browkorftv.widgets.cursor
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Point
-import android.graphics.PointF
-import android.graphics.Rect
-import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.KeyEvent
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
 import android.widget.FrameLayout
-import org.mlm.browkorftv.utils.Utils
 
 
 /**
