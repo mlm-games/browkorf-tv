@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import java.util.Properties
 
 plugins {
@@ -9,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("io.github.mlm-games.apk-dist") version "0.4.2"
 }
 
 val properties = Properties()
@@ -46,36 +46,6 @@ android {
                 }
             }
             isUniversalApk = includeUniversalApk
-        }
-    }
-
-    applicationVariants.all {
-        val buildingApk = gradle.startParameter.taskNames.any { it.contains("assemble", ignoreCase = true) }
-        if (!buildingApk) return@all
-
-        val variant = this
-        outputs.all {
-            if (this is ApkVariantOutputImpl) {
-                val flavour = variant.flavorName
-                val verName = variant.versionName
-                val abiName = filters.find { it.filterType == "ABI" }?.identifier
-                val base = variant.versionCode
-
-                if (abiName != null) {
-                    val abiVersionCode = when (abiName) {
-                        "x86" -> base - 3
-                        "x86_64" -> base - 2
-                        "armeabi-v7a" -> base - 1
-                        "arm64-v8a" -> base
-                        else -> base
-                    }
-                    versionCodeOverride = abiVersionCode
-                    outputFileName = "browkorftv-${flavour}-${verName}(${abiName}).apk"
-                } else {
-                    versionCodeOverride = base + 1
-                    outputFileName = "browkorftv-${flavour}-${verName}(universal).apk"
-                }
-            }
         }
     }
 
@@ -150,6 +120,10 @@ android {
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
     arg("room.incremental", "true")
+}
+
+apkDist {
+    artifactNamePrefix.set("browkorftv")
 }
 
 // Configure all tasks that are instances of AbstractArchiveTask (From Target)

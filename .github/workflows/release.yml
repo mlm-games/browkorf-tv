@@ -45,6 +45,7 @@ jobs:
       version_code: ${{ steps.ver.outputs.version_code }}
       commit_sha:   ${{ steps.commit.outputs.commit_sha }}
       release_notes: ${{ steps.notes.outputs.release-notes }}
+
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
@@ -80,7 +81,7 @@ jobs:
         name: Generate release notes
         uses: mikepenz/release-changelog-builder-action@v4 # try once
         with:
-          # configuration: "configuration.json" 
+          # configuration: "configuration.json"
           toTag: ${{ github.sha }}
         continue-on-error: true
 
@@ -100,9 +101,20 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        flavor:
+          - GenericGeckoIncluded
+          - GenericGeckoExcluded
+          - GoogleGeckoIncluded
+          - GoogleGeckoExcluded
+          - FossGeckoIncluded
+          - FossGeckoExcluded
+
     steps:
       - uses: actions/checkout@v4
-        with: 
+        with:
           ref: ${{ needs.prepare-version.outputs.commit_sha }}
 
       - uses: actions/setup-java@v4
@@ -123,46 +135,56 @@ jobs:
         env:
           KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS:      ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD:   ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew :${{ env.GRADLE_MODULE }}:bundle${{ env.BUILD_FLAVOR }}Release -PenableApkSplits=false
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew :${{ env.GRADLE_MODULE }}:bundle${{ matrix.flavor }}Release -PenableApkSplits=false
 
-      - name: Prepare AAB artifact
-        run: |
-          mkdir -p artifacts
-          find ${{ env.GRADLE_MODULE }}/build/outputs/bundle/ -name "*release.aab" -exec cp {} "artifacts/${{ env.APP_SLUG }}-${{ needs.prepare-version.outputs.version_name }}.aab" \;
-      
-      - name: Clean before APK build
-        run: ./gradlew clean
-
-      - name: Build APKs
+      - name: Build APKs (splits)
         env:
           KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS:      ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD:   ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew :${{ env.GRADLE_MODULE }}:assemble${{ env.BUILD_FLAVOR }}Release --no-daemon -PenableApkSplits=true -PincludeUniversalApk=true
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew :${{ env.GRADLE_MODULE }}:assemble${{ matrix.flavor }}Release --no-daemon -PenableApkSplits=true -PincludeUniversalApk=true
 
-      - name: Prepare APKs
+      - name: Collect artifacts
         run: |
           mkdir -p artifacts
-          # script outputs: browkorftv-{flavour}-{version}({arch}).apk
+          
+          # AAB
+          find ${{ env.GRADLE_MODULE }}/build/outputs/bundle/ -name "*release.aab" -exec cp {} "artifacts/${{ env.APP_SLUG }}-${{ needs.prepare-version.outputs.version_name }}-${{ matrix.flavor }}.aab" \;
+          
+          # APKs (your plugin writes under build/outputs/apk/**)
           find ${{ env.GRADLE_MODULE }}/build/outputs/apk/ -name "*.apk" -exec cp {} artifacts/ \;
 
-      - name: Upload artifacts (CI only)
-        if: inputs.upload_releases == false
+      - name: Upload artifacts (per flavor)
         uses: actions/upload-artifact@v4
         with:
-          name: android-${{ needs.prepare-version.outputs.version_name }}
+          name: android-${{ needs.prepare-version.outputs.version_name }}-${{ matrix.flavor }}
           path: artifacts/*
 
+  release:
+    needs: [ prepare-version, build ]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.upload_releases || github.event_name == 'schedule' }}
+
+    steps:
+      - name: Download all artifacts from matrix
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Flatten artifact directory
+        run: |
+          mkdir -p out
+          find artifacts -type f -maxdepth 3 -print -exec cp {} out/ \;
+
       - name: Create GitHub Release
-        if: inputs.upload_releases == true
         uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/*
+          files: out/*
           name: ${{ env.APP_NAME }} ${{ needs.prepare-version.outputs.version_name }}
           tag_name: ${{ needs.prepare-version.outputs.version_name }}
           target_commitish: ${{ needs.prepare-version.outputs.commit_sha }}
-          prerelease: ${{ inputs.mark_prerelease }}
+          prerelease: ${{ github.event_name == 'workflow_dispatch' && inputs.mark_prerelease || false }}
           body: ${{ needs.prepare-version.outputs.release_notes }}

@@ -35,10 +35,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.FileProvider
@@ -98,11 +96,11 @@ open class MainActivity : AppCompatActivity() {
         const val EXTRA_FILE_PATH = "file_path_extra"
     }
 
-    // --- Compose-first: real View containers kept as fields (stable references) ---
+    // Compose-first: real View containers kept as fields
     private lateinit var webContainer: CursorLayout
     private lateinit var fullscreenContainer: CursorLayout
 
-    // Show a blocking overlay (replaces old progressBarGeneric)
+    // Show a blocking overlay
     private val blockingUi = MutableStateFlow(false)
 
     // Koin ViewModels
@@ -407,7 +405,6 @@ open class MainActivity : AppCompatActivity() {
 
                 voiceSearchHelper.VoiceSearchUI()
 
-                // Blocking overlay (replaces old XML ProgressBar)
                 if (isBlocking) {
                     Box(
                         modifier = Modifier
@@ -425,10 +422,8 @@ open class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Edge-to-edge insets: apply to Activity content root (works with Compose too)
         EdgeToEdgeViews.enable(this, findViewById(android.R.id.content))
 
-        // Observers / collectors (unchanged in spirit)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
