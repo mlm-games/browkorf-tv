@@ -1141,7 +1141,7 @@ open class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 browserUiViewModel.updateAdBlockStats(true, tab.blockedAds, tab.blockedPopups)
                 val msg = getString(if (newTab) R.string.new_tab_blocked else R.string.popup_dialog_blocked)
-                browserUiViewModel.showNotification(R.drawable.ic_block_popups, msg)
+                browserUiViewModel.showNotification(R.drawable.outline_web_asset_off_24, msg)
             }
         }
 

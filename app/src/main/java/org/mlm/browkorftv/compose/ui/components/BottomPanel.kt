@@ -33,7 +33,7 @@ fun BottomNavigationPanel(
     modifier: Modifier = Modifier
 ) {
     val colors = AppTheme.colors
-    
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -50,31 +50,26 @@ fun BottomNavigationPanel(
             contentDescription = stringResource(R.string.close_tab),
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // Back
+        // The 'enabled' property in BrowkorfTvIconButton handles the grey-out/alpha automatically
         BrowkorfTvIconButton(
             onClick = onBack,
-            painter = painterResource(
-                if (canGoBack) R.drawable.ic_arrow_back_grey_900_24dp
-                else R.drawable.ic_arrow_back_grey_400_24dp
-            ),
+            painter = painterResource(R.drawable.outline_chevron_backward_24),
             contentDescription = stringResource(R.string.navigate_back),
             enabled = canGoBack,
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // Forward
         BrowkorfTvIconButton(
             onClick = onForward,
-            painter = painterResource(
-                if (canGoForward) R.drawable.ic_arrow_forward_grey_900_24dp 
-                else R.drawable.ic_arrow_forward_grey_400_24dp
-            ),
+            painter = painterResource(R.drawable.outline_chevron_forward_24),
             contentDescription = stringResource(R.string.navigate_forward),
             enabled = canGoForward,
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // Refresh
         BrowkorfTvIconButton(
             onClick = onRefresh,
@@ -82,58 +77,52 @@ fun BottomNavigationPanel(
             contentDescription = stringResource(R.string.refresh_page),
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // Zoom in
         BrowkorfTvIconButton(
             onClick = onZoomIn,
-            painter = painterResource(
-                if (canZoomIn) R.drawable.ic_zoom_in_black_24dp
-                else R.drawable.ic_zoom_in_gray_24dp
-            ),
+            painter = painterResource(R.drawable.outline_zoom_in_24),
             contentDescription = stringResource(R.string.zoom_in),
             enabled = canZoomIn,
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // Zoom out
         BrowkorfTvIconButton(
             onClick = onZoomOut,
-            painter = painterResource(
-                if (canZoomOut) R.drawable.ic_zoom_out_black_24dp 
-                else R.drawable.ic_zoom_out_gray_24dp
-            ),
+            painter = painterResource(R.drawable.outline_zoom_out_24),
             contentDescription = stringResource(R.string.zoom_out),
             enabled = canZoomOut,
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // AdBlock toggle
         BrowkorfTvIconButton(
             onClick = onToggleAdBlock,
             painter = painterResource(
-                if (adBlockEnabled) R.drawable.ic_adblock_on 
-                else R.drawable.ic_adblock_off
+                if (adBlockEnabled) R.drawable.outline_security_24
+                else R.drawable.outline_gpp_bad_24
             ),
             contentDescription = stringResource(R.string.toggle_ads_blocking),
             checked = adBlockEnabled,
             badgeCount = if (blockedAdsCount > 0) blockedAdsCount else null,
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // Popup block toggle
         BrowkorfTvIconButton(
             onClick = onTogglePopupBlock,
-            painter = painterResource(R.drawable.ic_block_popups),
+            painter = painterResource(R.drawable.outline_web_asset_off_24),
             contentDescription = stringResource(R.string.block_popups),
             checked = popupBlockEnabled,
             badgeCount = if (blockedPopupsCount > 0) blockedPopupsCount else null,
             modifier = Modifier.padding(3.dp)
         )
-        
+
         // Home
         BrowkorfTvIconButton(
             onClick = onHome,
-            painter = painterResource(R.drawable.ic_home_grey_900_24dp),
+            painter = painterResource(R.drawable.outline_home_24),
             contentDescription = stringResource(R.string.navigate_home),
             modifier = Modifier.padding(3.dp)
         )
