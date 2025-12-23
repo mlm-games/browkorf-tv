@@ -150,12 +150,8 @@ jobs:
       - name: Collect artifacts
         run: |
           mkdir -p artifacts
-          
-          # AAB
           find ${{ env.GRADLE_MODULE }}/build/outputs/bundle/ -name "*release.aab" -exec cp {} "artifacts/${{ env.APP_SLUG }}-${{ needs.prepare-version.outputs.version_name }}-${{ matrix.flavor }}.aab" \;
-          
-          # APKs (your plugin writes under build/outputs/apk/**)
-          find ${{ env.GRADLE_MODULE }}/build/outputs/apk/ -name "*.apk" -exec cp {} artifacts/ \;
+          find ${{ env.GRADLE_MODULE }}/build/outputs/apk/ -name "*.apk" ! -name "app-*.apk" -exec cp {} artifacts/ \;
 
       - name: Upload artifacts (per flavor)
         uses: actions/upload-artifact@v4
