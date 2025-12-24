@@ -69,7 +69,6 @@ data class AppSettings(
     val allowAutoplayMedia: Boolean = false,
 
 
-
     @Setting(
         title = "Home Page Mode",
         category = HomePage::class,
@@ -80,15 +79,6 @@ data class AppSettings(
     val homePageMode: Int = HomePageMode.HOME_PAGE.ordinal,
 
     @Setting(
-        title = "Home Page Links",
-        category = HomePage::class,
-        type = Dropdown::class,
-        key = "home_page_suggestions_mode",
-        options = ["Bookmarks", "Latest History", "Most Visited"]
-    )
-    val homePageLinksMode: Int = HomePageLinksMode.BOOKMARKS.ordinal,
-
-    @Setting(
         title = "Custom Home Page URL",
         category = HomePage::class,
         type = TextInput::class,
@@ -96,7 +86,6 @@ data class AppSettings(
         dependsOn = "homePageMode" // Only relevant when mode is CUSTOM
     )
     val homePage: String = HOME_URL_ALIAS,
-
 
 
     @Setting(
@@ -110,7 +99,6 @@ data class AppSettings(
 
     @Persisted(key = "search_engine_custom_url")
     val searchEngineCustomUrl: String = "",
-
 
 
     @Setting(
@@ -127,7 +115,6 @@ data class AppSettings(
     val userAgentCustom: String? = null,
 
 
-
     @Setting(
         title = "Web Engine",
         description = "GeckoView recommended for devices with 3GB+ RAM",
@@ -142,7 +129,6 @@ data class AppSettings(
         isDangerous = true
     )
     val webEngineIndex: Int = -1, // -1 means not set, will use default
-
 
 
     @Setting(
@@ -163,7 +149,6 @@ data class AppSettings(
     val adBlockListURL: String = DEFAULT_ADBLOCK_LIST_URL,
 
 
-
     @Setting(
         title = "Auto Check Updates",
         category = Updates::class,
@@ -181,7 +166,6 @@ data class AppSettings(
         dependsOn = "autoCheckUpdates"
     )
     val updateChannelIndex: Int = 0,
-
 
 
     @Persisted(key = "incognito_mode_hint_suppress")
@@ -220,12 +204,14 @@ data class AppSettings(
     companion object {
         const val HOME_URL_ALIAS = "about:home"
         const val DEFAULT_ADBLOCK_LIST_URL = "https://easylist.to/easylist/easylist.txt"
-        const val HOME_PAGE_URL = "https://zombiefox.github.io/nightTab/" // wanted ddg-lite by default but, well no bookmarks...
+        const val HOME_PAGE_URL =
+            "https://mlm-games.github.io/startpose/" // wanted ddg-lite by default but, well no bookmarks...
 
         const val ENGINE_GECKO_VIEW = "GeckoView"
         const val ENGINE_WEB_VIEW = "WebView"
 
-        val SearchEnginesTitles = arrayOf("Google", "Bing", "Yahoo!", "DuckDuckGo", "Yandex", "Startpage", "Custom")
+        val SearchEnginesTitles =
+            arrayOf("Google", "Bing", "Yahoo!", "DuckDuckGo", "Yandex", "Startpage", "Custom")
         val SearchEnginesURLs = listOf(
             "https://www.google.com/search?q=[query]",
             "https://www.bing.com/search?q=[query]",
@@ -251,15 +237,11 @@ data class AppSettings(
     }
 
 
-
     val themeEnum: Theme
         get() = Theme.entries.getOrElse(theme) { Theme.SYSTEM }
 
     val homePageModeEnum: HomePageMode
         get() = HomePageMode.entries.getOrElse(homePageMode) { HomePageMode.HOME_PAGE }
-
-    val homePageLinksModeEnum: HomePageLinksMode
-        get() = HomePageLinksMode.entries.getOrElse(homePageLinksMode) { HomePageLinksMode.BOOKMARKS }
 
     val searchEngineURL: String
         get() = if (searchEngineIndex < SearchEnginesURLs.size - 1) {
@@ -299,15 +281,10 @@ data class AppSettings(
 }
 
 
-
 enum class Theme {
     SYSTEM, WHITE, BLACK
 }
 
 enum class HomePageMode {
     HOME_PAGE, SEARCH_ENGINE, CUSTOM, BLANK
-}
-
-enum class HomePageLinksMode {
-    BOOKMARKS, LATEST_HISTORY, MOST_VISITED
 }

@@ -7,14 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.BrowkorfTV
-import org.mlm.browkorftv.model.FavoriteItem
 import org.mlm.browkorftv.model.HistoryItem
 import org.mlm.browkorftv.model.WebTabState
 import org.mlm.browkorftv.model.dao.FavoritesDao
 import org.mlm.browkorftv.model.dao.HistoryDao
 import org.mlm.browkorftv.settings.AppSettings
-import org.mlm.browkorftv.settings.HomePageLinksMode
-import org.mlm.browkorftv.settings.HomePageMode
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.utils.deleteDirectory
 import kotlinx.coroutines.*
@@ -48,7 +45,6 @@ class MainViewModel(
         if (loaded) return@launch
         checkVersionCodeAndRunMigrations()
         initHistory()
-        // No need to manually loadHomePageLinks() anymore!
         loaded = true
     }
 
@@ -75,7 +71,11 @@ class MainViewModel(
     }
 
     fun logVisitedHistory(title: String?, url: String, faviconHash: String?) {
-        if ((url == lastHistoryItem?.url) || url == AppSettings.HOME_PAGE_URL || !url.startsWith("http", true)) {
+        if ((url == lastHistoryItem?.url) || url == AppSettings.HOME_PAGE_URL || !url.startsWith(
+                "http",
+                true
+            )
+        ) {
             return
         }
 
@@ -100,7 +100,6 @@ class MainViewModel(
             item.saved = true
         }
     }
-
 
 
     fun onTabTitleUpdated(tab: WebTabState) {
@@ -197,14 +196,6 @@ class MainViewModel(
                         WEB_VIEW_DATA_BACKUP_DIRECTORY_SUFFIX
             )
             backupedWebViewCache.renameTo(webViewCache)
-        }
-    }
-
-    fun onHomePageLinkEdited(item: FavoriteItem) = viewModelScope.launch(Dispatchers.IO) {
-        if (item.id == 0L) {
-            favoritesDao.insert(item)
-        } else {
-            favoritesDao.update(item)
         }
     }
 }

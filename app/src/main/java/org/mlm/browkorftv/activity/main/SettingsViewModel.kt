@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.mlm.browkorftv.settings.AppSettings
-import org.mlm.browkorftv.settings.HomePageLinksMode
 import org.mlm.browkorftv.settings.HomePageMode
 import org.mlm.browkorftv.settings.SettingsManager
 
@@ -34,13 +33,11 @@ class SettingsViewModel(
     fun setHomePageProperties(
         homePageMode: HomePageMode,
         customHomePageUrl: String?,
-        homePageLinksMode: HomePageLinksMode
     ) {
         viewModelScope.launch {
             settingsManager.setHomePageProperties(
                 mode = homePageMode,
                 customUrl = customHomePageUrl,
-                linksMode = homePageLinksMode
             )
         }
     }

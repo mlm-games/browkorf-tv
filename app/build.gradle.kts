@@ -31,7 +31,8 @@ android {
     }
 
     val enableApkSplits = (providers.gradleProperty("enableApkSplits").orNull ?: "true").toBoolean()
-    val includeUniversalApk = (providers.gradleProperty("includeUniversalApk").orNull ?: "false").toBoolean()
+    val includeUniversalApk =
+        (providers.gradleProperty("includeUniversalApk").orNull ?: "false").toBoolean()
     val targetAbi = providers.gradleProperty("targetAbi").orNull
 
     splits {
@@ -51,7 +52,8 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "${rootProject.projectDir}/release.keystore")
+            storeFile =
+                file(System.getenv("KEYSTORE_PATH") ?: "${rootProject.projectDir}/release.keystore")
             storePassword = System.getenv("STORE_PASSWORD")
             keyAlias = System.getenv("KEY_ALIAS")
             keyPassword = System.getenv("KEY_PASSWORD")
@@ -71,7 +73,10 @@ android {
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("Long", "BUILD_TIME", "${System.currentTimeMillis()}L")
         }
@@ -91,9 +96,11 @@ android {
 
         create("geckoIncluded") {
             dimension = "webengine"
+            buildConfigField("Boolean", "GECKO_INCLUDED", "true")
         }
         create("geckoExcluded") {
             dimension = "webengine"
+            buildConfigField("Boolean", "GECKO_INCLUDED", "false")
         }
     }
 

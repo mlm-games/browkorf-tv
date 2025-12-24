@@ -26,13 +26,13 @@ robolectric = "4.16"
 composeBom = "2025.12.01"
 activityCompose = "1.12.2"
 tvMaterial = "1.0.1"
-kmpSettingsCore = "0.2.1"
+kmpSettingsCore = "0.2.2"
 
 koinBom = "4.1.1"
 navigation3Runtime = "1.0.0"
 koin-annotations = "2.3.1"
 startup = "1.2.0"
-apkDist = "0.4.2"
+apkDist = "0.4.3"
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -91,4 +91,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-apk-dist = {id = "io.github.mlm-games.apk-dist", version.ref = "apkDist"}
+apk-dist = { id = "io.github.mlm-games.apk-dist", version.ref = "apkDist" }

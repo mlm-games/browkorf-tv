@@ -51,6 +51,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.activity.IncognitoModeMainActivity
 import org.mlm.browkorftv.compose.ComposeMenuActivity
@@ -340,6 +341,18 @@ open class MainActivity : AppCompatActivity() {
         // Back handling (same as before)
         onBackPressedDispatcher.addCallback(this) {
             handleAppBackLogic()
+        }
+
+        if (!BuildConfig.GECKO_INCLUDED) {
+            val webViewIndex = AppSettings.SupportedWebEngines
+                .indexOf(AppSettings.ENGINE_WEB_VIEW)
+                .coerceAtLeast(0)
+
+            if (settingsManager.current.webEngineIndex != webViewIndex) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    settingsManager.setWebEngine(webViewIndex)
+                }
+            }
         }
 
         setContent {
