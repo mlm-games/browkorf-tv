@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SSL warning</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #111;
+            color: #eee;
+            padding: 20px;
+        }
+
+        .box {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #1c1c1c;
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 12px 16px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h2 id="t"></h2>
+        <p><b id="hLbl"></b>: <span id="host"></span></p>
+        <p><b id="eLbl"></b>: <span id="err"></span></p>
+
+        <details>
+            <summary id="dLbl"></summary>
+            <pre id="details"></pre>
+        </details>
+
+        <div style="margin-top:16px">
+            <button onclick="history.back()" id="backBtn"></button>
+            <button onclick="BrowkorfTV.reloadWithSslTrust()" id="goBtn"></button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('t').textContent = BrowkorfTV.getStringByName("connection_isnt_secure");
+        document.getElementById('hLbl').textContent = BrowkorfTV.getStringByName("hostname");
+        document.getElementById('eLbl').textContent = BrowkorfTV.getStringByName("err_desk");
+        document.getElementById('dLbl').textContent = BrowkorfTV.getStringByName("details");
+        document.getElementById('backBtn').textContent = BrowkorfTV.getStringByName("back_to_safety");
+        document.getElementById('goBtn').textContent = BrowkorfTV.getStringByName("go_im_aware");
+
+        document.getElementById('err').textContent = BrowkorfTV.lastSSLError(false);
+        document.getElementById('details').textContent = BrowkorfTV.lastSSLError(true);
+
+        try {
+            document.getElementById('host').textContent = new URL(location.href).searchParams.get("url") || "";
+        } catch (e) {
+            document.getElementById('host').textContent = "";
+        }
+    </script>
+</body>
+
+</html>
