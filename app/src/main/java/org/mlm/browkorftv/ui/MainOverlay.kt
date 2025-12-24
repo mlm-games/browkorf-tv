@@ -1,10 +1,19 @@
 package org.mlm.browkorftv.ui
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +38,8 @@ import org.mlm.browkorftv.ui.components.TabsRow
 fun MainOverlay(
     uiVm: BrowserUiViewModel,
     tabsVm: TabsViewModel,
+    menuVisible: Boolean,
+
     onNavigate: (String) -> Unit,
     onMenuAction: (String) -> Unit, // "history", "downloads", "settings" etc.
     onTabSelected: (WebTabState) -> Unit,
@@ -51,19 +62,14 @@ fun MainOverlay(
     val tabs by tabsVm.tabsStates.collectAsStateWithLifecycle()
     val currentTab by tabsVm.currentTab.collectAsStateWithLifecycle()
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+
         AnimatedVisibility(
-            visible = uiState.isMenuVisible && !uiState.isFullscreen,
+            visible = menuVisible && !uiState.isFullscreen,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                // Thumbnail in center
+            Box(modifier = Modifier.fillMaxSize()) {
                 uiState.currentThumbnail?.let { bitmap ->
                     Image(
                         bitmap = bitmap.asImageBitmap(),
@@ -79,18 +85,16 @@ fun MainOverlay(
             }
         }
 
-        // Top Bar Area (ActionBar + Tabs)
+        // Top Bar Area
         AnimatedVisibility(
-            visible = uiState.isMenuVisible && !uiState.isFullscreen,
+            visible = menuVisible && !uiState.isFullscreen,
             enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
             Column {
-                // Progress Bar
                 BrowkorfTvProgressBar(progress = uiState.progress / 100f)
 
-                // Action Bar
                 ActionBar(
                     currentUrl = uiState.url,
                     isIncognito = uiState.isIncognito,
@@ -104,7 +108,6 @@ fun MainOverlay(
                     onUrlSubmit = onNavigate
                 )
 
-                // Tabs
                 TabsRow(
                     tabs = tabs,
                     currentTabId = currentTab?.id,
@@ -116,7 +119,7 @@ fun MainOverlay(
 
         // Bottom Bar Area
         AnimatedVisibility(
-            visible = uiState.isMenuVisible && !uiState.isFullscreen,
+            visible = menuVisible && !uiState.isFullscreen,
             enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
             modifier = Modifier.align(Alignment.BottomCenter)
@@ -128,7 +131,7 @@ fun MainOverlay(
                 canZoomOut = true,
                 adBlockEnabled = uiState.isAdBlockEnabled,
                 blockedAdsCount = uiState.blockedAds,
-                popupBlockEnabled = true, // Simplified for now
+                popupBlockEnabled = true,
                 blockedPopupsCount = uiState.blockedPopups,
                 onCloseTab = { currentTab?.let { onCloseTab(it) } },
                 onBack = onBack,
@@ -141,24 +144,25 @@ fun MainOverlay(
                 onHome = onHome
             )
         }
+
+        // Keep these always (same behavior as your current code)
         NotificationHost(uiState.notification)
 
-        if (uiState.isCursorMenuVisible && uiState.isMenuVisible && !uiState.isFullscreen) {
+        if (uiState.isCursorMenuVisible && !uiState.isFullscreen) {
             CursorRadialMenu(
                 xPx = uiState.cursorMenuX,
                 yPx = uiState.cursorMenuY,
-                onAction = { action -> onCursorMenuAction(action) }
+                onAction = onCursorMenuAction
             )
         }
 
         val linkCaps = getLinkCapabilities()
-
         if (uiState.isLinkActionsVisible && !uiState.isFullscreen) {
             LinkActionsDialog(
-                canOpenUrlActions = linkCaps.first,   // computed by activity based on last link url
+                canOpenUrlActions = linkCaps.first,
                 canCopyShare = linkCaps.second,
-                onDismiss = { onDismissLinkActions() },
-                onAction = { onLinkAction(it) }
+                onDismiss = onDismissLinkActions,
+                onAction = onLinkAction
             )
         }
     }

@@ -109,11 +109,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ComposeMenuActivity"
-            android:exported="false"
-            android:configChanges="uiMode|screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|keyboard"
-            android:screenOrientation="sensorLandscape" />
-        <activity
             android:name=".activity.IncognitoModeMainActivity"
             android:process=":incognito"
             android:exported="false"

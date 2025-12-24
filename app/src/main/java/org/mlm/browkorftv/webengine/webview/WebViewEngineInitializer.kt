@@ -1,26 +1,30 @@
 package org.mlm.browkorftv.webengine.webview
 
 import android.content.Context
+import android.webkit.WebView
 import androidx.startup.Initializer
 import androidx.webkit.WebViewCompat
+import org.mlm.browkorftv.model.WebTabState
+import org.mlm.browkorftv.settings.AppSettings.Companion.ENGINE_WEB_VIEW
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.webengine.*
+import org.mlm.browkorftv.widgets.cursor.CursorLayout
 
 class WebViewEngineInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         val appCtx = context.applicationContext
 
         WebEngineFactory.registerProvider(
-            WebEngineProvider("WebView", object : WebEngineProviderCallback {
-                override suspend fun initialize(context: Context, webViewContainer: org.mlm.browkorftv.widgets.cursor.CursorLayout) {
+            WebEngineProvider(ENGINE_WEB_VIEW, object : WebEngineProviderCallback {
+                override suspend fun initialize(context: Context, webViewContainer: CursorLayout) {
                     // no-op for WebView
                 }
 
-                override fun createWebEngine(tab: org.mlm.browkorftv.model.WebTabState): WebEngine =
+                override fun createWebEngine(tab: WebTabState): WebEngine =
                     WebViewWebEngine(tab)
 
                 override suspend fun clearCache(ctx: Context) {
-                    android.webkit.WebView(ctx).clearCache(true)
+                    WebView(ctx).clearCache(true)
                 }
 
                 override fun onThemeSettingUpdated(value: Theme) {

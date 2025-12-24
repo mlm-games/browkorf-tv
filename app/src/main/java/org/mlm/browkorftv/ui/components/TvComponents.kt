@@ -128,7 +128,7 @@ fun BrowkorfTopBar(
         },
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = c.topBarBackground,
+            containerColor = Color.Transparent,
             titleContentColor = c.textPrimary,
             navigationIconContentColor = c.textPrimary,
             actionIconContentColor = c.textPrimary,

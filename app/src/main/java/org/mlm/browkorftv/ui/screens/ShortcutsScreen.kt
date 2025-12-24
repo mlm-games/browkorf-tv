@@ -12,31 +12,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
-import androidx.tv.material3.*
+import androidx.tv.material3.ClickableSurfaceDefaults
+import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.Surface
+import androidx.tv.material3.Text
+import org.koin.compose.koinInject
 import org.mlm.browkorftv.R
-import org.mlm.browkorftv.ui.components.BrowkorfTvButton
-import org.mlm.browkorftv.ui.theme.AppTheme
 import org.mlm.browkorftv.singleton.shortcuts.Shortcut
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
+import org.mlm.browkorftv.ui.components.BrowkorfTvButton
+import org.mlm.browkorftv.ui.theme.AppTheme
 
 @Composable
 fun ShortcutsScreen(
-    backStack: NavBackStack<NavKey>
+    onDone: () -> Unit
 ) {
     val colors = AppTheme.colors
-    val shortcutMgr = remember { ShortcutMgr.getInstance() }
+    val context = LocalContext.current
+    val shortcutMgr: ShortcutMgr = koinInject()
 
-    // Force recomposition when shortcuts change
-    var refreshTrigger by remember { mutableIntStateOf(0) }
-    val shortcuts =
-        remember(refreshTrigger) { shortcutMgr.findForId(-1) /*Dummy call*/; Shortcut.entries }
+    val bindings by shortcutMgr.bindings.collectAsState()
 
     var editingShortcut by remember { mutableStateOf<Shortcut?>(null) }
 
@@ -62,16 +63,19 @@ fun ShortcutsScreen(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(shortcuts) { shortcut ->
-                ShortcutItemRow(shortcut = shortcut, onClick = { editingShortcut = shortcut })
+            items(Shortcut.entries) { shortcut ->
+                val binding = bindings[shortcut] ?: shortcutMgr.bindingFor(shortcut)
+                ShortcutItemRow(
+                    shortcut = shortcut,
+                    bindingText = Shortcut.shortcutKeysToString(shortcut, binding, context),
+                    onClick = { editingShortcut = shortcut }
+                )
             }
         }
 
         Spacer(Modifier.height(16.dp))
         BrowkorfTvButton(
-            onClick = {
-                if (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
-            },
+            onClick = onDone,
             text = stringResource(R.string.navigate_back)
         )
     }
@@ -79,16 +83,17 @@ fun ShortcutsScreen(
     editingShortcut?.let { shortcut ->
         ShortcutEditDialog(
             shortcut = shortcut,
-            onSetKey = { keyCode ->
-                shortcut.keyCode = keyCode
-                shortcutMgr.save(shortcut)
-                refreshTrigger++
+            onSetKey = { keyCode, modifiers ->
+                shortcutMgr.updateBinding(
+                    shortcut = shortcut,
+                    keyCode = keyCode,
+                    modifiers = modifiers,
+                    longPress = false
+                )
                 editingShortcut = null
             },
             onClearKey = {
-                shortcut.keyCode = 0
-                shortcutMgr.save(shortcut)
-                refreshTrigger++
+                shortcutMgr.updateBinding(shortcut, keyCode = 0)
                 editingShortcut = null
             },
             onDismiss = { editingShortcut = null }
@@ -97,13 +102,13 @@ fun ShortcutsScreen(
 }
 
 @Composable
-private fun ShortcutItemRow(shortcut: Shortcut, onClick: () -> Unit) {
+private fun ShortcutItemRow(
+    shortcut: Shortcut,
+    bindingText: String,
+    onClick: () -> Unit
+) {
     val colors = AppTheme.colors
     var isFocused by remember { mutableStateOf(false) }
-    val keyName = remember(shortcut.keyCode) {
-        if (shortcut.keyCode != 0) KeyEvent.keyCodeToString(shortcut.keyCode)
-            .removePrefix("KEYCODE_") else "—"
-    }
 
     Surface(
         onClick = onClick,
@@ -129,7 +134,7 @@ private fun ShortcutItemRow(shortcut: Shortcut, onClick: () -> Unit) {
                 fontSize = 18.sp,
                 modifier = Modifier.weight(1f)
             )
-            Text(text = keyName, color = colors.textSecondary, fontSize = 18.sp)
+            Text(text = bindingText, color = colors.textSecondary, fontSize = 18.sp)
         }
     }
 }
@@ -137,7 +142,7 @@ private fun ShortcutItemRow(shortcut: Shortcut, onClick: () -> Unit) {
 @Composable
 private fun ShortcutEditDialog(
     shortcut: Shortcut,
-    onSetKey: (Int) -> Unit,
+    onSetKey: (keyCode: Int, modifiers: Int) -> Unit,
     onClearKey: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -152,16 +157,27 @@ private fun ShortcutEditDialog(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(48.dp)
-                .then(if (waitingForKey) Modifier.onKeyEvent { event ->
-                    if (event.nativeKeyEvent.action == KeyEvent.ACTION_DOWN) {
-                        val code = event.nativeKeyEvent.keyCode
-                        if (code != KeyEvent.KEYCODE_BACK && code != KeyEvent.KEYCODE_DPAD_CENTER) {
-                            onSetKey(code)
-                            return@onKeyEvent true
+                .then(
+                    if (waitingForKey) {
+                        Modifier.onKeyEvent { event ->
+                            val native = event.nativeKeyEvent
+                            if (native.action == KeyEvent.ACTION_DOWN) {
+                                val code = native.keyCode
+                                if (code != KeyEvent.KEYCODE_BACK && code != KeyEvent.KEYCODE_DPAD_CENTER) {
+                                    val normalized = KeyEvent.normalizeMetaState(native.metaState)
+                                    val mask =
+                                        KeyEvent.META_ALT_ON or KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON
+                                    val mods = normalized and mask
+                                    onSetKey(code, mods)
+                                    return@onKeyEvent true
+                                }
+                            }
+                            false
                         }
+                    } else {
+                        Modifier
                     }
-                    false
-                } else Modifier),
+                ),
             contentAlignment = Alignment.Center
         ) {
             Surface(

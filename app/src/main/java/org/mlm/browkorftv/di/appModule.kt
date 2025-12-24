@@ -33,7 +33,7 @@ val appModule = module {
 
     // Core singletons
     single { SettingsManager.getInstance(androidContext()) }
-    single { ShortcutMgr.getInstance() }
+    single { ShortcutMgr(androidContext()) }
     single { SnackbarManager() }
 
     // Repos / managers

@@ -23,25 +23,12 @@ import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
 import android.webkit.WebStorage
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
@@ -49,9 +36,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.webkit.URLUtilCompat
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinComponent
@@ -59,11 +49,6 @@ import org.koin.core.component.inject
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.activity.IncognitoModeMainActivity
-import org.mlm.browkorftv.activity.ComposeMenuActivity
-import org.mlm.browkorftv.ui.MainOverlay
-import org.mlm.browkorftv.ui.components.CursorMenuAction
-import org.mlm.browkorftv.ui.components.LinkAction
-import org.mlm.browkorftv.ui.theme.AppTheme
 import org.mlm.browkorftv.model.Download
 import org.mlm.browkorftv.model.HostConfig
 import org.mlm.browkorftv.model.WebTabState
@@ -74,6 +59,8 @@ import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
 import org.mlm.browkorftv.ui.SnackbarManager
+import org.mlm.browkorftv.ui.theme.AppTheme
+import org.mlm.browkorftv.ui.screens.BrowserScreen
 import org.mlm.browkorftv.updates.UpdateDialogs
 import org.mlm.browkorftv.updates.UpdatesEvent
 import org.mlm.browkorftv.updates.UpdatesViewModel
@@ -106,7 +93,6 @@ open class MainActivity : AppCompatActivity() {
         private val snackbarManager: SnackbarManager by inject()
     }
 
-    // Compose-first: real View containers kept as fields
     private lateinit var webContainer: CursorLayout
     private lateinit var fullscreenContainer: CursorLayout
 
@@ -121,7 +107,7 @@ open class MainActivity : AppCompatActivity() {
     private val browserUiViewModel: BrowserUiViewModel by viewModel()
     private val favoritesViewModel: FavoritesViewModel by viewModel()
 
-    // Singletons / Managers
+    // Singletons/Managers
     private val adBlockRepository: AdBlockRepository by inject()
     private val downloadsManager: DownloadsManager by inject()
     protected val settingsManager: SettingsManager by inject()
@@ -142,15 +128,6 @@ open class MainActivity : AppCompatActivity() {
     private val filePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             tabsViewModel.currentTab.value?.webEngine?.onFilePicked(result.resultCode, result.data)
-        }
-
-    private val menuActivityLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val url = result.data?.getStringExtra(ComposeMenuActivity.KEY_PICKED_URL)
-                if (!url.isNullOrBlank()) navigate(url)
-                browserUiViewModel.setMenuVisibility(false)
-            }
         }
 
     private val unknownSourcesLauncher =
@@ -181,50 +158,56 @@ open class MainActivity : AppCompatActivity() {
         return (ctx.linkUri ?: ctx.srcUri)?.trim('"')
     }
 
-    val cursorActionHandler: (CursorMenuAction) -> Unit = { action ->
-        val ctx = lastCtxMenu
-        when (action) {
-            CursorMenuAction.Dismiss -> {
-                browserUiViewModel.hideCursorMenu()
-                lastCtxMenu = null
-            }
+    val cursorActionHandler: (org.mlm.browkorftv.ui.components.CursorMenuAction) -> Unit =
+        { action ->
+            val ctx = lastCtxMenu
+            when (action) {
+                org.mlm.browkorftv.ui.components.CursorMenuAction.Dismiss -> {
+                    browserUiViewModel.hideCursorMenu()
+                    lastCtxMenu = null
+                    webContainer.post { focusWeb() }
+                }
 
-            CursorMenuAction.Grab -> {
-                ctx?.cursorDrawer?.goToGrabMode()
-                browserUiViewModel.hideCursorMenu()
-            }
+                org.mlm.browkorftv.ui.components.CursorMenuAction.Grab -> {
+                    ctx?.cursorDrawer?.goToGrabMode()
+                    browserUiViewModel.hideCursorMenu()
+                }
 
-            CursorMenuAction.TextSelect -> {
-                ctx?.cursorDrawer?.goToTextSelectionMode()
-                browserUiViewModel.hideCursorMenu()
-            }
+                org.mlm.browkorftv.ui.components.CursorMenuAction.TextSelect -> {
+                    ctx?.cursorDrawer?.goToTextSelectionMode()
+                    browserUiViewModel.hideCursorMenu()
+                }
 
-            CursorMenuAction.ZoomIn -> ctx?.tab?.webEngine?.zoomIn()
-            CursorMenuAction.ZoomOut -> ctx?.tab?.webEngine?.zoomOut()
-            CursorMenuAction.LinkActions -> browserUiViewModel.showLinkActions()
+                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomIn -> ctx?.tab?.webEngine?.zoomIn()
+                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomOut -> ctx?.tab?.webEngine?.zoomOut()
+                org.mlm.browkorftv.ui.components.CursorMenuAction.LinkActions -> browserUiViewModel.showLinkActions()
+            }
         }
-    }
 
-    val linkActionHandler: (LinkAction) -> Unit = let@{ action ->
+    val linkActionHandler: (org.mlm.browkorftv.ui.components.LinkAction) -> Unit = let@{ action ->
         val ctx = lastCtxMenu ?: return@let
         val url = currentLinkUrl()
         when (action) {
-            LinkAction.Refresh -> ctx.tab.webEngine.reload()
-            LinkAction.OpenInNewTab -> if (url != null) ctx.windowProvider.onOpenInNewTabRequested(
-                url,
-                true
-            )
+            org.mlm.browkorftv.ui.components.LinkAction.Refresh -> ctx.tab.webEngine.reload()
+            org.mlm.browkorftv.ui.components.LinkAction.OpenInNewTab -> if (url != null) {
+                ctx.windowProvider.onOpenInNewTabRequested(url, true)
+            }
 
-            LinkAction.OpenExternal -> if (url != null) ctx.windowProvider.onOpenInExternalAppRequested(
-                url
-            )
+            org.mlm.browkorftv.ui.components.LinkAction.OpenExternal -> if (url != null) {
+                ctx.windowProvider.onOpenInExternalAppRequested(url)
+            }
 
-            LinkAction.Download -> if (url != null) ctx.windowProvider.onDownloadRequested(url)
-            LinkAction.Copy -> if (url != null) ctx.windowProvider.onCopyTextToClipboardRequested(
-                url
-            )
+            org.mlm.browkorftv.ui.components.LinkAction.Download -> if (url != null) {
+                ctx.windowProvider.onDownloadRequested(url)
+            }
 
-            LinkAction.Share -> if (url != null) ctx.windowProvider.onShareUrlRequested(url)
+            org.mlm.browkorftv.ui.components.LinkAction.Copy -> if (url != null) {
+                ctx.windowProvider.onCopyTextToClipboardRequested(url)
+            }
+
+            org.mlm.browkorftv.ui.components.LinkAction.Share -> if (url != null) {
+                ctx.windowProvider.onShareUrlRequested(url)
+            }
         }
         browserUiViewModel.hideLinkActions()
     }
@@ -298,8 +281,6 @@ open class MainActivity : AppCompatActivity() {
     }
 
     private fun focusWeb() {
-        // For WebView engine: focus should end up in WebViewEx so CursorLayout can intercept DPAD
-        // For Gecko engine: focus should end up in GeckoViewWithVirtualCursor
         tabsViewModel.currentTab.value?.webEngine?.getView()?.requestFocus()
     }
 
@@ -330,7 +311,6 @@ open class MainActivity : AppCompatActivity() {
         }
 
         webContainer = CursorLayout(this).apply {
-            // WebView engine uses CursorLayout drawing + key interception
             setWillNotDraw(false)
             isFocusable = true
             isFocusableInTouchMode = true
@@ -342,11 +322,6 @@ open class MainActivity : AppCompatActivity() {
             visibility = View.INVISIBLE
             isFocusable = true
             isFocusableInTouchMode = true
-        }
-
-        // Back handling (same as before)
-        onBackPressedDispatcher.addCallback(this) {
-            handleAppBackLogic()
         }
 
         if (!BuildConfig.GECKO_INCLUDED) {
@@ -362,7 +337,6 @@ open class MainActivity : AppCompatActivity() {
         }
 
         setContent {
-            val uiState by browserUiViewModel.uiState.collectAsStateWithLifecycle()
             val isBlocking by blockingUi.collectAsStateWithLifecycle()
 
             val themePref by settingsManager.themeFlow.collectAsStateWithLifecycle(
@@ -374,7 +348,6 @@ open class MainActivity : AppCompatActivity() {
                 Theme.WHITE -> false
                 Theme.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
             }
-            val snackbarManager: SnackbarManager by inject()
 
             val snackbarHostState = remember { androidx.compose.material3.SnackbarHostState() }
 
@@ -388,101 +361,77 @@ open class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // When menu becomes visible: clear Web focus so DPAD goes to Compose
-            LaunchedEffect(uiState.isMenuVisible, uiState.isFullscreen) {
-                if (uiState.isMenuVisible && !uiState.isFullscreen) {
-                    clearWebFocus()
-                }
-            }
-
-
             AppTheme(darkTheme) {
-                Box(Modifier.fillMaxSize()) {
+                BrowserScreen(
+                    webContainer = webContainer,
+                    fullscreenContainer = fullscreenContainer,
 
-                    AndroidView(
-                        factory = { webContainer },
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    uiVm = browserUiViewModel,
+                    tabsVm = tabsViewModel,
+                    viewModelStoreOwner = this@MainActivity,
 
-                    AndroidView(
-                        factory = { fullscreenContainer },
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    isBlocking = isBlocking,
+                    snackbarHostState = snackbarHostState,
 
-                    MainOverlay(
-                        uiVm = browserUiViewModel,
-                        tabsVm = tabsViewModel,
-                        onNavigate = { url -> search(url); hideMenuOverlay() },
-                        onMenuAction = { action ->
-                            when (action) {
-                                "history" -> showHistory()
-                                "downloads" -> showDownloads()
-                                "favorites" -> showFavorites()
-                                "settings" -> showSettings()
-                                "voice" -> initiateVoiceSearch()
-                                "close" -> closeWindow()
-                                "incognito" -> toggleIncognitoMode()
-                            }
-                        },
-                        onTabSelected = { tab ->
-                            tabsViewModel.changeTab(
-                                tab,
-                                { t -> createWebView(t) },
-                                webContainer,
-                                fullscreenContainer,
-                                WebEngineCallback(tab)
-                            )
-                            hideMenuOverlay()
-                        },
-                        onCloseTab = { tab -> closeTab(tab) },
-                        onAddTab = {
-                            openInNewTab(settings.homePage, tabsViewModel.tabsStates.value.size)
-                        },
-                        onBack = { navigateBack() },
-                        onForward = { tabsViewModel.currentTab.value?.webEngine?.goForward() },
-                        onRefresh = { refresh() },
-                        onHome = { navigate(AppSettings.HOME_URL_ALIAS) },
-                        onZoomIn = { tabsViewModel.currentTab.value?.webEngine?.zoomIn() },
-                        onZoomOut = { tabsViewModel.currentTab.value?.webEngine?.zoomOut() },
-                        onToggleAdBlock = { toggleAdBlockForTab() },
-                        onTogglePopupBlock = { lifecycleScope.launch { showPopupBlockOptions() } },
-                        onCursorMenuAction = cursorActionHandler,
-                        onDismissLinkActions = { browserUiViewModel.hideLinkActions() },
-                        onLinkAction = linkActionHandler,
-                        getLinkCapabilities = {
-                            val ctx = lastCtxMenu
-                            val url = (ctx?.linkUri ?: ctx?.srcUri)?.trim('"')
-                            val hasUrl = !url.isNullOrBlank()
-                            val isWebUrl =
-                                hasUrl && (url.startsWith("http://") || url.startsWith("https://"))
-                            Pair(isWebUrl, hasUrl)
-                        },
-                    )
+                    setCursorEnabled = ::setCursorEnabled,
+                    clearWebFocus = ::clearWebFocus,
+                    focusWeb = ::focusWeb,
+                    postFocusWeb = { webContainer.post { focusWeb() } },
+                    consumeBackIfCursorModeActive = { webContainer.consumeBackIfCursorModeActive() },
 
-                    voiceSearchHelper.VoiceSearchUI()
+                    showMenuOverlay = ::showMenuOverlay,
+                    hideMenuOverlay = ::hideMenuOverlay,
 
-                    if (isBlocking) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Black.copy(alpha = 0.45f))
-                                .focusable(true) // eats DPAD while blocking
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .align(Alignment.Center)
-                            )
-                        }
-                    }
-                    SnackbarHost(
-                        hostState = snackbarHostState,
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                    )
+                    onNavigateOrSearch = { text ->
+                        search(text)
+                        browserUiViewModel.toggleMenu()
+                    },
+                    onCloseWindow = ::closeWindow,
+                    onToggleIncognito = ::toggleIncognitoMode,
+                    onVoiceSearch = ::initiateVoiceSearch,
 
-                }
+                    onTabSelected = { tab ->
+                        tabsViewModel.changeTab(
+                            tab,
+                            { t -> createWebView(t) },
+                            webContainer,
+                            fullscreenContainer,
+                            WebEngineCallback(tab)
+                        )
+                        browserUiViewModel.toggleMenu()
+                    },
+                    onCloseTab = { tab -> closeTab(tab) },
+                    onAddTab = {
+                        openInNewTab(settings.homePage, tabsViewModel.tabsStates.value.size)
+                    },
+
+                    onBack = { navigateBack() },
+                    onForward = { tabsViewModel.currentTab.value?.webEngine?.goForward() },
+                    onRefresh = { refresh() },
+                    onHome = {
+                        navigate(AppSettings.HOME_URL_ALIAS)
+                        browserUiViewModel.toggleMenu()
+                    },
+                    onZoomIn = { tabsViewModel.currentTab.value?.webEngine?.zoomIn() },
+                    onZoomOut = { tabsViewModel.currentTab.value?.webEngine?.zoomOut() },
+                    onToggleAdBlock = { toggleAdBlockForTab() },
+                    onTogglePopupBlock = { lifecycleScope.launch { showPopupBlockOptions() } },
+
+                    onCursorMenuAction = cursorActionHandler,
+                    onDismissLinkActions = { browserUiViewModel.hideLinkActions() },
+                    onLinkAction = linkActionHandler,
+                    getLinkCapabilities = {
+                        val ctx = lastCtxMenu
+                        val url = (ctx?.linkUri ?: ctx?.srcUri)?.trim('"')
+                        val hasUrl = !url.isNullOrBlank()
+                        val isWebUrl =
+                            hasUrl && (url.startsWith("http://") || url.startsWith("https://"))
+                        isWebUrl to hasUrl
+                    },
+
+                    voiceSearchUi = { voiceSearchHelper.VoiceSearchUI() }
+                )
             }
-
         }
 
         EdgeToEdgeViews.enable(this, findViewById(android.R.id.content))
@@ -538,15 +487,6 @@ open class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                // Mirror menu visibility into the AndroidView world (for thumbnails + focus)
-                launch {
-                    browserUiViewModel.uiState.collect { state ->
-                        if (state.isMenuVisible) showMenuOverlay(updateVm = false)
-                        else hideMenuOverlay(updateVm = false)
-                    }
-                }
-
-                // Updates events (unchanged)
                 launch {
                     updatesViewModel.events.collectLatest { e ->
                         when (e) {
@@ -602,64 +542,15 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showDownloads() {
-        val intent = Intent(this, ComposeMenuActivity::class.java)
-        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_DOWNLOADS)
-        startActivity(intent)
-    }
-
-    fun showHistory() {
-        val intent = Intent(this, ComposeMenuActivity::class.java)
-        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_HISTORY)
-        menuActivityLauncher.launch(intent)
-        browserUiViewModel.setMenuVisibility(false)
-    }
-
-    fun showFavorites() {
-        val intent = Intent(this, ComposeMenuActivity::class.java)
-        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_FAVORITES)
-        menuActivityLauncher.launch(intent)
-        browserUiViewModel.setMenuVisibility(false)
-    }
-
-    fun showSettings() {
-        val intent = Intent(this, ComposeMenuActivity::class.java)
-        intent.putExtra(ComposeMenuActivity.EXTRA_START_ROUTE, ComposeMenuActivity.ROUTE_SETTINGS)
-        startActivity(intent)
-    }
-
-    private fun handleAppBackLogic() {
-        val ui = browserUiViewModel.uiState.value
-
-        if (ui.isFullscreen) {
-            tabsViewModel.currentTab.value?.webEngine?.hideFullscreenView()
-            return
-        }
-        if (ui.isLinkActionsVisible) {
-            browserUiViewModel.hideLinkActions()
-            return
-        }
-        if (ui.isCursorMenuVisible) {
-            browserUiViewModel.hideCursorMenu()
-            lastCtxMenu = null
-            return
-        }
-        if (webContainer.consumeBackIfCursorModeActive()) {
-            return
-        }
-        toggleMenu()
-    }
-
-    fun navigateBack(goHomeIfNoHistory: Boolean = false) {
+    fun navigateBack(goHomeIfNoHistory: Boolean = false) { // Moving back in tabs should only be done via action bar
         val currentTab = tabsViewModel.currentTab.value
         if (currentTab != null && currentTab.webEngine.canGoBack()) {
             currentTab.webEngine.goBack()
         } else if (goHomeIfNoHistory) {
             navigate(settings.homePage)
-        } else if (!browserUiViewModel.uiState.value.isMenuVisible) {
-            browserUiViewModel.setMenuVisibility(true)
         } else {
-            browserUiViewModel.setMenuVisibility(false)
+            // toggle overlay menu
+            browserUiViewModel.toggleMenu()
         }
     }
 
@@ -732,17 +623,16 @@ open class MainActivity : AppCompatActivity() {
 
         val currentTab = tabsViewModel.currentTab.value
         if (currentTab == null || currentTab.url == settings.homePage) {
-            browserUiViewModel.setMenuVisibility(true)
+            // open overlay menu root
+            browserUiViewModel.toggleMenu()
         }
 
         updatesViewModel.checkAutoIfNeeded()
 
         blockingUi.value = false
 
-        // If menu is not visible after load, ensure web focus is correct
-        if (!browserUiViewModel.uiState.value.isMenuVisible) {
-            focusWeb()
-        }
+        // If menu not visible after load, ensure web focus is correct
+        webContainer.post { focusWeb() }
     }
 
     private fun openInNewTab(
@@ -759,7 +649,7 @@ open class MainActivity : AppCompatActivity() {
         changeTab(tab)
 
         if (navigateImmediately) navigate(url)
-        if (needToHideMenuOverlay) browserUiViewModel.setMenuVisibility(false)
+        if (needToHideMenuOverlay) browserUiViewModel.toggleMenu()
 
         return tab.webEngine
     }
@@ -782,7 +672,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         tabsViewModel.onCloseTab(tab)
-        browserUiViewModel.setMenuVisibility(false)
+        browserUiViewModel.toggleMenu()
     }
 
     private fun changeTab(newTab: WebTabState) {
@@ -793,10 +683,7 @@ open class MainActivity : AppCompatActivity() {
             fullscreenContainer,
             WebEngineCallback(newTab)
         )
-        // If menu is hidden, keep focus in web so cursor works immediately
-        if (!browserUiViewModel.uiState.value.isMenuVisible) {
-            focusWeb()
-        }
+        webContainer.post { focusWeb() }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -823,7 +710,6 @@ open class MainActivity : AppCompatActivity() {
     }
 
     private fun onWebViewUpdated(tab: WebTabState) {
-        // Ensure text selection callbacks go to current engine
         webContainer.cursorDrawerDelegate.textSelectionCallback = tab.webEngine
         fullscreenContainer.cursorDrawerDelegate.textSelectionCallback = tab.webEngine
 
@@ -878,13 +764,6 @@ open class MainActivity : AppCompatActivity() {
         onDownloadStarted(download.filename)
     }
 
-    override fun onTrimMemory(level: Int) {
-        for (tab in tabsViewModel.tabsStates.value) {
-            if (!tab.selected) tab.trimMemory()
-        }
-        super.onTrimMemory(level)
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -896,6 +775,7 @@ open class MainActivity : AppCompatActivity() {
                 grantResults
             ) == true
         ) return
+
         if (grantResults.isEmpty()) return
 
         when (requestCode) {
@@ -1057,40 +937,30 @@ open class MainActivity : AppCompatActivity() {
         exitProcess(0)
     }
 
-    fun toggleMenu() {
-        browserUiViewModel.toggleMenu()
-    }
-
     @SuppressLint("RestrictedApi")
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (shortcutMgr.handle(event, this, tabsViewModel.currentTab.value)) return true
         return super.dispatchKeyEvent(event)
     }
 
-    private fun showMenuOverlay(updateVm: Boolean = true) {
-        if (updateVm) browserUiViewModel.setMenuVisibility(true)
+    private fun showMenuOverlay() { // Not hiding the webview, doesn't seem to affect perf. that much
+//        val currentTab = tabsViewModel.currentTab.value ?: return
+//        lifecycleScope.launch {
+//            val thumbnail = currentTab.webEngine.renderThumbnail(currentTab.thumbnail)
+//            if (thumbnail != null) {
+//                currentTab.thumbnail = thumbnail
+//                browserUiViewModel.updateThumbnail(thumbnail)
+//            }
+//            displayThumbnail(currentTab)
+//        }
+    }
 
-        // IMPORTANT: hide the live web content behind the menu (like old XML version)
-        webContainer.visibility = View.INVISIBLE
-        clearWebFocus()
-
-        val currentTab = tabsViewModel.currentTab.value
-        if (currentTab != null) {
-            lifecycleScope.launch {
-                val thumbnail = currentTab.webEngine.renderThumbnail(currentTab.thumbnail)
-                if (thumbnail != null) {
-                    currentTab.thumbnail = thumbnail
-                    browserUiViewModel.updateThumbnail(thumbnail)
-                }
-                displayThumbnail(currentTab)
-            }
-        }
+    private fun hideMenuOverlay() {
+//        browserUiViewModel.updateThumbnail(null)
     }
 
     private suspend fun displayThumbnail(currentTab: WebTabState?) {
         if (currentTab != null) {
-            if (tabByTitleIndex(tabsViewModel.tabsStates.value.indexOf(currentTab)) != currentTab) return
-
             if (currentTab.thumbnailHash != null) {
                 withContext(Dispatchers.IO) {
                     val thumbnail = currentTab.loadThumbnail(applicationContext)
@@ -1102,15 +972,6 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideMenuOverlay(updateVm: Boolean = true) {
-        if (updateVm) browserUiViewModel.setMenuVisibility(false)
-
-        browserUiViewModel.updateThumbnail(null)
-        webContainer.visibility = View.VISIBLE
-
-        webContainer.post { focusWeb() }
-    }
-
     private fun onDownloadStarted(fileName: String) {
         snackbarManager.show(
             getString(
@@ -1119,11 +980,11 @@ open class MainActivity : AppCompatActivity() {
                     .toString() + File.separator + fileName
             )
         )
-        browserUiViewModel.setMenuVisibility(false)
+        browserUiViewModel.toggleMenu()
     }
 
     fun initiateVoiceSearch() {
-        browserUiViewModel.setMenuVisibility(false)
+        browserUiViewModel.toggleMenu()
         voiceSearchHelper.initiateVoiceSearch(object : VoiceSearchHelper.Callback {
             override fun onResult(text: String?) {
                 if (text == null) {
@@ -1131,14 +992,9 @@ open class MainActivity : AppCompatActivity() {
                     return
                 }
                 search(text)
-                browserUiViewModel.setMenuVisibility(false)
+                browserUiViewModel.toggleMenu()
             }
         })
-    }
-
-    private fun tabByTitleIndex(index: Int): WebTabState? {
-        val tabs = tabsViewModel.tabsStates.value
-        return if (index >= 0 && index < tabs.size) tabs[index] else null
     }
 
     private inner class WebEngineCallback(val tab: WebTabState) : WebEngineWindowProviderCallback {
@@ -1183,6 +1039,7 @@ open class MainActivity : AppCompatActivity() {
                     contentDisposition
                 ) else null)
                     ?: URLUtilCompat.guessFileName(url, null, mimeType)
+
             this@MainActivity.onDownloadRequested(
                 url,
                 referer,
@@ -1241,7 +1098,7 @@ open class MainActivity : AppCompatActivity() {
             }
         }
 
-        override fun onReceivedIcon(icon: Bitmap) { /* optional: wire to favicon store */
+        override fun onReceivedIcon(icon: Bitmap) { /* optional */
         }
 
         override fun shouldOverrideUrlLoading(url: String): Boolean {
@@ -1296,20 +1153,14 @@ open class MainActivity : AppCompatActivity() {
                 val newThumbnail = tab.webEngine.renderThumbnail(tab.thumbnail)
                 if (newThumbnail != null) {
                     tab.updateThumbnail(this@MainActivity, newThumbnail)
-                    if (browserUiViewModel.uiState.value.isMenuVisible && tab == tabsViewModel.currentTab.value) {
-                        displayThumbnail(tab)
-                    }
                 }
             }
         }
 
         override fun onPageCertificateError(url: String?) {
             runOnUiThread {
-                if (browserUiViewModel.uiState.value.isMenuVisible) {
-                    hideMenuOverlay(updateVm = true)
-                } else {
-                    webContainer.post { focusWeb() }
-                }
+                browserUiViewModel.toggleMenu()
+                webContainer.post { focusWeb() }
 
                 browserUiViewModel.showNotification(
                     R.drawable.outline_web_asset_off_24,
@@ -1437,7 +1288,6 @@ open class MainActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
-            // Restore focus to web view after exiting fullscreen
             focusWeb()
         }
 
@@ -1464,8 +1314,7 @@ open class MainActivity : AppCompatActivity() {
         ) {
             lastCtxMenu = ContextMenuCtx(tab, this, cursorDrawer, baseUri, linkUri, srcUri)
             browserUiViewModel.showCursorMenu(x, y)
-
-            browserUiViewModel.setMenuVisibility(true)
+            clearWebFocus()
         }
 
         override fun onSelectedTextActionRequested(selectedText: String, editable: Boolean) {
@@ -1510,14 +1359,13 @@ open class MainActivity : AppCompatActivity() {
                                 type = "text/plain"
                                 putExtra(Intent.EXTRA_TEXT, selectedText)
                             }
-                            runCatching { startActivity(share) }
-                                .onFailure {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        R.string.external_app_open_error,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                            runCatching { startActivity(share) }.onFailure {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    R.string.external_app_open_error,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
 
                         R.string.search -> search(selectedText)
@@ -1547,5 +1395,14 @@ open class MainActivity : AppCompatActivity() {
         override fun onServiceDisconnected(name: ComponentName?) {
             downloadService = null
         }
+    }
+
+    private fun setCursorEnabled(enabled: Boolean) {
+        webContainer.cursorDrawerDelegate.enabled = enabled
+        fullscreenContainer.cursorDrawerDelegate.enabled = enabled
+    }
+
+    fun toggleMenu() {
+        browserUiViewModel.toggleMenu()
     }
 }

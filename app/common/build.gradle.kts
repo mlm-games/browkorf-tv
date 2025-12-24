@@ -30,6 +30,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     implementation(libs.kmp.settings.core)
+    implementation(libs.androidx.startup.runtime)
+
 
     ksp(libs.kmp.settings.ksp)
     implementation(libs.androidx.datastore.preferences)

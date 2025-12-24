@@ -17,20 +17,31 @@ data class BrowserUiState(
     val isProgressVisible: Boolean = false,
     val canGoBack: Boolean = false,
     val canGoForward: Boolean = false,
+
     val isIncognito: Boolean = false,
+
     val isAdBlockEnabled: Boolean = true,
     val blockedAds: Int = 0,
     val blockedPopups: Int = 0,
-    val isMenuVisible: Boolean = false,
+
     val isFullscreen: Boolean = false,
+
     val currentThumbnail: Bitmap? = null,
     val notification: NotificationUi? = null,
 
     val isCursorMenuVisible: Boolean = false,
     val cursorMenuX: Int = 0, // px
     val cursorMenuY: Int = 0, // px
+
     val isLinkActionsVisible: Boolean = false,
+    val isMenuVisible: Boolean = false,
 )
+
+data class NotificationUi(
+    val iconRes: Int,
+    val message: String
+)
+
 
 class BrowserUiViewModel : ViewModel() {
 
@@ -56,7 +67,7 @@ class BrowserUiViewModel : ViewModel() {
         hideProgressJob?.cancel()
         _uiState.update { it.copy(progress = progress, isProgressVisible = true) }
 
-        if (progress == 100) {
+        if (progress >= 100) {
             hideProgressJob = viewModelScope.launch {
                 delay(1000)
                 _uiState.update { it.copy(isProgressVisible = false) }
@@ -69,19 +80,17 @@ class BrowserUiViewModel : ViewModel() {
     }
 
     fun updateAdBlockStats(enabled: Boolean, ads: Int, popups: Int) {
-        _uiState.update { it.copy(isAdBlockEnabled = enabled, blockedAds = ads, blockedPopups = popups) }
-    }
-
-    fun setMenuVisibility(visible: Boolean) {
-        _uiState.update { it.copy(isMenuVisible = visible) }
+        _uiState.update {
+            it.copy(
+                isAdBlockEnabled = enabled,
+                blockedAds = ads,
+                blockedPopups = popups
+            )
+        }
     }
 
     fun setFullscreen(fullscreen: Boolean) {
         _uiState.update { it.copy(isFullscreen = fullscreen) }
-    }
-
-    fun toggleMenu() {
-        _uiState.update { it.copy(isMenuVisible = !it.isMenuVisible) }
     }
 
     fun updateThumbnail(bitmap: Bitmap?) {
@@ -91,7 +100,6 @@ class BrowserUiViewModel : ViewModel() {
     fun showNotification(iconRes: Int, message: String) {
         _uiState.update { it.copy(notification = NotificationUi(iconRes, message)) }
 
-        // auto-dismiss
         viewModelScope.launch {
             delay(3000)
             _uiState.update { s ->
@@ -115,9 +123,16 @@ class BrowserUiViewModel : ViewModel() {
     fun hideLinkActions() {
         _uiState.update { it.copy(isLinkActionsVisible = false) }
     }
-}
 
-data class NotificationUi(
-    val iconRes: Int,
-    val message: String
-)
+    fun showMenu() {
+        _uiState.update { it.copy(isMenuVisible = true) }
+    }
+
+    fun hideMenu() {
+        _uiState.update { it.copy(isMenuVisible = false) }
+    }
+
+    fun toggleMenu() {
+        _uiState.update { it.copy(isMenuVisible = !it.isMenuVisible) }
+    }
+}

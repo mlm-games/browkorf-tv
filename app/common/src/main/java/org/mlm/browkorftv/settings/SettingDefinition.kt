@@ -130,7 +130,7 @@ data class AppSettings(
     )
     @RequiresConfirmation(
         title = "Change Web Engine?",
-        message = "App will restart to apply changes",
+        message = "You should restart to apply changes",
         isDangerous = true
     )
     val webEngineIndex: Int = -1, // -1 means not set, will use default
