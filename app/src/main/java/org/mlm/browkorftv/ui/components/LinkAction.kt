@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Button
 import androidx.tv.material3.Surface
@@ -27,7 +29,10 @@ fun LinkActionsDialog(
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
         val c = AppTheme.colors
-        Surface(colors = SurfaceDefaults.colors(c.topBarBackground, contentColor = c.textPrimary)) {
+        Surface(
+            colors = SurfaceDefaults.colors(c.topBarBackground, contentColor = c.textPrimary),
+            shape = RoundedCornerShape(5.dp)
+        ) {
             Column(
                 Modifier.padding(18.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)

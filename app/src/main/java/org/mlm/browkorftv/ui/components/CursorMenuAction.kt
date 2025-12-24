@@ -1,11 +1,17 @@
 package org.mlm.browkorftv.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -14,6 +20,7 @@ import androidx.tv.material3.IconButton
 import androidx.tv.material3.Surface
 import androidx.compose.ui.res.painterResource
 import androidx.tv.material3.SurfaceDefaults
+import kotlinx.coroutines.delay
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.ui.theme.AppTheme
 
@@ -30,6 +37,13 @@ fun CursorRadialMenu(
     val radius = 70.dp
     val density = LocalDensity.current
 
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        runCatching { focusRequester.requestFocus() }
+    }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -39,14 +53,17 @@ fun CursorRadialMenu(
                 val half = with(density) { (size / 2).roundToPx() }
                 IntOffset(xPx - half, yPx - half)
             },
-            colors = SurfaceDefaults.colors(c.topBarBackground, c.textPrimary),
+            colors = SurfaceDefaults.colors(Color.Transparent, c.textPrimary),
+            shape = RoundedCornerShape(4.dp)
         ) {
             Box(Modifier.size(size)) {
 
                 // Center (Dismiss)
                 IconButton(
                     onClick = { onAction(CursorMenuAction.Dismiss) },
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .focusRequester(focusRequester)
                 ) {
                     Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
                 }
