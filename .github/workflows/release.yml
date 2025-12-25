@@ -68,8 +68,8 @@ jobs:
           NEW_NAME="$MAJ.$MIN.$(( ${PAT:-0} + 1 ))"
           
           # Update the TOML / kts file
-          sed -i "s/versionCode = \"$OLD_CODE\"/versionCode = \"$NEW_CODE\"/" $VERSION_CATALOG_PATH
-          sed -i "s/versionCode = $OLD_CODE/versionCode = \"$NEW_CODE\"/" $VERSION_CATALOG_PATH # Fallback if no quotes
+          # sed -i "s/versionCode = \"$OLD_CODE\"/versionCode = \"$NEW_CODE\"/" $VERSION_CATALOG_PATH
+          sed -i "s/versionCode = $OLD_CODE/versionCode = $NEW_CODE/" $VERSION_CATALOG_PATH # Fallback if no quotes
           sed -i "s/versionName = \"$OLD_NAME\"/versionName = \"$NEW_NAME\"/" $VERSION_CATALOG_PATH
           
           echo "New Version: $NEW_NAME ($NEW_CODE)"
