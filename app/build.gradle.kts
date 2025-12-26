@@ -1,7 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,12 +7,6 @@ plugins {
     alias(libs.plugins.ksp)
     id("org.jetbrains.kotlin.plugin.serialization")
     alias(libs.plugins.apk.dist)
-}
-
-val properties = Properties()
-val localPropertiesFile: File = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.inputStream().use { properties.load(it) }
 }
 
 android {
