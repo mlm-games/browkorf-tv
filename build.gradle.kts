@@ -35,13 +35,6 @@ subprojects {
             jvmToolchain(libs.versions.jvmTarget.get().toInt())
         }
     }
-
-    // Fixes compose group key generation diffs.
-    tasks.withType<KotlinCompile>().configureEach {
-        compilerOptions {
-            freeCompilerArgs.add("-Xmap-source-path=${project.rootDir}=.")
-        }
-    }
 }
 
 tasks.register("clean", Delete::class) {

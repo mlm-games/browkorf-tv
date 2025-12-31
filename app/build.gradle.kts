@@ -113,6 +113,11 @@ android {
             isIncludeAndroidResources = true
         }
     }
+
+    composeCompiler {
+        includeSourceInformation.set(false)
+        includeTraceMarkers.set(false)
+    }
 }
 
 ksp {
