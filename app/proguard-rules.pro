@@ -24,7 +24,8 @@
 -keep class org.mlm.browkorftv.webengine.gecko.** { *; }
 
 -dontobfuscate
--renamesourcefileattribute ""
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
 #-keepclasseswithmembers class org.mlm.browkorftv.model.** {
 #    <fields>;
