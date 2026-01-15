@@ -17,6 +17,20 @@ import kotlin.math.abs
 
 class CursorDrawerDelegate(val context: Context, val surface: View) {
     var enabled: Boolean = true
+
+    /**
+     * When true, D-pad directions are passed through to the webpage as arrow key events
+     * instead of moving the cursor. Useful for games and interactive web apps.
+     */
+    var directionalNavMode: Boolean = false
+        set(value) {
+            if (field == value) return
+            field = value
+            // Stop any ongoing cursor movement
+            stopCursorMovement()
+            surface.invalidate()
+        }
+
     private var cursorRadius: Int = 0
     private var cursorRadiusPressed: Int = 0
     private var maxCursorSpeed: Float = 0f
@@ -26,12 +40,13 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
     val cursorPosition = PointF(0f, 0f)
     private val cursorSpeed = PointF(0f, 0f)
     private val paint = Paint()
-    private var lastCursorUpdate = SystemClock.uptimeMillis() - CURSOR_DISAPPEAR_TIMEOUT
+    private var lastCursorUpdate = 0L  // Start with 0 so cursor is hidden initially
     private var dpadCenterPressed = false
     internal var tmpPointF = PointF()
     var callback: Callback? = null
     var customScrollCallback: CustomScrollCallback? = null
     var textSelectionCallback: TextSelectionCallback? = null
+    var directionalNavCallback: DirectionalNavCallback? = null
     private val cursorHideRunnable = Runnable { surface.invalidate() }
     private var scrollHackStarted = false
     private val scrollHackCoords = PointF()
@@ -40,19 +55,53 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
     var textSelectionMode = false
     private var downTime: Long = 0L
 
-    //handle long press
+    /**
+     * When true, the long-press context menu is active.
+     * Center button events should be consumed, D-pad events pass through for menu navigation.
+     */
+    private var longPressMenuActive = false
+
+    /**
+     * Tracks if we're currently in a center button press sequence.
+     * Used to properly handle the UP event after long press.
+     */
+    private var centerButtonDownTime = 0L
+
     private val longPressRunnable = Runnable {
+        // Cancel any ongoing touch on the surface first
+        if (dpadCenterPressed) {
+            dispatchMotionEvent(cursorPosition.x, cursorPosition.y, MotionEvent.ACTION_CANCEL)
+            dpadCenterPressed = false
+        }
+
         surface.keyDispatcherState.reset(this@CursorDrawerDelegate)
-        dpadCenterPressed = false
         grabMode = false
+        longPressMenuActive = true
+
+        // Stop cursor movement
+        stopCursorMovement()
+
         callback?.onLongPress(cursorPosition.x.toInt(), cursorPosition.y.toInt())
     }
 
     private val isCursorDisappear: Boolean
         get() {
+            if (lastCursorUpdate == 0L) return true
             val newTime = SystemClock.uptimeMillis()
             return newTime - lastCursorUpdate > CURSOR_DISAPPEAR_TIMEOUT
         }
+
+    /**
+     * Check if cursor should be hidden (menu active or directional nav mode)
+     */
+    private val shouldHideCursor: Boolean
+        get() = longPressMenuActive || directionalNavMode
+
+    /**
+     * Check if cursor movement should be blocked
+     */
+    private val isCursorMovementBlocked: Boolean
+        get() = longPressMenuActive || directionalNavMode
 
     interface Callback {
         fun onLongPress(x: Int, y: Int)
@@ -69,12 +118,44 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
         fun onTextSelectionCancel()
     }
 
+    /**
+     * Callback for directional navigation mode - sends key events to webpage
+     */
+    interface DirectionalNavCallback {
+        fun onDirectionalKey(keyCode: Int, action: Int): Boolean
+    }
+
     fun init() {
         paint.isAntiAlias = true
     }
 
+    private fun stopCursorMovement() {
+        cursorDirection.set(0, 0)
+        cursorSpeed.set(0f, 0f)
+        surface.removeCallbacks(cursorUpdateRunnable)
+        surface.removeCallbacks(longPressRunnable)
+        if (scrollHackStarted) {
+            dispatchMotionEvent(scrollHackCoords.x, scrollHackCoords.y, MotionEvent.ACTION_CANCEL)
+            scrollHackStarted = false
+        }
+    }
+
+    /**
+     * Call this when the long-press menu (cursor menu) is dismissed
+     * to re-enable normal input handling.
+     */
+    fun onMenuDismissed() {
+        longPressMenuActive = false
+        centerButtonDownTime = 0L
+        surface.postInvalidate()
+    }
+
+    /**
+     * Check if the long-press menu is currently active
+     */
+    fun isMenuActive(): Boolean = longPressMenuActive
+
     fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) {
-        // Calculate dimensions based on the actual View size
         cursorStrokeWidth = (w / 400).toFloat()
         cursorRadius = w / 100
         cursorRadiusPressed = cursorRadius - Utils.D2P(context, 5f).toInt()
@@ -89,10 +170,64 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
 
     fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (!enabled) return false
-        when (event.keyCode) {
-            KeyEvent.KEYCODE_ESCAPE, KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BACK -> {
+
+        val keyCode = event.keyCode
+        val action = event.action
+
+        // Handle long press menu active state
+        if (longPressMenuActive) {
+            when (keyCode) {
+                // Center/Enter buttons - CONSUME to prevent click on WebView underneath
+                KeyEvent.KEYCODE_DPAD_CENTER,
+                KeyEvent.KEYCODE_ENTER,
+                KeyEvent.KEYCODE_NUMPAD_ENTER,
+                KeyEvent.KEYCODE_BUTTON_A -> {
+                    // Consume but don't process - let Compose handle menu selection
+                    return false
+                }
+
+                // D-pad navigation - let pass through for menu navigation
+                KeyEvent.KEYCODE_DPAD_LEFT,
+                KeyEvent.KEYCODE_DPAD_RIGHT,
+                KeyEvent.KEYCODE_DPAD_UP,
+                KeyEvent.KEYCODE_DPAD_DOWN -> {
+                    return false
+                }
+
+                // Back/Escape - let pass through to dismiss menu
+                KeyEvent.KEYCODE_ESCAPE,
+                KeyEvent.KEYCODE_BUTTON_B,
+                KeyEvent.KEYCODE_BACK -> {
+                    return false
+                }
+            }
+            // Consume all other keys while menu is active
+            return true
+        }
+
+        // Handle directional navigation mode
+        if (directionalNavMode) {
+            when (keyCode) {
+                KeyEvent.KEYCODE_DPAD_LEFT,
+                KeyEvent.KEYCODE_DPAD_RIGHT,
+                KeyEvent.KEYCODE_DPAD_UP,
+                KeyEvent.KEYCODE_DPAD_DOWN -> {
+                    // Pass to callback for injection into WebView
+                    directionalNavCallback?.onDirectionalKey(keyCode, action)
+                    // Always consume to prevent any cursor movement
+                    return true
+                }
+            }
+            // Other keys in directional mode - don't intercept
+        }
+
+        // Normal cursor mode handling
+        when (keyCode) {
+            KeyEvent.KEYCODE_ESCAPE,
+            KeyEvent.KEYCODE_BUTTON_B,
+            KeyEvent.KEYCODE_BACK -> {
                 if (grabMode || textSelectionMode) {
-                    if (event.action == KeyEvent.ACTION_UP) {
+                    if (action == KeyEvent.ACTION_UP) {
                         if (grabMode) {
                             exitGrabMode()
                         } else if (textSelectionMode) {
@@ -101,114 +236,143 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                     }
                     return true
                 }
+                return false
             }
 
             KeyEvent.KEYCODE_DPAD_LEFT -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, -1, UNCHANGED, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, 0, UNCHANGED, false)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, 1, UNCHANGED, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, 0, UNCHANGED, false)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_UP -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, UNCHANGED, -1, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, UNCHANGED, 0, false)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_DOWN -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, UNCHANGED, 1, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, UNCHANGED, 0, false)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_UP_LEFT -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, -1, -1, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, 0, 0, false)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_UP_RIGHT -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, 1, -1, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, 0, 0, false)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_DOWN_LEFT -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, -1, 1, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, 0, 0, false)
                 }
                 return true
             }
 
             KeyEvent.KEYCODE_DPAD_DOWN_RIGHT -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
+                if (action == KeyEvent.ACTION_DOWN) {
                     handleDirectionKeyEvent(event, 1, 1, true)
-                } else if (event.action == KeyEvent.ACTION_UP) {
+                } else if (action == KeyEvent.ACTION_UP) {
                     handleDirectionKeyEvent(event, 0, 0, false)
                 }
                 return true
             }
 
-            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER, KeyEvent.KEYCODE_NUMPAD_ENTER, KeyEvent.KEYCODE_BUTTON_A -> {
-                if (event.action == KeyEvent.ACTION_DOWN && !surface.keyDispatcherState.isTracking(
-                        event
-                    )
-                ) {
+            KeyEvent.KEYCODE_DPAD_CENTER,
+            KeyEvent.KEYCODE_ENTER,
+            KeyEvent.KEYCODE_NUMPAD_ENTER,
+            KeyEvent.KEYCODE_BUTTON_A -> {
+                if (directionalNavMode) {
+                    return false  // Passes through to WebView
+                }
+                if (action == KeyEvent.ACTION_DOWN) {
+                    if (event.repeatCount > 0) {
+                        // Already tracking, ignore repeats
+                        return true
+                    }
+
                     if (grabMode) {
                         exitGrabMode()
-                        return false
-                    } else if (textSelectionMode) {
                         return true
-                    } else {
-                        surface.keyDispatcherState.startTracking(event, this)
-                        if (!isCursorDisappear) {
-                            dpadCenterPressed = true
-                            dispatchMotionEvent(
-                                cursorPosition.x,
-                                cursorPosition.y,
-                                MotionEvent.ACTION_DOWN
-                            )
-                            surface.postInvalidate()
-                            surface.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT)
-                        }
                     }
-                } else if (event.action == KeyEvent.ACTION_UP) {
+
+                    if (textSelectionMode) {
+                        return true
+                    }
+
+                    // Start tracking this press
+                    centerButtonDownTime = SystemClock.uptimeMillis()
+                    surface.keyDispatcherState.startTracking(event, this)
+
+                    if (!isCursorDisappear && !directionalNavMode) {
+                        dpadCenterPressed = true
+                        dispatchMotionEvent(
+                            cursorPosition.x,
+                            cursorPosition.y,
+                            MotionEvent.ACTION_DOWN
+                        )
+                        surface.postInvalidate()
+                        surface.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT)
+                    }
+                    return true
+
+                } else if (action == KeyEvent.ACTION_UP) {
                     surface.keyDispatcherState.handleUpEvent(event)
                     surface.removeCallbacks(longPressRunnable)
-                    if (grabMode) {
-                        //nop
-                    } else if (textSelectionMode) {
+
+                    // If long press menu became active, just consume the UP
+                    if (longPressMenuActive) {
+                        dpadCenterPressed = false
+                        centerButtonDownTime = 0L
+                        return true
+                    }
+
+                    if (textSelectionMode) {
                         exitTextSelectionMode(cancel = false)
-                    } else if (isCursorDisappear) {
+                        return true
+                    }
+
+                    if (isCursorDisappear && !directionalNavMode) {
+                        // Show cursor
                         lastCursorUpdate = SystemClock.uptimeMillis()
                         surface.postInvalidate()
-                    } else {
+                        return true
+                    }
+
+                    if (dpadCenterPressed) {
                         dispatchMotionEvent(
                             cursorPosition.x,
                             cursorPosition.y,
@@ -217,15 +381,22 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                         dpadCenterPressed = false
                         surface.postInvalidate()
                     }
-                }
 
-                return true
+                    centerButtonDownTime = 0L
+                    return true
+                }
             }
         }
         return false
     }
 
     private fun dispatchMotionEvent(x: Float, y: Float, action: Int, pointerId: Int = 0) {
+        // Don't dispatch touch events if menu is active (except CANCEL to clean up)
+        if (longPressMenuActive && action != MotionEvent.ACTION_CANCEL) return
+
+        // Don't dispatch touch events in directional nav mode
+        if (directionalNavMode && action != MotionEvent.ACTION_CANCEL) return
+
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             downTime = SystemClock.uptimeMillis()
         }
@@ -252,7 +423,11 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
     }
 
     private fun handleDirectionKeyEvent(event: KeyEvent, x: Int, y: Int, keyDown: Boolean) {
+        // Don't process direction keys if cursor movement is blocked
+        if (isCursorMovementBlocked) return
+
         lastCursorUpdate = SystemClock.uptimeMillis()
+
         if (keyDown) {
             if (surface.keyDispatcherState.isTracking(event)) {
                 return
@@ -280,21 +455,14 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
     }
 
     private fun scrollWebViewBy(scrollX: Int, scrollY: Int) {
-        if (scrollX == 0 && scrollY == 0) {
-            return
-        }
+        if (scrollX == 0 && scrollY == 0) return
 
         @Suppress("SimplifyBooleanWithConstants")
-        if ((scrollX != 0 && surface.canScrollHorizontally(scrollX)) || (scrollY != 0 && surface.canScrollVertically(
-                scrollY
-            ))
+        if ((scrollX != 0 && surface.canScrollHorizontally(scrollX)) ||
+            (scrollY != 0 && surface.canScrollVertically(scrollY))
         ) {
             surface.scrollTo(surface.scrollX + scrollX, surface.scrollY + scrollY)
-        } else if (customScrollCallback != null && customScrollCallback?.onScroll(
-                scrollX,
-                scrollY
-            ) == true
-        ) {
+        } else if (customScrollCallback?.onScroll(scrollX, scrollY) == true) {
             return
         } else if (USE_SCROLL_HACK && !dpadCenterPressed) {
             var justStarted = false
@@ -315,8 +483,10 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
             }
             scrollHackCoords.x -= scrollX
             scrollHackCoords.y -= scrollY
-            if (scrollHackCoords.x < scrollHackActiveRect.left || scrollHackCoords.x >= scrollHackActiveRect.right ||
-                scrollHackCoords.y < scrollHackActiveRect.top || scrollHackCoords.y >= scrollHackActiveRect.bottom
+            if (scrollHackCoords.x < scrollHackActiveRect.left ||
+                scrollHackCoords.x >= scrollHackActiveRect.right ||
+                scrollHackCoords.y < scrollHackActiveRect.top ||
+                scrollHackCoords.y >= scrollHackActiveRect.bottom
             ) {
                 scrollHackCoords.x += scrollX
                 scrollHackCoords.y += scrollY
@@ -336,6 +506,9 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
     }
 
     fun dispatchDraw(canvas: Canvas) {
+        // Don't draw cursor if it should be hidden
+        if (shouldHideCursor) return
+
         if (grabMode || textSelectionMode || !isCursorDisappear) {
             val cx = cursorPosition.x
             val cy = cursorPosition.y
@@ -399,7 +572,12 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
 
     private val cursorUpdateRunnable = object : Runnable {
         override fun run() {
-            if (!enabled) return
+            // Check if we should stop at the start of each frame
+            if (!enabled || isCursorMovementBlocked) {
+                stopCursorMovement()
+                return
+            }
+
             surface.removeCallbacks(cursorHideRunnable)
 
             val newTime = SystemClock.uptimeMillis()
@@ -408,18 +586,20 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
 
             val accelerationFactor = 0.05f * dTime
 
-            cursorSpeed.x =
-                (cursorSpeed.x + cursorDirection.x.toFloat().coerceIn(-1f, 1f) * accelerationFactor)
-                    .coerceIn(-maxCursorSpeed, maxCursorSpeed)
+            cursorSpeed.x = (cursorSpeed.x + cursorDirection.x.toFloat()
+                .coerceIn(-1f, 1f) * accelerationFactor)
+                .coerceIn(-maxCursorSpeed, maxCursorSpeed)
 
-            cursorSpeed.y =
-                (cursorSpeed.y + cursorDirection.y.toFloat().coerceIn(-1f, 1f) * accelerationFactor)
-                    .coerceIn(-maxCursorSpeed, maxCursorSpeed)
+            cursorSpeed.y = (cursorSpeed.y + cursorDirection.y.toFloat()
+                .coerceIn(-1f, 1f) * accelerationFactor)
+                .coerceIn(-maxCursorSpeed, maxCursorSpeed)
 
             if (abs(cursorSpeed.x) < 0.1f) cursorSpeed.x = 0f
             if (abs(cursorSpeed.y) < 0.1f) cursorSpeed.y = 0f
 
-            if (cursorDirection.x == 0 && cursorDirection.y == 0 && cursorSpeed.x == 0f && cursorSpeed.y == 0f) {
+            if (cursorDirection.x == 0 && cursorDirection.y == 0 &&
+                cursorSpeed.x == 0f && cursorSpeed.y == 0f
+            ) {
                 surface.postDelayed(cursorHideRunnable, CURSOR_DISAPPEAR_TIMEOUT.toLong())
                 return
             }
@@ -432,41 +612,43 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
             cursorPosition.y = cursorPosition.y.coerceIn(0f, (surface.height - 1).toFloat())
 
             if (tmpPointF != cursorPosition) {
-                if (dpadCenterPressed) {
-                    dispatchMotionEvent(cursorPosition.x, cursorPosition.y, MotionEvent.ACTION_MOVE)
-                } else if (textSelectionMode) {
-                    textSelectionCallback?.onTextSelectionMove(
-                        cursorPosition.x.toInt(),
-                        cursorPosition.y.toInt()
-                    )
-                } else {
-                    dispatchMotionEvent(
-                        cursorPosition.x,
-                        cursorPosition.y,
-                        MotionEvent.ACTION_HOVER_MOVE
-                    )
+                when {
+                    dpadCenterPressed -> {
+                        dispatchMotionEvent(
+                            cursorPosition.x,
+                            cursorPosition.y,
+                            MotionEvent.ACTION_MOVE
+                        )
+                    }
+
+                    textSelectionMode -> {
+                        textSelectionCallback?.onTextSelectionMove(
+                            cursorPosition.x.toInt(),
+                            cursorPosition.y.toInt()
+                        )
+                    }
+
+                    else -> {
+                        dispatchMotionEvent(
+                            cursorPosition.x,
+                            cursorPosition.y,
+                            MotionEvent.ACTION_HOVER_MOVE
+                        )
+                    }
                 }
             }
 
             var dx = 0
             var dy = 0
             if (cursorPosition.y > surface.height - scrollStartPadding) {
-                if (cursorSpeed.y > 0) {
-                    dy = cursorSpeed.y.toInt()
-                }
+                if (cursorSpeed.y > 0) dy = cursorSpeed.y.toInt()
             } else if (cursorPosition.y < scrollStartPadding) {
-                if (cursorSpeed.y < 0) {
-                    dy = cursorSpeed.y.toInt()
-                }
+                if (cursorSpeed.y < 0) dy = cursorSpeed.y.toInt()
             }
             if (cursorPosition.x > surface.width - scrollStartPadding) {
-                if (cursorSpeed.x > 0) {
-                    dx = cursorSpeed.x.toInt()
-                }
+                if (cursorSpeed.x > 0) dx = cursorSpeed.x.toInt()
             } else if (cursorPosition.x < scrollStartPadding) {
-                if (cursorSpeed.x < 0) {
-                    dx = cursorSpeed.x.toInt()
-                }
+                if (cursorSpeed.x < 0) dx = cursorSpeed.x.toInt()
             }
             if (dx != 0 || dy != 0) {
                 scrollWebViewBy(dx, dy)
@@ -485,23 +667,18 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
         generateZoomGesture(false)
     }
 
-    //https://stackoverflow.com/questions/11523423/how-to-generate-zoom-pinch-gesture-for-testing-for-android
     private var pinchZoomStartTime = 0L
     private val pinchZoomDuration = 1000
     private var pinchZoomIn = true
     private val zoomFactor = 0.1f
 
-    /**
-     * Helper function to create pointer action with index.
-     */
     private fun getPointerAction(action: Int, pointerIndex: Int): Int {
         return action or (pointerIndex shl MotionEvent.ACTION_POINTER_INDEX_SHIFT)
     }
 
     private fun generateZoomGesture(pinchZoomIn: Boolean) {
-        if (pinchZoomStartTime != 0L) {
-            return
-        }
+        if (pinchZoomStartTime != 0L) return
+
         this.pinchZoomIn = pinchZoomIn
         this.pinchZoomStartTime = SystemClock.uptimeMillis()
         val deltaX = zoomFactor / 2f * surface.height
@@ -518,13 +695,7 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
         } else {
             PointF(surface.width / 2f + deltaX, surface.height / 2f + deltaY)
         }
-        var event: MotionEvent?
-        val eventX1: Float = startPoint1.x
-        val eventY1: Float = startPoint1.y
-        val eventX2: Float = startPoint2.x
-        val eventY2: Float = startPoint2.y
 
-        // specify the property for the two touch points
         val properties = arrayOfNulls<MotionEvent.PointerProperties>(2)
         val pp1 = MotionEvent.PointerProperties()
         pp1.id = 0
@@ -535,35 +706,21 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
         properties[0] = pp1
         properties[1] = pp2
 
-        //specify the coordinations of the two touch points
-        //NOTE: you MUST set the pressure and size value, or it doesn't work
         val pointerCoords = arrayOfNulls<MotionEvent.PointerCoords>(2)
         val pc1 = MotionEvent.PointerCoords()
-        pc1.x = eventX1
-        pc1.y = eventY1
+        pc1.x = startPoint1.x
+        pc1.y = startPoint1.y
         pc1.pressure = 1f
         pc1.size = 1f
         val pc2 = MotionEvent.PointerCoords()
-        pc2.x = eventX2
-        pc2.y = eventY2
+        pc2.x = startPoint2.x
+        pc2.y = startPoint2.y
         pc2.pressure = 1f
         pc2.size = 1f
         pointerCoords[0] = pc1
         pointerCoords[1] = pc2
 
-        //////////////////////////////////////////////////////////////
-        // events sequence of zoom gesture
-        // 1. send ACTION_DOWN event of one start point
-        // 2. send ACTION_POINTER_DOWN of two start points (pointer index 1)
-        // 3. send ACTION_MOVE of two middle points
-        // 4. repeat step 3 with updated middle points (x,y),
-        //      until reach the end points
-        // 5. send ACTION_POINTER_UP of two end points (pointer index 1)
-        // 6. send ACTION_UP of one end point
-        //////////////////////////////////////////////////////////////
-
-        // step 1
-        event = MotionEvent.obtain(
+        var event = MotionEvent.obtain(
             pinchZoomStartTime, pinchZoomStartTime,
             MotionEvent.ACTION_DOWN, 1, properties,
             pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0
@@ -571,7 +728,6 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
         surface.dispatchTouchEvent(event)
         event.recycle()
 
-        // step 2 - Use non-deprecated method for second pointer down
         event = MotionEvent.obtain(
             pinchZoomStartTime, pinchZoomStartTime,
             getPointerAction(MotionEvent.ACTION_POINTER_DOWN, 1), 2,
@@ -586,9 +742,8 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
     private val pinchZoomRunnable: Runnable by lazy {
         object : Runnable {
             override fun run() {
-                if (pinchZoomStartTime == 0L) {
-                    return
-                }
+                if (pinchZoomStartTime == 0L) return
+
                 val deltaX = zoomFactor / 2 * surface.height
                 val deltaY = zoomFactor / 2 * surface.height
                 val deltaX2 = deltaX / 2
@@ -634,8 +789,6 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                 val now = SystemClock.uptimeMillis()
                 if (now - pinchZoomStartTime < pinchZoomDuration) {
                     val progress = (now - pinchZoomStartTime).toFloat() / pinchZoomDuration
-                    //step 3, 4
-                    // update the move events
                     pc1.x = startPoint1.x + (endPoint1.x - startPoint1.x) * progress
                     pc1.y = startPoint1.y + (endPoint1.y - startPoint1.y) * progress
                     pc2.x = startPoint2.x + (endPoint2.x - startPoint2.x) * progress
@@ -651,7 +804,6 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                     event.recycle()
                     surface.postOnAnimation(this)
                 } else {
-                    // step 5 - Use non-deprecated method for second pointer up
                     pc1.x = endPoint1.x
                     pc1.y = endPoint1.y
                     pc2.x = endPoint2.x
@@ -666,7 +818,6 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                     surface.dispatchTouchEvent(event)
                     event.recycle()
 
-                    // step 6
                     event = MotionEvent.obtain(
                         pinchZoomStartTime, now,
                         MotionEvent.ACTION_UP, 1, properties,

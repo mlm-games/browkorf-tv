@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import org.mlm.browkorftv.ui.theme.AppTheme
 import org.mlm.browkorftv.common.R
+import org.mlm.browkorftv.ui.theme.AppTheme.colors
 
 @Composable
 fun BrowkorfTvIconButton(
@@ -89,6 +90,34 @@ fun BrowkorfTvButton(
             text = text,
             modifier = Modifier.padding(vertical = 4.dp),
             style = MaterialTheme.typography.labelLarge
+        )
+    }
+}
+
+@Composable
+fun BrowkorfTvIconButton(
+    onClick: () -> Unit,
+    painter: Painter,
+    contentDescription: String? = null,
+    enabled: Boolean = true
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.size(
+            width = 45.dp,
+            height = 45.dp
+        ),
+        colors = ButtonDefaults.colors(
+            containerColor = colors.buttonBackground,
+            focusedContainerColor = colors.buttonBackgroundFocused,
+            contentColor = colors.textPrimary,
+            focusedContentColor = colors.textPrimary
+        ),
+        enabled = enabled,
+    ) {
+        Icon(
+            painter,
+            contentDescription,
         )
     }
 }

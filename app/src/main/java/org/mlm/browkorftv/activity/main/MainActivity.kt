@@ -165,22 +165,36 @@ open class MainActivity : AppCompatActivity() {
                 org.mlm.browkorftv.ui.components.CursorMenuAction.Dismiss -> {
                     browserUiViewModel.hideCursorMenu()
                     lastCtxMenu = null
+                    webContainer.cursorDrawerDelegate.onMenuDismissed()
+                    fullscreenContainer.cursorDrawerDelegate.onMenuDismissed()
                     webContainer.post { focusWeb() }
                 }
 
                 org.mlm.browkorftv.ui.components.CursorMenuAction.Grab -> {
-                    ctx?.cursorDrawer?.goToGrabMode()
                     browserUiViewModel.hideCursorMenu()
+                    webContainer.cursorDrawerDelegate.onMenuDismissed()
+                    fullscreenContainer.cursorDrawerDelegate.onMenuDismissed()
+                    ctx?.cursorDrawer?.goToGrabMode()
                 }
 
                 org.mlm.browkorftv.ui.components.CursorMenuAction.TextSelect -> {
-                    ctx?.cursorDrawer?.goToTextSelectionMode()
                     browserUiViewModel.hideCursorMenu()
+                    webContainer.cursorDrawerDelegate.onMenuDismissed()
+                    fullscreenContainer.cursorDrawerDelegate.onMenuDismissed()
+                    ctx?.cursorDrawer?.goToTextSelectionMode()
                 }
 
-                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomIn -> ctx?.tab?.webEngine?.zoomIn()
-                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomOut -> ctx?.tab?.webEngine?.zoomOut()
-                org.mlm.browkorftv.ui.components.CursorMenuAction.LinkActions -> browserUiViewModel.showLinkActions()
+                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomIn -> {
+                    ctx?.tab?.webEngine?.zoomIn()
+                }
+
+                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomOut -> {
+                    ctx?.tab?.webEngine?.zoomOut()
+                }
+
+                org.mlm.browkorftv.ui.components.CursorMenuAction.LinkActions -> {
+                    browserUiViewModel.showLinkActions()
+                }
             }
         }
 
@@ -210,6 +224,10 @@ open class MainActivity : AppCompatActivity() {
             }
         }
         browserUiViewModel.hideLinkActions()
+        webContainer.cursorDrawerDelegate.onMenuDismissed()
+        fullscreenContainer.cursorDrawerDelegate.onMenuDismissed()
+        lastCtxMenu = null
+        webContainer.post { focusWeb() }
     }
 
     private fun handleInstallRequest(file: File) {
@@ -416,6 +434,10 @@ open class MainActivity : AppCompatActivity() {
                     onZoomOut = { tabsViewModel.currentTab.value?.webEngine?.zoomOut() },
                     onToggleAdBlock = { toggleAdBlockForTab() },
                     onTogglePopupBlock = { lifecycleScope.launch { showPopupBlockOptions() } },
+                    onCursorMenuDismissed = {
+                        webContainer.cursorDrawerDelegate.onMenuDismissed()
+                        fullscreenContainer.cursorDrawerDelegate.onMenuDismissed()
+                    },
 
                     onCursorMenuAction = cursorActionHandler,
                     onDismissLinkActions = { browserUiViewModel.hideLinkActions() },
@@ -484,6 +506,33 @@ open class MainActivity : AppCompatActivity() {
                         if (tabs.isEmpty() && !settings.isWebEngineGecko) {
                             webContainer.removeAllViews()
                         }
+                    }
+                }
+
+                launch {
+                    settingsManager.directionalNavModeFlow.collectLatest { enabled ->
+                        webContainer.cursorDrawerDelegate.directionalNavMode = enabled
+                        fullscreenContainer.cursorDrawerDelegate.directionalNavMode = enabled
+
+                        // Set up or remove the callback for injecting keys into WebView
+                        val callback = if (enabled) {
+                            object : CursorDrawerDelegate.DirectionalNavCallback {
+                                override fun onDirectionalKey(keyCode: Int, action: Int): Boolean {
+                                    val webView =
+                                        tabsViewModel.currentTab.value?.webEngine?.getView()
+                                            ?: return false
+                                    val eventTime = SystemClock.uptimeMillis()
+                                    val keyEvent =
+                                        KeyEvent(eventTime, eventTime, action, keyCode, 0)
+                                    return webView.dispatchKeyEvent(keyEvent)
+                                }
+                            }
+                        } else {
+                            null
+                        }
+
+                        webContainer.cursorDrawerDelegate.directionalNavCallback = callback
+                        fullscreenContainer.cursorDrawerDelegate.directionalNavCallback = callback
                     }
                 }
 
@@ -891,6 +940,13 @@ open class MainActivity : AppCompatActivity() {
 
     fun toggleIncognitoMode() {
         toggleIncognitoMode(andSwitchProcess = true)
+    }
+
+    fun toggleDirectionalNavMode() {
+        lifecycleScope.launch {
+            val newValue = !settingsManager.current.directionalNavMode
+            settingsManager.update { it.copy(directionalNavMode = newValue) }
+        }
     }
 
     private fun toggleIncognitoMode(andSwitchProcess: Boolean) =

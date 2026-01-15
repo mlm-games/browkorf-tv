@@ -173,6 +173,15 @@ data class AppSettings(
     )
     val updateChannelIndex: Int = 0,
 
+    @Setting(
+        title = "Directional Navigation Mode",
+        description = "Send arrow keys to webpage instead of moving cursor (for games/apps)",
+        category = General::class,
+        type = Toggle::class,
+        key = "directional_nav_mode"
+    )
+    val directionalNavMode: Boolean = false,
+
 
     @Persisted(key = "incognito_mode_hint_suppress")
     @NoReset

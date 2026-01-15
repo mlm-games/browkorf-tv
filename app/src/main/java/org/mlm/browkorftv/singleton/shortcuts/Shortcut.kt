@@ -13,7 +13,7 @@ enum class Shortcut(
 ) {
     MENU(R.string.toggle_main_menu, "shortcut_menu", KeyEvent.KEYCODE_MENU),
 
-    // These default to "unassigned" (0) so user can choose keys.
+    // 0 -> blank
     NAVIGATE_BACK(R.string.navigate_back, "shortcut_nav_back", 0),
     NAVIGATE_HOME(R.string.navigate_home, "shortcut_nav_home", 0),
 
@@ -28,6 +28,12 @@ enum class Shortcut(
         R.string.media_fast_forward,
         "shortcut_media_fast_forward",
         KeyEvent.KEYCODE_MEDIA_FAST_FORWARD
+    ),
+
+    TOGGLE_DIRECTIONAL_NAV(
+        R.string.toggle_directional_nav,
+        "shortcut_toggle_directional_nav",
+        0
     );
 
     companion object {

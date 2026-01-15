@@ -1,170 +1,173 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="app_name">Browkorf TV: 电视网络浏览器</string>
-  <string name="error">错误</string>
-  <string name="ok">OK</string>
-  <string name="loading">载入中…</string>
-  <string name="url_prompt">输入搜索查询文字或网址</string>
-  <string name="can_not_recognize">无法识别</string>
-  <string name="speak">搜索查询</string>
-  <string name="open_new_tab">新建标签页</string>
-  <string name="close">关闭</string>
-  <string name="web_perm_request_confirmation">该网页想要使用以下资源:\n\n%s</string>
-  <string name="allow">允许</string>
-  <string name="deny">拒绝</string>
-  <string name="location">位置信息</string>
-  <string name="open_in_new_tab">在新标签页中打开</string>
-  <string name="download_started">开始下载…\n文件将存储在:\n%s</string>
-  <string name="downloading_file">正在下载文件…</string>
-  <string name="err_cant_open_file_chooser">无法打开文件选择器</string>
-  <string name="bookmarks">书签</string>
-  <string name="add">添加</string>
-  <string name="edit">编辑</string>
-  <string name="new_bookmark">新书签</string>
-  <string name="title">标题</string>
-  <string name="search_history">搜索历史记录</string>
-  <string name="engine">搜索引擎</string>
-  <string name="choose_default_search_engine">选择默认搜索引擎</string>
-  <string name="save">保存</string>
-  <string name="search_engine_url_with_query_placeholder_query">带有查询占位符 [query] 的搜索引擎网址</string>
-  <string name="change_search_engine">更改搜索引擎</string>
-  <string name="change_user_agent">更改用户代理</string>
-  <string name="user_agent_string">用户代理字符串</string>
-  <string name="choose_user_agent_string">选择用户代理字符串</string>
-  <string name="edit_user_agent_string">编辑用户代理字符串</string>
-  <string name="nothing">没有记录</string>
-  <string name="cancelled">取消</string>
-  <string name="download">下载</string>
-  <string name="file_not_found">文件未找到</string>
-  <string name="no_app_for_file_type">找不到打开此文件类型的应用程序</string>
-  <string name="delete">删除</string>
-  <string name="cancel">取消</string>
-  <string name="msg_delete_history">删除选定的历史项目？</string>
-  <string name="msg_delete_history_all">删除所有历史记录项？</string>
-  <string name="open_folder">打开包含文件夹</string>
-  <string name="no_file_explorer_msg">您的设备上似乎没有安装任何合适的文件浏览器应用程序</string>
-  <string name="shortcuts">快捷键</string>
-  <string name="favorites">收藏夹</string>
-  <string name="history">历史</string>
-  <string name="settings">设置</string>
-  <string name="shortcut">捷径</string>
-  <string name="toggle_main_menu">切换主菜单</string>
-  <string name="navigate_back">后退</string>
-  <string name="navigate_home">转到主页</string>
-  <string name="refresh_page">刷新页面</string>
-  <string name="voice_search">语音搜索</string>
-  <string name="zoom_in">放大</string>
-  <string name="zoom_out">缩小</string>
-  <string name="not_set">没有设置</string>
-  <string name="action">动作：</string>
-  <string name="current_key">当前按键：</string>
-  <string name="set_key_for_action">更改按键</string>
-  <string name="press_eny_key">按任意键...</string>
-  <string name="clear">清除</string>
-  <string name="install">安装</string>
-  <string name="turn_on_unknown_sources">请打开“未知来源”系统设置</string>
-  <string name="turn_on_unknown_sources_for_app">请允许 Browkorf TV 在系统设置中从“未知来源”安装应用</string>
-  <string name="storage_not_mounted">存储未挂载</string>
-  <string name="can_not_create_downloads">无法创建下载目录</string>
-  <string name="voice_search_not_found">找不到语音搜索</string>
-  <string name="new_version_dialog_title">新版本可用</string>
-  <string name="later">稍后提醒</string>
-  <string name="downloads">下载</string>
-  <string name="downloads_notifications_description">关于下载状态的通知</string>
-  <string name="main">主要</string>
-  <string name="version_and_updates">版本与更新</string>
-  <string name="version_s">版本: %s</string>
-  <string name="update_channel">更新频道：</string>
-  <string name="auto_check_for_updates">自动检查更新</string>
-  <string name="update">更新资料</string>
-  <string name="new_version_available_s">新版本可用: %s</string>
-  <string name="web_browser_optimized_for_tvs">针对电视进行了优化的网络浏览器</string>
-  <string name="warning">警告</string>
-  <string name="unprotected_connection">未保护的连接</string>
-  <string name="err_webview_can_not_link">无法链接到 WebView 组件。尝试先安装 Android 系统 WebView 组件。</string>
-  <string name="new_tab_title">[新标签页]</string>
-  <string name="open_a_new_tab_here">在这里打开一个新标签</string>
-  <string name="tabs">标签页</string>
-  <array name="tabs_options">
-    <item>新标签页</item>
-    <item>关闭当前</item>
-    <item>关闭全部</item>
-    <item>向左移动</item>
-    <item>向右移动</item>
-  </array>
-  <string name="ssl_expired">证书已过期</string>
-  <string name="ssl_idmismatch">主机名不匹配</string>
-  <string name="ssl_date_invalid">证书日期无效</string>
-  <string name="ssl_invalid">发生一般错误</string>
-  <string name="back_to_safety">返回到安全连接</string>
-  <string name="go_im_aware">我已知晓风险，继续</string>
-  <string name="connection_isnt_secure">连接不安全</string>
-  <string name="hostname">主机名：</string>
-  <string name="err_desk">错误说明：</string>
-  <string name="details">细节：</string>
-  <string name="exit">退出</string>
-  <string name="find_in_apps_store">在应用商店中查找</string>
-  <string name="close_application">关闭应用</string>
-  <string name="close_tab">关闭标签页</string>
-  <string name="navigate_forward">前进</string>
-  <string name="toggle_ads_blocking">广告屏蔽</string>
-  <string name="never">从不</string>
-  <string name="last_update">最后更新</string>
-  <string name="update_ad_blocker_list">更新广告拦截器列表</string>
-  <string name="need_restart">需要重启应用</string>
-  <string name="theme">主题</string>
-  <array name="themes">
-    <item>由系统决定</item>
-    <item>明亮</item>
-    <item>黑暗</item>
-  </array>
-  <string name="set_search_engine_as_homepage">将搜索引擎设为首页</string>
-  <string name="toggle_keep_screen_on">保持屏幕开启</string>
-  <string name="incognito_mode">隐身模式</string>
-  <string name="incognito_mode_hint">现在您可以浏览隐私内容，其他使用此设备的人将看不到您的活动。 Browkorf TV 不会保存您的浏览历史记录、cookie 和网站数据以及在表格中输入的信息。\n\n但是，下载和书签将被保存。 您访问的网站、您的组织或互联网服务提供商可能仍然可以看到您的活动。</string>
-  <string name="don_t_show_again">不再显示</string>
-  <string name="why_icon_changed">为什么图标变了？</string>
-  <string name="clear_web_cache">清除网络缓存</string>
-  <string name="no_bookmarks_yet">还没有书签</string>
-  <string name="done">完成</string>
-  <string name="block_popups">弹出窗口阻止</string>
-  <string name="block_popups_s">弹出窗口阻止 (%s)</string>
-  <string name="popup_dialog_blocked">弹出对话框被阻止</string>
-  <string name="new_tab_blocked">新标签页被阻止</string>
-  <string-array name="popup_blocking_level">
-    <item>不阻止</item>
-    <item>阻止对话框</item>
-    <item>同时阻止新标签页 (由脚本启动的)</item>
-    <item>阻止任何新窗口 (最大阻止)</item>
-  </string-array>
-  <string name="copy_to_clipboard">复制到剪贴板</string>
-  <string name="copied_to_clipboard">已复制到剪贴板</string>
-  <string name="share_url">分享网址</string>
-  <string name="open_in_external_application">在外部应用程序中打开</string>
-  <string name="external_app_open_error">找不到合适的应用</string>
-  <string name="home_page">主页</string>
-  <string name="custom_home_page_url">自定义主页 URL</string>
-  <string-array name="home_page_modes">
-    <item>Browkorf TV 主页</item>
-    <item>搜索引擎</item>
-    <item>自定义</item>
-    <item>空白页</item>
-  </string-array>
-  <string-array name="home_page_links_modes">
-    <item>书签</item>
-    <item>近期历史记录</item>
-    <item>最常访问</item>
-  </string-array>
+    <string name="app_name">Browkorf TV: 电视网络浏览器</string>
+    <string name="error">错误</string>
+    <string name="ok">OK</string>
+    <string name="loading">载入中…</string>
+    <string name="url_prompt">输入搜索查询文字或网址</string>
+    <string name="can_not_recognize">无法识别</string>
+    <string name="speak">搜索查询</string>
+    <string name="open_new_tab">新建标签页</string>
+    <string name="close">关闭</string>
+    <string name="web_perm_request_confirmation">该网页想要使用以下资源:\n\n%s</string>
+    <string name="allow">允许</string>
+    <string name="deny">拒绝</string>
+    <string name="location">位置信息</string>
+    <string name="open_in_new_tab">在新标签页中打开</string>
+    <string name="download_started">开始下载…\n文件将存储在:\n%s</string>
+    <string name="downloading_file">正在下载文件…</string>
+    <string name="err_cant_open_file_chooser">无法打开文件选择器</string>
+    <string name="bookmarks">书签</string>
+    <string name="add">添加</string>
+    <string name="edit">编辑</string>
+    <string name="new_bookmark">新书签</string>
+    <string name="title">标题</string>
+    <string name="search_history">搜索历史记录</string>
+    <string name="engine">搜索引擎</string>
+    <string name="choose_default_search_engine">选择默认搜索引擎</string>
+    <string name="save">保存</string>
+    <string name="search_engine_url_with_query_placeholder_query">带有查询占位符 [query] 的搜索引擎网址</string>
+    <string name="change_search_engine">更改搜索引擎</string>
+    <string name="change_user_agent">更改用户代理</string>
+    <string name="user_agent_string">用户代理字符串</string>
+    <string name="choose_user_agent_string">选择用户代理字符串</string>
+    <string name="edit_user_agent_string">编辑用户代理字符串</string>
+    <string name="nothing">没有记录</string>
+    <string name="cancelled">取消</string>
+    <string name="download">下载</string>
+    <string name="file_not_found">文件未找到</string>
+    <string name="no_app_for_file_type">找不到打开此文件类型的应用程序</string>
+    <string name="delete">删除</string>
+    <string name="cancel">取消</string>
+    <string name="msg_delete_history">删除选定的历史项目？</string>
+    <string name="msg_delete_history_all">删除所有历史记录项？</string>
+    <string name="open_folder">打开包含文件夹</string>
+    <string name="no_file_explorer_msg">您的设备上似乎没有安装任何合适的文件浏览器应用程序</string>
+    <string name="shortcuts">快捷键</string>
+    <string name="favorites">收藏夹</string>
+    <string name="history">历史</string>
+    <string name="settings">设置</string>
+    <string name="shortcut">捷径</string>
+    <string name="toggle_main_menu">切换主菜单</string>
+    <string name="navigate_back">后退</string>
+    <string name="navigate_home">转到主页</string>
+    <string name="refresh_page">刷新页面</string>
+    <string name="voice_search">语音搜索</string>
+    <string name="zoom_in">放大</string>
+    <string name="zoom_out">缩小</string>
+    <string name="not_set">没有设置</string>
+    <string name="action">动作：</string>
+    <string name="current_key">当前按键：</string>
+    <string name="set_key_for_action">更改按键</string>
+    <string name="press_eny_key">按任意键...</string>
+    <string name="clear">清除</string>
+    <string name="install">安装</string>
+    <string name="turn_on_unknown_sources">请打开“未知来源”系统设置</string>
+    <string name="turn_on_unknown_sources_for_app">请允许 Browkorf TV 在系统设置中从“未知来源”安装应用</string>
+    <string name="storage_not_mounted">存储未挂载</string>
+    <string name="can_not_create_downloads">无法创建下载目录</string>
+    <string name="voice_search_not_found">找不到语音搜索</string>
+    <string name="new_version_dialog_title">新版本可用</string>
+    <string name="later">稍后提醒</string>
+    <string name="downloads">下载</string>
+    <string name="downloads_notifications_description">关于下载状态的通知</string>
+    <string name="main">主要</string>
+    <string name="version_and_updates">版本与更新</string>
+    <string name="version_s">版本: %s</string>
+    <string name="update_channel">更新频道：</string>
+    <string name="auto_check_for_updates">自动检查更新</string>
+    <string name="update">更新资料</string>
+    <string name="new_version_available_s">新版本可用: %s</string>
+    <string name="web_browser_optimized_for_tvs">针对电视进行了优化的网络浏览器</string>
+    <string name="warning">警告</string>
+    <string name="unprotected_connection">未保护的连接</string>
+    <string name="err_webview_can_not_link">无法链接到 WebView 组件。尝试先安装 Android 系统 WebView 组件。</string>
+    <string name="new_tab_title">[新标签页]</string>
+    <string name="open_a_new_tab_here">在这里打开一个新标签</string>
+    <string name="tabs">标签页</string>
+    <array name="tabs_options">
+        <item>新标签页</item>
+        <item>关闭当前</item>
+        <item>关闭全部</item>
+        <item>向左移动</item>
+        <item>向右移动</item>
+    </array>
+    <string name="ssl_expired">证书已过期</string>
+    <string name="ssl_idmismatch">主机名不匹配</string>
+    <string name="ssl_date_invalid">证书日期无效</string>
+    <string name="ssl_invalid">发生一般错误</string>
+    <string name="back_to_safety">返回到安全连接</string>
+    <string name="go_im_aware">我已知晓风险，继续</string>
+    <string name="connection_isnt_secure">连接不安全</string>
+    <string name="hostname">主机名：</string>
+    <string name="err_desk">错误说明：</string>
+    <string name="details">细节：</string>
+    <string name="exit">退出</string>
+    <string name="find_in_apps_store">在应用商店中查找</string>
+    <string name="close_application">关闭应用</string>
+    <string name="close_tab">关闭标签页</string>
+    <string name="navigate_forward">前进</string>
+    <string name="toggle_ads_blocking">广告屏蔽</string>
+    <string name="never">从不</string>
+    <string name="last_update">最后更新</string>
+    <string name="update_ad_blocker_list">更新广告拦截器列表</string>
+    <string name="need_restart">需要重启应用</string>
+    <string name="theme">主题</string>
+    <array name="themes">
+        <item>由系统决定</item>
+        <item>明亮</item>
+        <item>黑暗</item>
+    </array>
+    <string name="set_search_engine_as_homepage">将搜索引擎设为首页</string>
+    <string name="toggle_keep_screen_on">保持屏幕开启</string>
+    <string name="incognito_mode">隐身模式</string>
+    <string name="incognito_mode_hint">现在您可以浏览隐私内容，其他使用此设备的人将看不到您的活动。 Browkorf TV 不会保存您的浏览历史记录、cookie 和网站数据以及在表格中输入的信息。\n\n但是，下载和书签将被保存。 您访问的网站、您的组织或互联网服务提供商可能仍然可以看到您的活动。</string>
+    <string name="don_t_show_again">不再显示</string>
+    <string name="why_icon_changed">为什么图标变了？</string>
+    <string name="clear_web_cache">清除网络缓存</string>
+    <string name="no_bookmarks_yet">还没有书签</string>
+    <string name="done">完成</string>
+    <string name="block_popups">弹出窗口阻止</string>
+    <string name="block_popups_s">弹出窗口阻止 (%s)</string>
+    <string name="popup_dialog_blocked">弹出对话框被阻止</string>
+    <string name="new_tab_blocked">新标签页被阻止</string>
+    <string-array name="popup_blocking_level">
+        <item>不阻止</item>
+        <item>阻止对话框</item>
+        <item>同时阻止新标签页 (由脚本启动的)</item>
+        <item>阻止任何新窗口 (最大阻止)</item>
+    </string-array>
+    <string name="copy_to_clipboard">复制到剪贴板</string>
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    <string name="share_url">分享网址</string>
+    <string name="open_in_external_application">在外部应用程序中打开</string>
+    <string name="external_app_open_error">找不到合适的应用</string>
+    <string name="home_page">主页</string>
+    <string name="custom_home_page_url">自定义主页 URL</string>
+    <string-array name="home_page_modes">
+        <item>Browkorf TV 主页</item>
+        <item>搜索引擎</item>
+        <item>自定义</item>
+        <item>空白页</item>
+    </string-array>
+    <string-array name="home_page_links_modes">
+        <item>书签</item>
+        <item>近期历史记录</item>
+        <item>最常访问</item>
+    </string-array>
 
-  <string name="web_browser_engine_temporary_setting">浏览器引擎 (临时设置)</string>
-  <string name="need_restart_message">重新启动应用以应用此更改</string>
-  <string name="restart">重新启动</string>
-  <string name="yes">是</string>
-  <string name="no">否</string>
-  <string name="site_asks_to_open_unknown_url">此站点想要打开一个未知的 URL</string>
-  <string name="site_asks_to_open_unknown_url_message">您想允许此站点使用外部应用打开此 URL 吗?</string>
-  <string name="err_no_app_to_handle_url">找不到合适的应用来处理此 URL</string>
-  <string name="home_page_links">主页上的链接</string>
-  <string name="settings_engine_change_gecko_msg">GeckoView 推荐的系统要求：3GB RAM、64 位八核 CPU。 你想继续吗\?</string>
-  <string name="settings_engine_change_webview_msg">WebView 在未来的更新中将会减少功能。 你想继续吗\?</string>
+    <string name="web_browser_engine_temporary_setting">浏览器引擎 (临时设置)</string>
+    <string name="need_restart_message">重新启动应用以应用此更改</string>
+    <string name="restart">重新启动</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="site_asks_to_open_unknown_url">此站点想要打开一个未知的 URL</string>
+    <string name="site_asks_to_open_unknown_url_message">您想允许此站点使用外部应用打开此 URL 吗?</string>
+    <string name="err_no_app_to_handle_url">找不到合适的应用来处理此 URL</string>
+    <string name="home_page_links">主页上的链接</string>
+    <string name="settings_engine_change_gecko_msg">GeckoView 推荐的系统要求：3GB RAM、64 位八核 CPU。 你想继续吗\?</string>
+    <string name="settings_engine_change_webview_msg">WebView 在未来的更新中将会减少功能。 你想继续吗\?</string>
+    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
+    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
+    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
 </resources>

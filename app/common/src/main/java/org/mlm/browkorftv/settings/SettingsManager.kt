@@ -53,6 +53,8 @@ class SettingsManager private constructor(context: Context) {
     val settingsState: StateFlow<AppSettings> = settings
         .stateIn(scope, SharingStarted.Eagerly, AppSettings())
 
+    val directionalNavModeFlow: Flow<Boolean> =
+        settings.map { it.directionalNavMode }.distinctUntilChanged()
     val themeFlow: Flow<Theme> = settings.map { it.themeEnum }.distinctUntilChanged()
     val keepScreenOnFlow: Flow<Boolean> = settings.map { it.keepScreenOn }.distinctUntilChanged()
     val incognitoModeFlow: Flow<Boolean> = settings.map { it.incognitoMode }.distinctUntilChanged()

@@ -116,7 +116,7 @@ class ShortcutMgr(
     @UiThread
     fun process(shortcut: Shortcut, mainActivity: MainActivity, webEngine: WebEngine?) {
         when (shortcut) {
-            Shortcut.MENU -> mainActivity.toggleMenu() // should open/close overlay menu now
+            Shortcut.MENU -> mainActivity.toggleMenu()
 
             Shortcut.NAVIGATE_BACK -> mainActivity.navigateBack()
             Shortcut.NAVIGATE_HOME -> mainActivity.navigate(HOME_URL_ALIAS)
@@ -127,6 +127,8 @@ class ShortcutMgr(
             Shortcut.MEDIA_STOP -> webEngine?.stopPlayback()
             Shortcut.MEDIA_REWIND -> webEngine?.rewind()
             Shortcut.MEDIA_FAST_FORWARD -> webEngine?.fastForward()
+
+            Shortcut.TOGGLE_DIRECTIONAL_NAV -> mainActivity.toggleDirectionalNavMode()
         }
     }
 

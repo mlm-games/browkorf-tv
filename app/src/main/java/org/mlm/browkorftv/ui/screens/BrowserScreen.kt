@@ -87,6 +87,7 @@ fun BrowserScreen(
     onZoomOut: () -> Unit,
     onToggleAdBlock: () -> Unit,
     onTogglePopupBlock: () -> Unit,
+    onCursorMenuDismissed: () -> Unit,
 
     onCursorMenuAction: (CursorMenuAction) -> Unit,
     onDismissLinkActions: () -> Unit,
@@ -203,11 +204,13 @@ fun BrowserScreen(
                         }
 
                         uiState.isLinkActionsVisible -> {
+                            onCursorMenuDismissed()
                             uiVm.hideLinkActions()
                         }
 
                         uiState.isCursorMenuVisible -> {
                             uiVm.hideCursorMenu()
+                            onCursorMenuDismissed()
                             postFocusWeb()
                         }
 
@@ -380,13 +383,16 @@ fun BrowserScreen(
                     onNavigateBack = {
                         backStack.removeAt(backStack.lastIndex)
                         uiVm.showMenu()
+                    },
+                    onNavigateToShortcuts = {
+                        backStack.add(AppKey.Shortcuts)
                     }
                 )
             }
 
             entry<AppKey.Shortcuts> {
                 ShortcutsScreen(
-                    onDone = {
+                    onNavigateBack = {
                         backStack.removeAt(backStack.lastIndex)
                         uiVm.showMenu()
                     }

@@ -10,28 +10,26 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.MaterialTheme
-import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import org.koin.compose.koinInject
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.singleton.shortcuts.Shortcut
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
+import org.mlm.browkorftv.ui.components.BrowkorfTopBar
 import org.mlm.browkorftv.ui.components.BrowkorfTvButton
+import org.mlm.browkorftv.ui.components.BrowkorfTvListItem
 import org.mlm.browkorftv.ui.theme.AppTheme
 
 @Composable
 fun ShortcutsScreen(
-    onDone: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
     val colors = AppTheme.colors
     val context = LocalContext.current
@@ -45,19 +43,14 @@ fun ShortcutsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.background)
-            .padding(22.dp)
+            .padding(horizontal = 48.dp, vertical = 24.dp)
     ) {
-        Text(
-            text = stringResource(R.string.shortcuts),
-            style = MaterialTheme.typography.headlineMedium,
-            color = colors.textPrimary
+        BrowkorfTopBar(
+            title = stringResource(R.string.shortcuts),
+            onBack = onNavigateBack
         )
-        Text(
-            text = stringResource(R.string.shortcuts),
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.textSecondary,
-            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
-        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -65,19 +58,13 @@ fun ShortcutsScreen(
         ) {
             items(Shortcut.entries) { shortcut ->
                 val binding = bindings[shortcut] ?: shortcutMgr.bindingFor(shortcut)
-                ShortcutItemRow(
-                    shortcut = shortcut,
-                    bindingText = Shortcut.shortcutKeysToString(shortcut, binding, context),
-                    onClick = { editingShortcut = shortcut }
+                BrowkorfTvListItem(
+                    onClick = { editingShortcut = shortcut },
+                    headline = stringResource(shortcut.titleResId),
+                    supportingText = Shortcut.shortcutKeysToString(shortcut, binding, context)
                 )
             }
         }
-
-        Spacer(Modifier.height(16.dp))
-        BrowkorfTvButton(
-            onClick = onDone,
-            text = stringResource(R.string.navigate_back)
-        )
     }
 
     editingShortcut?.let { shortcut ->
@@ -98,44 +85,6 @@ fun ShortcutsScreen(
             },
             onDismiss = { editingShortcut = null }
         )
-    }
-}
-
-@Composable
-private fun ShortcutItemRow(
-    shortcut: Shortcut,
-    bindingText: String,
-    onClick: () -> Unit
-) {
-    val colors = AppTheme.colors
-    var isFocused by remember { mutableStateOf(false) }
-
-    Surface(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .onFocusChanged { isFocused = it.isFocused },
-        shape = ClickableSurfaceDefaults.shape(RoundedCornerShape(5.dp)),
-        colors = ClickableSurfaceDefaults.colors(
-            containerColor = colors.background,
-            focusedContainerColor = colors.buttonBackgroundFocused
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(shortcut.titleResId),
-                color = colors.textPrimary,
-                fontSize = 18.sp,
-                modifier = Modifier.weight(1f)
-            )
-            Text(text = bindingText, color = colors.textSecondary, fontSize = 18.sp)
-        }
     }
 }
 

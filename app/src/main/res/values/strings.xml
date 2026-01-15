@@ -180,4 +180,7 @@
     <string name="media_rewind">Rewind Media</string>
     <string name="media_fast_forward">Fast Forward Media</string>
     <string name="long_press">Long press</string>
+    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
+    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
+    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
 </resources>
