@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -127,7 +128,7 @@ fun BrowkorfTvProgressBar(
     progress: Float,
     modifier: Modifier = Modifier
 ) {
-    LinearProgressIndicator(
+    LinearWavyProgressIndicator(
         progress = { progress },
         modifier = modifier
             .fillMaxWidth()

@@ -24,13 +24,13 @@ env:
   APP_NAME: 'Browkorf TV'
   APP_SLUG: 'browkorftv'
   
-  GRADLE_MODULE: 'app' 
+  GRADLE_MODULE: 'app'
   
   VERSION_CATALOG_PATH: 'app/build.gradle.kts'
   
   BUILD_FLAVOR: 'GenericGeckoIncluded'
   
-  JAVA_VERSION: '17'
+  JAVA_VERSION: '21'
   JAVA_DISTRIBUTION: 'temurin'
   ANDROID_API: '36'
   ANDROID_BUILD_TOOLS: '36.0.0'
@@ -38,12 +38,12 @@ env:
 jobs:
   prepare-version:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       contents: write
     outputs:
       version_name: ${{ steps.ver.outputs.version_name }}
       version_code: ${{ steps.ver.outputs.version_code }}
-      commit_sha:   ${{ steps.commit.outputs.commit_sha }}
+      commit_sha: ${{ steps.commit.outputs.commit_sha }}
       release_notes: ${{ steps.notes.outputs.release-notes }}
 
     steps:

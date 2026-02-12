@@ -2,11 +2,23 @@
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.apk.dist)
+}
+
+kotlin {
+    compilerOptions {
+        optIn.set(
+            listOf(
+                "androidx.compose.material3.ExperimentalMaterial3Api",
+                "androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+                "androidx.compose.foundation.ExperimentalFoundationApi",
+                "androidx.compose.foundation.layout.ExperimentalLayoutApi"
+            )
+        )
+    }
 }
 
 android {
@@ -15,6 +27,9 @@ android {
 
     defaultConfig {
         applicationId = "org.mlm.browkorftv"
+
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         versionCode = 234
         versionName = "4.2.1"
@@ -126,11 +141,6 @@ android {
         unitTests {
             isIncludeAndroidResources = true
         }
-    }
-
-    composeCompiler {
-        includeSourceInformation.set(false)
-        includeTraceMarkers.set(false)
     }
 }
 

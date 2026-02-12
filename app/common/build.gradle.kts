@@ -1,11 +1,15 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "org.mlm.browkorftv.common"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
+    kotlin {
+        jvmToolchain(libs.versions.jvmTarget.get().toInt())
+    }
 
     buildTypes {
         release {
@@ -17,13 +21,14 @@ android {
         }
     }
     defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
         consumerProguardFiles("consumer-rules.pro") // to prevent minify issues
     }
+}
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-    }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
 }
 
 dependencies {

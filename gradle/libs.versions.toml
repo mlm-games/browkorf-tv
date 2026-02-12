@@ -1,9 +1,9 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.0"
 datastorePreferences = "1.2.0"
-kotlin = "2.3.0"
-ksp = "2.3.4"
-jvmTarget = "17"
+kotlin = "2.3.10"
+ksp = "2.3.5"
+jvmTarget = "21"
 compileSdk = "36"
 targetSdk = "36"
 minSdk = "26"
@@ -20,19 +20,20 @@ ad-block = "v0.0.1-ci"
 geckoview = "146.0.20251201213807"
 
 junit = "4.13.2"
-robolectric = "4.16"
-composeBom = "2025.12.01"
-activityCompose = "1.12.2"
+robolectric = "4.16.1"
+activityCompose = "1.12.4"
 tvMaterial = "1.0.1"
-kmpSettingsCore = "0.3.3"
+kmpSettingsCore = "0.5.0"
 
 koinBom = "4.1.1"
-navigation3Runtime = "1.0.0"
+navigation3Runtime = "1.0.1"
 koin-annotations = "2.3.1"
 startup = "1.2.0"
 apkDist = "0.5.2"
+composeBom = "2026.02.00"
 
 [libraries]
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom-alpha", version.ref = "composeBom" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
@@ -53,7 +54,6 @@ koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
 
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 

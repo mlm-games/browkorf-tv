@@ -1,11 +1,19 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "org.mlm.browkorftv.webengine.gecko"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+    }
+
+    kotlin {
+        jvmToolchain(libs.versions.jvmTarget.get().toInt())
+    }
 
     buildTypes {
         release {

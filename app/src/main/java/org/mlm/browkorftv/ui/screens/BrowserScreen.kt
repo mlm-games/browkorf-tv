@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -420,7 +420,7 @@ fun BrowserScreen(
                 .background(Color.Black.copy(alpha = 0.45f))
                 .focusable(true)
         ) {
-            CircularProgressIndicator(
+            CircularWavyProgressIndicator(
                 modifier = Modifier
                     .size(64.dp)
                     .align(Alignment.Center)
