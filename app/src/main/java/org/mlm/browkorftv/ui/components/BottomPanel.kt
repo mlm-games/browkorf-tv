@@ -1,6 +1,7 @@
 package org.mlm.browkorftv.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,13 +33,11 @@ fun BottomNavigationPanel(
     onHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val colors = AppTheme.colors
-
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(60.dp)
-            .background(colors.topBarBackground)
+            .background(Color.Transparent)
             .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
