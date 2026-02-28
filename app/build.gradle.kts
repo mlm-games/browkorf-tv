@@ -32,7 +32,7 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
 
         versionCode = 234
-        versionName = "4.2.1"
+        versionName = "4.3.0"
 
         vectorDrawables.useSupportLibrary = true
     }
