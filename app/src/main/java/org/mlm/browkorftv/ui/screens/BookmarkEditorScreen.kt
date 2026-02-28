@@ -20,6 +20,8 @@ import org.mlm.browkorftv.common.R
 @Composable
 fun BookmarkEditorScreen(
     id: Long?,
+    initialTitle: String = "",
+    initialUrl: String = "",
     onDone: () -> Unit,
     viewModel: FavoritesViewModel = koinViewModel()
 ) {
@@ -33,15 +35,17 @@ fun BookmarkEditorScreen(
 
     LaunchedEffect(id) {
         loading = true
-        val item = withContext(Dispatchers.IO) {
-            when {
-                id != null -> viewModel.getFavoriteById(id)
-                else -> null
+        if (id != null) {
+            val item = withContext(Dispatchers.IO) {
+                viewModel.getFavoriteById(id)
             }
+            existingId = item?.id?.takeIf { it != 0L }
+            title = item?.title.orEmpty()
+            url = item?.url.orEmpty()
+        } else {
+            title = initialTitle
+            url = initialUrl
         }
-        existingId = item?.id?.takeIf { it != 0L }
-        title = item?.title.orEmpty()
-        url = item?.url.orEmpty()
         loading = false
     }
 

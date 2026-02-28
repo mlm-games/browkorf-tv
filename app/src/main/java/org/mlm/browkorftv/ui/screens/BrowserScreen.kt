@@ -373,7 +373,13 @@ fun BrowserScreen(
                         backStack.add(AppKey.Browser)
                         uiVm.hideMenu()
                     },
-                    onAddBookmark = { backStack.add(AppKey.BookmarkEditor()) },
+                    onAddBookmark = {
+                        val tab = tabsVm.currentTab.value
+                        backStack.add(AppKey.BookmarkEditor(
+                            initialTitle = tab?.title ?: "",
+                            initialUrl = tab?.url ?: uiState.url
+                        ))
+                    },
                     onEditBookmark = { id -> backStack.add(AppKey.BookmarkEditor(id)) }
                 )
             }
@@ -402,9 +408,10 @@ fun BrowserScreen(
             entry<AppKey.BookmarkEditor> { key ->
                 BookmarkEditorScreen(
                     id = key.id,
+                    initialTitle = key.initialTitle,
+                    initialUrl = key.initialUrl,
                     onDone = {
                         backStack.removeAt(backStack.lastIndex)
-                        // Stay on Favorites if we came from there
                     }
                 )
             }

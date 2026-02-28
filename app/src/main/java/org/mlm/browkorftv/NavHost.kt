@@ -28,7 +28,11 @@ sealed interface AppKey : NavKey {
     data object About : AppKey
 
     @Serializable
-    data class BookmarkEditor(val id: Long? = null) : AppKey
+    data class BookmarkEditor(
+        val id: Long? = null,
+        val initialTitle: String = "",
+        val initialUrl: String = ""
+    ) : AppKey
 }
 
 private fun NavBackStack<NavKey>.popOrClose(onCloseOverlay: () -> Unit) {
