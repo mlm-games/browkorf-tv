@@ -2,10 +2,11 @@ package org.mlm.browkorftv.settings
 
 import org.mozilla.geckoview.GeckoRuntimeSettings
 
-fun Theme.toGeckoPreferredColorScheme(): Int {
+fun Theme.toGeckoPreferredColorScheme(forceDarkWebpage: Boolean): Int {
     return when (this) {
         Theme.SYSTEM -> GeckoRuntimeSettings.COLOR_SCHEME_SYSTEM
         Theme.WHITE -> GeckoRuntimeSettings.COLOR_SCHEME_LIGHT
-        Theme.BLACK -> GeckoRuntimeSettings.COLOR_SCHEME_DARK
+        Theme.BLACK -> if (forceDarkWebpage) GeckoRuntimeSettings.COLOR_SCHEME_DARK 
+                       else GeckoRuntimeSettings.COLOR_SCHEME_LIGHT
     }
 }

@@ -2,13 +2,18 @@ package org.mlm.browkorftv.webengine.gecko
 
 import android.content.Context
 import androidx.startup.Initializer
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.mlm.browkorftv.model.WebTabState
+import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.webengine.*
 import org.mlm.browkorftv.widgets.cursor.CursorLayout
 import org.mozilla.geckoview.BuildConfig
 
-class GeckoEngineInitializer : Initializer<Unit> {
+class GeckoEngineInitializer : Initializer<Unit>, KoinComponent {
+    private val settingsManager: SettingsManager by inject()
+
     override fun create(context: Context) {
         WebEngineFactory.registerProvider(
             WebEngineProvider(GeckoWebEngine.ENGINE_NAME, object : WebEngineProviderCallback {
@@ -24,7 +29,7 @@ class GeckoEngineInitializer : Initializer<Unit> {
                 }
 
                 override fun onThemeSettingUpdated(value: Theme) {
-                    GeckoWebEngine.onThemeSettingUpdated(value)
+                    GeckoWebEngine.onThemeSettingUpdated(value, settingsManager.current.forceDarkWebpage)
                 }
 
                 override fun getWebEngineVersionString(): String =

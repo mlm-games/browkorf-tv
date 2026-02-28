@@ -85,7 +85,7 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
                     builder.consoleOutput(true)
                 }
                 builder.aboutConfigEnabled(true)
-                    .preferredColorScheme(settings.themeEnum.toGeckoPreferredColorScheme())
+                    .preferredColorScheme(settings.themeEnum.toGeckoPreferredColorScheme(settings.forceDarkWebpage))
                     .forceUserScalableEnabled(true)
                 builder.contentBlocking(
                     ContentBlocking.Settings.Builder()
@@ -143,8 +143,8 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
             }
         }
 
-        fun onThemeSettingUpdated(theme: Theme) {
-            runtime.settings.preferredColorScheme = theme.toGeckoPreferredColorScheme()
+        fun onThemeSettingUpdated(theme: Theme, forceDarkWebpage: Boolean) {
+            runtime.settings.preferredColorScheme = theme.toGeckoPreferredColorScheme(forceDarkWebpage)
         }
     }
 

@@ -46,7 +46,7 @@ fun TextEntryDialog(
                     factory = {
                         EditText(it).apply {
                             setText(initial)
-                            setSelection(text.length)
+                            setSelection(0, text.length)
                             hint?.let { h -> setHint(h) }
 
                             // Try to show IME (may not always show on TV, but works with many TV keyboards)
@@ -61,7 +61,7 @@ fun TextEntryDialog(
                         // Keep Compose state in sync (avoid loops)
                         if (et.text.toString() != value) {
                             et.setText(value)
-                            et.setSelection(et.text.length)
+                            et.setSelection(0, et.text.length)
                         }
                         et.setOnEditorActionListener { v, _, _ ->
                             value = (v as EditText).text.toString()

@@ -44,8 +44,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onAlertPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.AlertPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: AlertPrompt
+    ): GeckoResult<PromptResponse>? {
         if (webEngine.callback?.isDialogsBlockingEnabled() == true) {
             webEngine.callback?.onBlockedDialog(true)
             return GeckoResult.fromValue(prompt.dismiss())
@@ -63,8 +63,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onBeforeUnloadPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.BeforeUnloadPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: BeforeUnloadPrompt
+    ): GeckoResult<PromptResponse>? {
         val activity: Activity = webEngine.callback?.getActivity()
             ?: return GeckoResult.fromValue<PromptResponse>(prompt.dismiss())
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
@@ -93,8 +93,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onRepostConfirmPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.RepostConfirmPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: RepostConfirmPrompt
+    ): GeckoResult<PromptResponse>? {
         if (webEngine.callback?.isDialogsBlockingEnabled() == true) {
             webEngine.callback?.onBlockedDialog(true)
             return GeckoResult.fromValue(prompt.dismiss())
@@ -127,8 +127,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onButtonPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.ButtonPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: ButtonPrompt
+    ): GeckoResult<PromptResponse>? {
         if (webEngine.callback?.isDialogsBlockingEnabled() == true) {
             webEngine.callback?.onBlockedDialog(true)
             return GeckoResult.fromValue(prompt.dismiss())
@@ -160,8 +160,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onTextPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.TextPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: TextPrompt
+    ): GeckoResult<PromptResponse>? {
         if (webEngine.callback?.isDialogsBlockingEnabled() == true) {
             webEngine.callback?.onBlockedDialog(true)
             return GeckoResult.fromValue(prompt.dismiss())
@@ -188,8 +188,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onAuthPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.AuthPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: AuthPrompt
+    ): GeckoResult<PromptResponse>? {
         val activity: Activity = webEngine.callback?.getActivity()
             ?: return GeckoResult.fromValue<PromptResponse>(prompt.dismiss())
         val builder = AlertDialog.Builder(activity)
@@ -241,8 +241,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onChoicePrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.ChoicePrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: ChoicePrompt
+    ): GeckoResult<PromptResponse>? {
         val res = GeckoResult<PromptResponse>()
         onChoicePromptImpl(
             session, prompt.title, prompt.message, prompt.type, prompt.choices, prompt, res
@@ -252,8 +252,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onColorPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.ColorPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: ColorPrompt
+    ): GeckoResult<PromptResponse>? {
         if (webEngine.callback?.isDialogsBlockingEnabled() == true) {
             webEngine.callback?.onBlockedDialog(true)
             return GeckoResult.fromValue(prompt.dismiss())
@@ -334,8 +334,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onDateTimePrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.DateTimePrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: DateTimePrompt
+    ): GeckoResult<PromptResponse>? {
         if (webEngine.callback?.isDialogsBlockingEnabled() == true) {
             webEngine.callback?.onBlockedDialog(true)
             return GeckoResult.fromValue(prompt.dismiss())
@@ -485,8 +485,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onFilePrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.FilePrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: FilePrompt
+    ): GeckoResult<PromptResponse>? {
         val activity: Activity = webEngine.callback?.getActivity()
             ?: return GeckoResult.fromValue<PromptResponse>(prompt.dismiss())
 
@@ -541,8 +541,8 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onPopupPrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.PopupPrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: PopupPrompt
+    ): GeckoResult<PromptResponse>? {
         if (webEngine.callback?.shouldBlockNewWindow(dialog = false, userGesture = false) == true) {
             webEngine.callback?.onBlockedDialog(true)
             return GeckoResult.fromValue(prompt.dismiss())
@@ -552,52 +552,52 @@ class MyPromptDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Prom
 
     override fun onSharePrompt(
         session: GeckoSession,
-        prompt: GeckoSession.PromptDelegate.SharePrompt
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        prompt: SharePrompt
+    ): GeckoResult<PromptResponse>? {
         return super.onSharePrompt(session, prompt)
     }
 
     override fun onLoginSave(
         session: GeckoSession,
-        request: GeckoSession.PromptDelegate.AutocompleteRequest<Autocomplete.LoginSaveOption>
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        request: AutocompleteRequest<Autocomplete.LoginSaveOption>
+    ): GeckoResult<PromptResponse>? {
         Log.i(TAG, "onLoginSave")
         return GeckoResult.fromValue(request.confirm(request.options[0]))
     }
 
     override fun onAddressSave(
         session: GeckoSession,
-        request: GeckoSession.PromptDelegate.AutocompleteRequest<Autocomplete.AddressSaveOption>
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        request: AutocompleteRequest<Autocomplete.AddressSaveOption>
+    ): GeckoResult<PromptResponse>? {
         return super.onAddressSave(session, request)
     }
 
     override fun onCreditCardSave(
         session: GeckoSession,
-        request: GeckoSession.PromptDelegate.AutocompleteRequest<Autocomplete.CreditCardSaveOption>
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        request: AutocompleteRequest<Autocomplete.CreditCardSaveOption>
+    ): GeckoResult<PromptResponse>? {
         Log.i(TAG, "onCreditCardSave " + request.options[0].value)
         return null
     }
 
     override fun onLoginSelect(
         session: GeckoSession,
-        request: GeckoSession.PromptDelegate.AutocompleteRequest<Autocomplete.LoginSelectOption>
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        request: AutocompleteRequest<Autocomplete.LoginSelectOption>
+    ): GeckoResult<PromptResponse>? {
         return super.onLoginSelect(session, request)
     }
 
     override fun onCreditCardSelect(
         session: GeckoSession,
-        request: GeckoSession.PromptDelegate.AutocompleteRequest<Autocomplete.CreditCardSelectOption>
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        request: AutocompleteRequest<Autocomplete.CreditCardSelectOption>
+    ): GeckoResult<PromptResponse>? {
         return super.onCreditCardSelect(session, request)
     }
 
     override fun onAddressSelect(
         session: GeckoSession,
-        request: GeckoSession.PromptDelegate.AutocompleteRequest<Autocomplete.AddressSelectOption>
-    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
+        request: AutocompleteRequest<Autocomplete.AddressSelectOption>
+    ): GeckoResult<PromptResponse>? {
         return super.onAddressSelect(session, request)
     }
 

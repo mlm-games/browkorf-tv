@@ -44,6 +44,15 @@ data class AppSettings(
     val theme: Int = Theme.SYSTEM.ordinal,
 
     @Setting(
+        title = "Force Dark Webpage",
+        description = "Apply dark theme to web pages when using dark mode",
+        category = General::class,
+        type = Toggle::class,
+        key = "force_dark_webpage"
+    )
+    val forceDarkWebpage: Boolean = true,
+
+    @Setting(
         title = "Keep Screen On",
         description = "Prevent screen from turning off while browsing",
         category = General::class,
