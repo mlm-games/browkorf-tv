@@ -32,48 +32,63 @@ fun TabsRow(
     currentTabId: Long?,
     onSelectTab: (WebTabState) -> Unit,
     onAddTab: () -> Unit,
+    isAddButtonBeforeTabs: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val colors = AppTheme.colors
 
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(colors.topBarBackground)
-    ) {
-        // Tabs list
-        LazyRow(
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
             modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 5.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            contentPadding = PaddingValues(horizontal = 5.dp)
+                .fillMaxWidth()
+                .background(colors.topBarBackground),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            itemsIndexed(tabs, key = { index, tab ->
-                if (tab.id != 0L) tab.id else -(index + 1).toLong()
-            }) { index, tab ->
-                TabItem(
-                    tab = tab,
-                    isSelected = tab.id == currentTabId,
-                    onClick = { onSelectTab(tab) }
+            if (isAddButtonBeforeTabs) {
+                AddTabButton(
+                    onClick = onAddTab,
+                    modifier = Modifier.padding(
+                        5.dp
+                    )
+                )
+            }
+
+            LazyRow(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 5.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                contentPadding = PaddingValues(
+                    start = if (isAddButtonBeforeTabs) 4.dp else 5.dp,
+                    end = if (isAddButtonBeforeTabs) 5.dp else 4.dp
+                )
+            ) {
+                itemsIndexed(tabs, key = { index, tab ->
+                    if (tab.id != 0L) tab.id else -(index + 1).toLong()
+                }) { index, tab ->
+                    TabItem(
+                        tab = tab,
+                        isSelected = tab.id == currentTabId,
+                        onClick = { onSelectTab(tab) }
+                    )
+                }
+            }
+
+            if (!isAddButtonBeforeTabs) {
+                AddTabButton(
+                    onClick = onAddTab,
+                    modifier = Modifier.padding(5.dp)
                 )
             }
         }
 
-        // Add tab button
-        AddTabButton(
-            onClick = onAddTab,
-            modifier = Modifier.padding(5.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(10.dp)
+                .background(colors.topBarBackground2)
         )
     }
-
-    // Bottom spacer
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(10.dp)
-            .background(colors.topBarBackground2)
-    )
 }
 
 @Composable

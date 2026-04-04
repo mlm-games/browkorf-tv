@@ -34,10 +34,12 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import kotlinx.coroutines.delay
+import org.koin.compose.koinInject
 import org.mlm.browkorftv.AppKey
 import org.mlm.browkorftv.activity.main.BrowserUiViewModel
 import org.mlm.browkorftv.activity.main.TabsViewModel
 import org.mlm.browkorftv.model.WebTabState
+import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.ui.components.ActionBar
 import org.mlm.browkorftv.ui.components.BottomNavigationPanel
 import org.mlm.browkorftv.ui.components.BrowkorfTvProgressBar
@@ -96,6 +98,8 @@ fun BrowserScreen(
 
     voiceSearchUi: @Composable () -> Unit
 ) {
+    val settingsManager: SettingsManager = koinInject()
+    val settings by settingsManager.settingsState.collectAsStateWithLifecycle()
     val backStack = rememberNavBackStack(AppKey.Browser)
     val uiState by uiVm.uiState.collectAsStateWithLifecycle()
     val currentKey = backStack.lastOrNull()
@@ -276,7 +280,8 @@ fun BrowserScreen(
                                     onTabSelected(tab)
                                     uiVm.hideMenu()
                                 },
-                                onAddTab = onAddTab
+                                onAddTab = onAddTab,
+                                isAddButtonBeforeTabs = settings.newTabButtonBeforeTabs
                             )
                         }
                     }

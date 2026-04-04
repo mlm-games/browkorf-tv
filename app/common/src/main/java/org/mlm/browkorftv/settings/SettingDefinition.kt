@@ -203,6 +203,15 @@ data class AppSettings(
     )
     val directionalNavMode: Boolean = false,
 
+    @Setting(
+        title = "New Tab Button At The Start",
+        description = "Places the + button before the tab list instead of after it",
+        category = General::class,
+        type = Toggle::class,
+        key = "new_tab_button_before_tabs"
+    )
+    val newTabButtonBeforeTabs: Boolean = false,
+
 
     @Persisted(key = "incognito_mode_hint_suppress")
     @NoReset
