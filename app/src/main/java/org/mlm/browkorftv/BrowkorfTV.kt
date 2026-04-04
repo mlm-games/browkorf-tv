@@ -56,7 +56,7 @@ class BrowkorfTV : Application(), Application.ActivityLifecycleCallbacks {
         initWebEngineStuff()
         initNotificationChannels()
 
-        applyTheme(settingsManager.current.themeEnum)
+        applyTheme(settingsManager.current.theme)
 
         // Observe theme changes
         ProcessLifecycleOwner.get().lifecycleScope.launch {

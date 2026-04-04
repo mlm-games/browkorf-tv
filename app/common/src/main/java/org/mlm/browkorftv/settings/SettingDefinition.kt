@@ -3,6 +3,8 @@ package org.mlm.browkorftv.settings
 import io.github.mlmgames.settings.core.annotations.*
 import io.github.mlmgames.settings.core.types.*
 import androidx.core.net.toUri
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.Serializable
 
 @CategoryDefinition(order = 0)
 object General
@@ -29,6 +31,17 @@ object Updates
 @CategoryDefinition(order = 100)
 object Internal
 
+@OptIn(InternalSerializationApi::class)
+@Serializable
+data class BookmarkEntry(
+    val id: Long = 0L,
+    val title: String = "",
+    val url: String = "",
+    val parent: Long = 0L,
+    val homePageBookmark: Boolean = false,
+    val useful: Boolean = false,
+)
+
 
 @SchemaVersion(version = 1)
 data class AppSettings(
@@ -41,7 +54,7 @@ data class AppSettings(
         key = "theme",
         options = ["System", "Light", "Dark"]
     )
-    val theme: Int = Theme.SYSTEM.ordinal,
+    val theme: Theme = Theme.SYSTEM,
 
     @Setting(
         title = "Force Dark Webpage",
@@ -84,9 +97,8 @@ data class AppSettings(
         category = HomePage::class,
         type = Dropdown::class,
         key = "home_page_mode",
-        options = ["Home Page", "Search Engine", "Custom", "Blank"]
     )
-    val homePageMode: Int = HomePageMode.HOME_PAGE.ordinal,
+    val homePageMode: HomePageMode = HomePageMode.HOME_PAGE,
 
     @Setting(
         title = "Custom Home Page URL",
@@ -220,6 +232,13 @@ data class AppSettings(
     @NoReset
     val initialBookmarksSuggestionsLoaded: Boolean = false,
 
+    @Persisted(key = "bookmarks")
+    val bookmarks: List<BookmarkEntry> = emptyList(),
+
+    @Persisted(key = "__bookmarks_migrated_from_room__")
+    @NoReset
+    val bookmarksMigratedFromRoom: Boolean = false,
+
     // Migration helper - tracks if we migrated from SharedPreferences
     @Persisted(key = "__migrated_from_shared_prefs__")
     @NoReset
@@ -297,13 +316,6 @@ data class AppSettings(
         val SupportedWebEngines = arrayOf(ENGINE_GECKO_VIEW, ENGINE_WEB_VIEW)
         val UpdateChannels = arrayOf("release", "beta")
     }
-
-
-    val themeEnum: Theme
-        get() = Theme.entries.getOrElse(theme) { Theme.SYSTEM }
-
-    val homePageModeEnum: HomePageMode
-        get() = HomePageMode.entries.getOrElse(homePageMode) { HomePageMode.HOME_PAGE }
 
     val searchEngineURL: String
         get() = if (searchEngineIndex < SearchEnginesURLs.size - 1) {

@@ -2,16 +2,16 @@ package org.mlm.browkorftv.activity.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import org.mlm.browkorftv.model.FavoriteItem
-import org.mlm.browkorftv.model.dao.FavoritesDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.mlm.browkorftv.data.BookmarksRepository
+import org.mlm.browkorftv.model.FavoriteItem
 
 class FavoritesViewModel(
-    private val favoritesDao: FavoritesDao
+    private val bookmarksRepository: BookmarksRepository
 ) : ViewModel() {
 
     private val _bookmarks = MutableStateFlow<List<FavoriteItem>>(emptyList())
@@ -22,32 +22,26 @@ class FavoritesViewModel(
 
     fun loadData() = viewModelScope.launch(Dispatchers.IO) {
         _loading.value = true
-        _bookmarks.value = favoritesDao.getAll()
+        _bookmarks.value = bookmarksRepository.getAll()
         _loading.value = false
     }
 
     suspend fun getFavoriteById(id: Long): FavoriteItem? {
-        // This is blocking/suspend, used for initializing editors
-        return favoritesDao.getById(id)
+        return bookmarksRepository.getById(id)
     }
 
-
     fun saveFavorite(item: FavoriteItem) = viewModelScope.launch(Dispatchers.IO) {
-        if (item.id == 0L) {
-            favoritesDao.insert(item)
-        } else {
-            favoritesDao.update(item)
-        }
-        loadData() // Refresh list
+        bookmarksRepository.upsert(item)
+        _bookmarks.value = bookmarksRepository.getAll()
     }
 
     fun deleteFavorite(id: Long) = viewModelScope.launch(Dispatchers.IO) {
-        favoritesDao.delete(id)
-        loadData()
+        bookmarksRepository.delete(id)
+        _bookmarks.value = bookmarksRepository.getAll()
     }
     
     fun deleteFavorite(item: FavoriteItem) = viewModelScope.launch(Dispatchers.IO) {
-        favoritesDao.delete(item)
-        loadData()
+        bookmarksRepository.delete(item.id)
+        _bookmarks.value = bookmarksRepository.getAll()
     }
 }

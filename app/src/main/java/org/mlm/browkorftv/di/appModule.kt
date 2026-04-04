@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import org.mlm.browkorftv.activity.main.*
 import org.mlm.browkorftv.core.DefaultDispatcherProvider
 import org.mlm.browkorftv.core.DispatcherProvider
+import org.mlm.browkorftv.data.BookmarksRepository
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.singleton.AppDatabase
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
@@ -37,6 +38,7 @@ val appModule = module {
     single { SnackbarManager() }
 
     // Repos / managers
+    single { BookmarksRepository(get(), get()) }
     single { AdBlockRepository(get(), androidContext()) }
     single { DownloadsManager(get(), androidContext()) }
 

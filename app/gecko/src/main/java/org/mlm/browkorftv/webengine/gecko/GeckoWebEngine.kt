@@ -85,7 +85,7 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
                     builder.consoleOutput(true)
                 }
                 builder.aboutConfigEnabled(true)
-                    .preferredColorScheme(settings.themeEnum.toGeckoPreferredColorScheme(settings.forceDarkWebpage))
+                    .preferredColorScheme(settings.theme.toGeckoPreferredColorScheme(settings.forceDarkWebpage))
                     .forceUserScalableEnabled(true)
                 builder.contentBlocking(
                     ContentBlocking.Settings.Builder()
@@ -305,7 +305,7 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
         }
 
         if (HOME_URL_ALIAS == url) {
-            when (settings.homePageModeEnum) {
+            when (settings.homePageMode) {
                 HomePageMode.BLANK -> {
                     session.loadUri("about:blank")
                 }

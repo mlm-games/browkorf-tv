@@ -593,7 +593,7 @@ class WebViewEx(
 
         when {
             AppSettings.HOME_URL_ALIAS == url -> {
-                when (settings.homePageModeEnum) {
+                when (settings.homePageMode) {
                     HomePageMode.BLANK -> {
                         loadDataWithBaseURL(null, "", "text/html", "UTF-8", null)
                     }

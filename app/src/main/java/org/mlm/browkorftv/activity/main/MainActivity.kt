@@ -26,6 +26,8 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -59,6 +61,8 @@ import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
 import org.mlm.browkorftv.ui.SnackbarManager
+import org.mlm.browkorftv.ui.components.CursorMenuAction
+import org.mlm.browkorftv.ui.components.LinkAction
 import org.mlm.browkorftv.ui.theme.AppTheme
 import org.mlm.browkorftv.ui.screens.BrowserScreen
 import org.mlm.browkorftv.updates.UpdateDialogs
@@ -158,11 +162,11 @@ open class MainActivity : AppCompatActivity() {
         return (ctx.linkUri ?: ctx.srcUri)?.trim('"')
     }
 
-    val cursorActionHandler: (org.mlm.browkorftv.ui.components.CursorMenuAction) -> Unit =
+    val cursorActionHandler: (CursorMenuAction) -> Unit =
         { action ->
             val ctx = lastCtxMenu
             when (action) {
-                org.mlm.browkorftv.ui.components.CursorMenuAction.Dismiss -> {
+                CursorMenuAction.Dismiss -> {
                     browserUiViewModel.hideCursorMenu()
                     lastCtxMenu = null
                     webContainer.cursorDrawerDelegate.onMenuDismissed()
@@ -170,56 +174,56 @@ open class MainActivity : AppCompatActivity() {
                     webContainer.post { focusWeb() }
                 }
 
-                org.mlm.browkorftv.ui.components.CursorMenuAction.Grab -> {
+                CursorMenuAction.Grab -> {
                     browserUiViewModel.hideCursorMenu()
                     webContainer.cursorDrawerDelegate.onMenuDismissed()
                     fullscreenContainer.cursorDrawerDelegate.onMenuDismissed()
                     ctx?.cursorDrawer?.goToGrabMode()
                 }
 
-                org.mlm.browkorftv.ui.components.CursorMenuAction.TextSelect -> {
+                CursorMenuAction.TextSelect -> {
                     browserUiViewModel.hideCursorMenu()
                     webContainer.cursorDrawerDelegate.onMenuDismissed()
                     fullscreenContainer.cursorDrawerDelegate.onMenuDismissed()
                     ctx?.cursorDrawer?.goToTextSelectionMode()
                 }
 
-                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomIn -> {
+                CursorMenuAction.ZoomIn -> {
                     ctx?.tab?.webEngine?.zoomIn()
                 }
 
-                org.mlm.browkorftv.ui.components.CursorMenuAction.ZoomOut -> {
+                CursorMenuAction.ZoomOut -> {
                     ctx?.tab?.webEngine?.zoomOut()
                 }
 
-                org.mlm.browkorftv.ui.components.CursorMenuAction.LinkActions -> {
+                CursorMenuAction.LinkActions -> {
                     browserUiViewModel.showLinkActions()
                 }
             }
         }
 
-    val linkActionHandler: (org.mlm.browkorftv.ui.components.LinkAction) -> Unit = let@{ action ->
+    val linkActionHandler: (LinkAction) -> Unit = let@{ action ->
         val ctx = lastCtxMenu ?: return@let
         val url = currentLinkUrl()
         when (action) {
-            org.mlm.browkorftv.ui.components.LinkAction.Refresh -> ctx.tab.webEngine.reload()
-            org.mlm.browkorftv.ui.components.LinkAction.OpenInNewTab -> if (url != null) {
+            LinkAction.Refresh -> ctx.tab.webEngine.reload()
+            LinkAction.OpenInNewTab -> if (url != null) {
                 ctx.windowProvider.onOpenInNewTabRequested(url, true)
             }
 
-            org.mlm.browkorftv.ui.components.LinkAction.OpenExternal -> if (url != null) {
+            LinkAction.OpenExternal -> if (url != null) {
                 ctx.windowProvider.onOpenInExternalAppRequested(url)
             }
 
-            org.mlm.browkorftv.ui.components.LinkAction.Download -> if (url != null) {
+            LinkAction.Download -> if (url != null) {
                 ctx.windowProvider.onDownloadRequested(url)
             }
 
-            org.mlm.browkorftv.ui.components.LinkAction.Copy -> if (url != null) {
+            LinkAction.Copy -> if (url != null) {
                 ctx.windowProvider.onCopyTextToClipboardRequested(url)
             }
 
-            org.mlm.browkorftv.ui.components.LinkAction.Share -> if (url != null) {
+            LinkAction.Share -> if (url != null) {
                 ctx.windowProvider.onShareUrlRequested(url)
             }
         }
@@ -358,16 +362,16 @@ open class MainActivity : AppCompatActivity() {
             val isBlocking by blockingUi.collectAsStateWithLifecycle()
 
             val themePref by settingsManager.themeFlow.collectAsStateWithLifecycle(
-                initialValue = settingsManager.current.themeEnum
+                initialValue = settingsManager.current.theme
             )
 
             val darkTheme = when (themePref) {
                 Theme.BLACK -> true
                 Theme.WHITE -> false
-                Theme.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
+                Theme.SYSTEM -> isSystemInDarkTheme()
             }
 
-            val snackbarHostState = remember { androidx.compose.material3.SnackbarHostState() }
+            val snackbarHostState = remember { SnackbarHostState() }
 
             LaunchedEffect(Unit) {
                 snackbarManager.events.collect { e ->

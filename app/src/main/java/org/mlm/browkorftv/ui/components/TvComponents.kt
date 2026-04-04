@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -19,8 +18,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
-import org.mlm.browkorftv.ui.theme.AppTheme
-import org.mlm.browkorftv.common.R
+import org.mlm.browkorftv.R
 import org.mlm.browkorftv.ui.theme.AppTheme.colors
 
 @Composable
@@ -99,12 +97,13 @@ fun BrowkorfTvButton(
 fun BrowkorfTvIconButton(
     onClick: () -> Unit,
     painter: Painter,
+    modifier: Modifier = Modifier,
     contentDescription: String? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.size(
+        modifier = modifier.size(
             width = 45.dp,
             height = 45.dp
         ),
@@ -146,14 +145,14 @@ fun BrowkorfTopBar(
     onBack: () -> Unit,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
-    val c = AppTheme.colors
+    val c = colors
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
         title = { Text(title) },
         navigationIcon = {
             IconButton(onClick = onBack) {
                 Icon(
-                    painterResource(org.mlm.browkorftv.R.drawable.outline_chevron_backward_24),
+                    painterResource(R.drawable.outline_chevron_backward_24),
                     contentDescription = "Back"
                 )
             }
@@ -179,7 +178,7 @@ fun BrowkorfTvListItem(
     modifier: Modifier = Modifier,
     supportingText: String? = null,
 ) {
-    val colors = AppTheme.colors
+    val colors = colors
 
     Surface(
         onClick = onClick,
