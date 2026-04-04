@@ -1,7 +1,7 @@
 [versions]
-agp = "9.0.1"
-datastorePreferences = "1.2.0"
-kotlin = "2.3.10"
+agp = "9.1.0"
+datastorePreferences = "1.2.1"
+kotlin = "2.3.20"
 ksp = "2.3.5"
 jvmTarget = "21"
 compileSdk = "36"
@@ -21,16 +21,16 @@ geckoview = "146.0.20251201213807"
 
 junit = "4.13.2"
 robolectric = "4.16.1"
-activityCompose = "1.12.4"
+activityCompose = "1.13.0"
 tvMaterial = "1.0.1"
-kmpSettingsCore = "0.5.0"
+kmpSettingsCore = "0.7.3"
 
 koinBom = "4.1.1"
 navigation3Runtime = "1.0.1"
 koin-annotations = "2.3.1"
 startup = "1.2.0"
 apkDist = "0.5.2"
-composeBom = "2026.02.00"
+composeBom = "2026.03.01"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom-alpha", version.ref = "composeBom" }
