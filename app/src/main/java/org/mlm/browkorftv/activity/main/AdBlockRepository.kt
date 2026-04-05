@@ -2,6 +2,7 @@ package org.mlm.browkorftv.activity.main
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.brave.adblock.AdBlockClient
 import com.brave.adblock.AdBlockClient.FilterOption
 import com.brave.adblock.Utils.uriHasExtension
@@ -22,6 +23,7 @@ class AdBlockRepository(
     private val context: Context
 ) {
     companion object : KoinComponent {
+        val TAG = AdBlockRepository::class.java.simpleName
         const val SERIALIZED_LIST_FILE = "adblock_ser.dat"
         const val AUTO_UPDATE_INTERVAL_MINUTES = 60 * 24 * 30 // 30 days
 
@@ -66,7 +68,8 @@ class AdBlockRepository(
                 success = newClient.parse(easyList)
                 newClient.serialize(serializedFile.absolutePath)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(TAG, "Failed to load ad block list", e)
+                snackbar.postError("Error loading ad-blocker list", e.message)
             }
         }
 
@@ -90,7 +93,7 @@ class AdBlockRepository(
         val result = try {
             baseHost != null && client.matches(url.toString(), filterOption, baseHost)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Ad block match check failed", e)
             false
         }
         return result

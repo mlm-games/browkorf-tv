@@ -66,7 +66,7 @@ class MainViewModel(
             val result = historyDao.lastFlow().first()
             if (result.isNotEmpty()) lastHistoryItem = result[0]
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Failed to load last history item", e)
         }
     }
 

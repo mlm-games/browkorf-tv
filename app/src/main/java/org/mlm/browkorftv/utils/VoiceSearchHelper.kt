@@ -9,7 +9,6 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -55,7 +54,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import org.mlm.browkorftv.R
 
-class VoiceSearchHelper(private val activity: ComponentActivity) {
+class VoiceSearchHelper(
+    private val activity: ComponentActivity,
+    private val showMessage: (String) -> Unit = {}
+) {
 
     private var isListening by mutableStateOf(false)
     private var partialResult by mutableStateOf("")
@@ -79,7 +81,7 @@ class VoiceSearchHelper(private val activity: ComponentActivity) {
                     startRecognitionAndroid11Plus()
                 }
             } else {
-                Toast.makeText(activity, "Microphone permission required", Toast.LENGTH_SHORT).show()
+                showMessage("Microphone permission required")
             }
         }
 
@@ -111,8 +113,8 @@ class VoiceSearchHelper(private val activity: ComponentActivity) {
             try {
                 legacyVoiceLauncher.launch(intent)
             } catch (e : Exception) {
-                Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
+                Log.e("VoiceSearchHelper", "Failed to start voice recognition", e)
+                showMessage(activity.getString(R.string.error))
             }
         } else {
             showInstallVoiceEnginePrompt()
@@ -165,7 +167,7 @@ class VoiceSearchHelper(private val activity: ComponentActivity) {
                 else -> "Voice search error: $error"
             }
             stopListening()
-            Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
+            showMessage(activity.getString(R.string.error))
             Log.e("VoiceSearchHelper","Error: $message")
         }
         override fun onResults(results: Bundle?) {
@@ -205,7 +207,7 @@ class VoiceSearchHelper(private val activity: ComponentActivity) {
                     activity.startActivity(intent)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show()
+                    showMessage(activity.getString(R.string.error))
                 }
             }
         }

@@ -17,7 +17,6 @@ import android.os.Looper
 import android.text.format.Formatter
 import android.util.Log
 import android.webkit.MimeTypeMap
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
@@ -27,6 +26,7 @@ import org.mlm.browkorftv.activity.main.DownloadsManager
 import org.mlm.browkorftv.activity.main.MainActivity
 import org.mlm.browkorftv.model.Download
 import org.mlm.browkorftv.model.dao.DownloadDao
+import org.mlm.browkorftv.ui.SnackbarManager
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
@@ -37,6 +37,7 @@ class DownloadService : Service(), KoinComponent {
 
     private val downloadsManager: DownloadsManager by inject()
     private val downloadDao: DownloadDao by inject()
+    private val snackbarManager: SnackbarManager by inject()
 
     private val executor = Executors.newCachedThreadPool()
     private val handler = Handler(Looper.getMainLooper())
@@ -180,7 +181,7 @@ class DownloadService : Service(), KoinComponent {
         try {
             context.startActivity(install)
         } catch (_: ActivityNotFoundException) {
-            Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
+            snackbarManager.show(context.getString(R.string.error))
         }
     }
 
@@ -209,11 +210,11 @@ class DownloadService : Service(), KoinComponent {
             download.filename = fileName
 
             if (Environment.MEDIA_MOUNTED != Environment.getExternalStorageState()) {
-                Toast.makeText(this, R.string.storage_not_mounted, Toast.LENGTH_SHORT).show()
+                snackbarManager.show(getString(R.string.storage_not_mounted))
                 return
             }
             if (!downloadsDir.exists() && !downloadsDir.mkdirs()) {
-                Toast.makeText(this, R.string.can_not_create_downloads, Toast.LENGTH_SHORT).show()
+                snackbarManager.show(getString(R.string.can_not_create_downloads))
                 return
             }
             download.filepath = File(downloadsDir, fileName).absolutePath

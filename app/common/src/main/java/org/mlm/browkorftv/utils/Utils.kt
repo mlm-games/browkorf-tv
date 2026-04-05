@@ -10,7 +10,6 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Parcel
 import android.view.WindowManager
-import android.widget.Toast
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -37,20 +36,6 @@ object Utils {
         val size = Point()
         display.getSize(size)
         return size
-    }
-
-    /**
-     * Shows a (long) toast
-     */
-    fun showToast(context: Context, msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
-    }
-
-    /**
-     * Shows a (long) toast.
-     */
-    fun showToast(context: Context, resourceId: Int) {
-        Toast.makeText(context, context.getString(resourceId), Toast.LENGTH_LONG).show()
     }
 
     fun D2P(ctx: Context, dp: Float): Float {

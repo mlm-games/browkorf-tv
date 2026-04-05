@@ -22,7 +22,6 @@ import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
 import android.webkit.WebStorage
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -121,7 +120,7 @@ open class MainActivity : AppCompatActivity() {
 
     private var running: Boolean = false
 
-    private val voiceSearchHelper = VoiceSearchHelper(this)
+    private val voiceSearchHelper = VoiceSearchHelper(this, showMessage = { msg -> snackbarManager.show(msg) })
     private var lastCommonRequestsCode = COMMON_REQUESTS_START_CODE
     private var downloadService: DownloadService? = null
     private var downloadIntent: Download? = null
@@ -264,7 +263,7 @@ open class MainActivity : AppCompatActivity() {
         try {
             startActivity(install)
         } catch (_: ActivityNotFoundException) {
-            Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show()
+            snackbarManager.show(getString(R.string.error))
         }
     }
 
@@ -375,11 +374,15 @@ open class MainActivity : AppCompatActivity() {
 
             LaunchedEffect(Unit) {
                 snackbarManager.events.collect { e ->
-                    snackbarHostState.showSnackbar(
+                    val result = snackbarHostState.showSnackbar(
                         message = e.message,
                         actionLabel = e.actionLabel,
                         withDismissAction = e.withDismissAction
                     )
+                    if (result == androidx.compose.material3.SnackbarResult.ActionPerformed && e.errorDetails != null) {
+                        val clipBoard = this@MainActivity.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                        clipBoard.setPrimaryClip(ClipData.newPlainText("Error Details", e.errorDetails))
+                    }
                 }
             }
 
@@ -571,10 +574,7 @@ open class MainActivity : AppCompatActivity() {
 
                             is UpdatesEvent.RequestInstallApk -> handleInstallRequest(e.file)
 
-                            is UpdatesEvent.ToastMessage -> UpdateDialogs.toast(
-                                this@MainActivity,
-                                e.message
-                            )
+            is UpdatesEvent.ToastMessage -> snackbarManager.show(e.message)
                         }
                     }
                 }
@@ -744,7 +744,7 @@ open class MainActivity : AppCompatActivity() {
         val webView: View = try {
             tab.webEngine.getOrCreateView(this)
         } catch (e: Throwable) {
-            e.printStackTrace()
+            Log.e(TAG, "Failed to create WebView", e)
             if (!settings.isWebEngineGecko) {
                 AlertDialog.Builder(this)
                     .setTitle(R.string.error)
@@ -933,8 +933,8 @@ open class MainActivity : AppCompatActivity() {
             val query = try {
                 URLEncoder.encode(text, "utf-8")
             } catch (e: UnsupportedEncodingException) {
-                e.printStackTrace()
-                Utils.showToast(this, R.string.error)
+                Log.e(TAG, "UTF-8 encoding not supported", e)
+                snackbarManager.show(getString(R.string.error))
                 return
             }
             val searchUrl = settings.searchEngineURL.replace("[query]", query)
@@ -1048,7 +1048,7 @@ open class MainActivity : AppCompatActivity() {
         voiceSearchHelper.initiateVoiceSearch(object : VoiceSearchHelper.Callback {
             override fun onResult(text: String?) {
                 if (text == null) {
-                    Utils.showToast(this@MainActivity, getString(R.string.can_not_recognize))
+                    snackbarManager.show(getString(R.string.can_not_recognize))
                     return
                 }
                 search(text)
@@ -1298,11 +1298,7 @@ open class MainActivity : AppCompatActivity() {
         override fun onCopyTextToClipboardRequested(url: String) {
             val clipBoard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             clipBoard.setPrimaryClip(ClipData.newPlainText("URL", url))
-            Toast.makeText(
-                this@MainActivity,
-                getString(R.string.copied_to_clipboard),
-                Toast.LENGTH_SHORT
-            ).show()
+            snackbarManager.show(getString(R.string.copied_to_clipboard))
         }
 
         override fun onShareUrlRequested(url: String) {
@@ -1400,11 +1396,7 @@ open class MainActivity : AppCompatActivity() {
                     when (actions[which]) {
                         R.string.copy -> {
                             clipBoard.setPrimaryClip(ClipData.newPlainText("text", selectedText))
-                            Toast.makeText(
-                                this@MainActivity,
-                                getString(R.string.copied_to_clipboard),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            snackbarManager.show(getString(R.string.copied_to_clipboard))
                         }
 
                         R.string.cut -> {
@@ -1420,11 +1412,7 @@ open class MainActivity : AppCompatActivity() {
                                 putExtra(Intent.EXTRA_TEXT, selectedText)
                             }
                             runCatching { startActivity(share) }.onFailure {
-                                Toast.makeText(
-                                    this@MainActivity,
-                                    R.string.external_app_open_error,
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                snackbarManager.show(getString(R.string.external_app_open_error))
                             }
                         }
 

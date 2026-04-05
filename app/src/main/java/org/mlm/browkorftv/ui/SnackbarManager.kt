@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.SharedFlow
 data class SnackbarEvent(
     val message: String,
     val actionLabel: String? = null,
-    val withDismissAction: Boolean = false
+    val withDismissAction: Boolean = false,
+    val errorDetails: String? = null
 )
 
 class SnackbarManager {
@@ -19,5 +20,16 @@ class SnackbarManager {
 
     fun show(message: String, actionLabel: String? = null, withDismissAction: Boolean = false) {
         _events.tryEmit(SnackbarEvent(message, actionLabel, withDismissAction))
+    }
+
+    fun postError(message: String, errorDetails: String?) {
+        _events.tryEmit(
+            SnackbarEvent(
+                message = message,
+                actionLabel = "Copy Error",
+                withDismissAction = true,
+                errorDetails = errorDetails
+            )
+        )
     }
 }

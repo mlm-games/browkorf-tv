@@ -4,7 +4,6 @@ import android.app.Activity
 import android.text.Html
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.BuildConfig
@@ -68,9 +67,5 @@ object UpdateDialogs {
             pb.max = 100
             pb.setProgress(p.percent, true)
         }
-    }
-
-    fun toast(activity: Activity, msg: String) {
-        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
     }
 }
