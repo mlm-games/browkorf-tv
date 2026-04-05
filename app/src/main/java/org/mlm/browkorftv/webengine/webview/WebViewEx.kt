@@ -137,7 +137,6 @@ class WebViewEx(
             builtInZoomControls = true
             displayZoomControls = false
             saveFormData = true
-            setSupportZoom(true)
             domStorageEnabled = true
             allowContentAccess = false
             cacheMode = WebSettings.LOAD_DEFAULT
@@ -668,11 +667,11 @@ class WebViewEx(
             try {
                 thumbnail = createBitmap(width, height)
             } catch (e: Throwable) {
-                e.printStackTrace()
+                Log.e(TAG, "Failed to create thumbnail bitmap", e)
                 try {
                     thumbnail = createBitmap(width / 2, height / 2)
                 } catch (e: OutOfMemoryError) {
-                    e.printStackTrace()
+                    Log.e(TAG, "Failed to create half-size thumbnail bitmap", e)
                 }
             }
         }

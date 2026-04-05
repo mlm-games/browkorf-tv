@@ -1,36 +1,41 @@
 package org.mlm.browkorftv.updates
 
-data class UpdateChannel(
+data class GitHubRelease(
+    val tagName: String,
     val name: String,
-    val latestVersionName: String,
-    val latestVersionCode: Int,
-    val minApi: Int = 21,
-    val url: String,
-    val urls: List<String> = emptyList()
+    val prerelease: Boolean,
+    val body: String,
+    val assets: List<GitHubAsset>
 )
 
-data class UpdateChangelogEntry(
-    val versionCode: Int,
-    val versionName: String,
-    val changes: String
+data class GitHubAsset(
+    val name: String,
+    val downloadUrl: String
 )
 
-data class UpdateManifest(
-    val channels: List<UpdateChannel>,
-    val changelog: List<UpdateChangelogEntry>
-)
-
-/** Result of selecting the best update for this device + requested channels. */
 data class UpdateInfo(
-    val latestVersionCode: Int,
-    val latestVersionName: String,
-    val channel: String,
+    val versionName: String,
     val downloadUrl: String,
-    val changelog: List<UpdateChangelogEntry>,
-    val availableChannels: List<String>
+    val changelog: String
 ) {
-    fun hasUpdate(currentVersionCode: Int): Boolean = latestVersionCode > currentVersionCode
+    fun hasUpdate(currentVersionName: String): Boolean {
+        val remote = parseVersion(versionName)
+        val current = parseVersion(currentVersionName)
+        return remote > current
+    }
 
-    fun changelogSince(currentVersionCode: Int): List<UpdateChangelogEntry> =
-        changelog.filter { it.versionCode > currentVersionCode }
+    private fun parseVersion(version: String): List<Int> {
+        val cleaned = version.removePrefix("v")
+        return cleaned.split(".").mapNotNull { it.toIntOrNull() }
+    }
+
+    private operator fun List<Int>.compareTo(other: List<Int>): Int {
+        val maxLen = maxOf(size, other.size)
+        for (i in 0 until maxLen) {
+            val a = getOrNull(i) ?: 0
+            val b = other.getOrNull(i) ?: 0
+            if (a != b) return a.compareTo(b)
+        }
+        return 0
+    }
 }

@@ -19,16 +19,11 @@ object UpdateDialogs {
         onLater: () -> Unit = {},
         onSettings: () -> Unit = {}
     ) {
-        if (!info.hasUpdate(BuildConfig.VERSION_CODE)) return
+        if (!info.hasUpdate(BuildConfig.VERSION_NAME)) return
 
-        val message = buildString {
-            val entries = info.changelogSince(BuildConfig.VERSION_CODE)
-            for (e in entries) {
-                append("<b>${e.versionName}</b><br>")
-                append(e.changes.replace("\n", "<br>"))
-                append("<br><br>")
-            }
-        }
+        val message = info.changelog
+            .replace("\n", "<br>")
+            .replace("#", "")
 
         val textView = TextView(activity).apply {
             val pad = Utils.D2P(activity, 25f).toInt()

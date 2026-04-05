@@ -189,7 +189,7 @@ data class AppSettings(
         category = Updates::class,
         type = Dropdown::class,
         key = "update_channel",
-        options = ["Release", "Beta"],
+        options = ["Release", "Prerelease"],
         dependsOn = "autoCheckUpdates"
     )
     val updateChannelIndex: Int = 0,
@@ -323,7 +323,6 @@ data class AppSettings(
         )
 
         val SupportedWebEngines = arrayOf(ENGINE_GECKO_VIEW, ENGINE_WEB_VIEW)
-        val UpdateChannels = arrayOf("release", "beta")
     }
 
     val searchEngineURL: String
@@ -344,9 +343,6 @@ data class AppSettings(
         get() = SupportedWebEngines.getOrElse(webEngineIndex) {
             ENGINE_WEB_VIEW
         }
-
-    val updateChannel: String
-        get() = UpdateChannels.getOrElse(updateChannelIndex) { "release" }
 
     val isWebEngineGecko: Boolean
         get() = webEngine == ENGINE_GECKO_VIEW

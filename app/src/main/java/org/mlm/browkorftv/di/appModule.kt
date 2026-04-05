@@ -12,7 +12,11 @@ import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.singleton.AppDatabase
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
 import org.mlm.browkorftv.ui.SnackbarManager
-import org.mlm.browkorftv.updates.*
+import org.mlm.browkorftv.updates.JsonUpdateApi
+import org.mlm.browkorftv.updates.UpdateApi
+import org.mlm.browkorftv.updates.UpdateInstaller
+import org.mlm.browkorftv.updates.UpdateRepository
+import org.mlm.browkorftv.updates.UpdatesViewModel
 
 val appModule = module {
 

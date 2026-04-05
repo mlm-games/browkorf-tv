@@ -11,42 +11,29 @@ sealed interface UpdateResult {
 class UpdateRepository(
     private val api: UpdateApi
 ) {
+    companion object {
+        private const val GITHUB_RELEASES_URL = "https://api.github.com/repos/mlm-games/browkorf-tv/releases"
+    }
+
     suspend fun checkForUpdates(
-        manifestUrl: String,
-        currentVersionCode: Int,
-        channelsToCheck: List<String>,
-        deviceApi: Int = Build.VERSION.SDK_INT,
+        currentVersionName: String,
+        prerelease: Boolean,
         supportedAbis: List<String> = Build.SUPPORTED_ABIS.toList()
     ): UpdateResult {
         return try {
-            val manifest = api.fetchManifest(manifestUrl)
+            val release = api.fetchLatestRelease(prerelease)
+                ?: return UpdateResult.NoUpdate
 
-            val availableChannels = manifest.channels.map { it.name }.distinct()
-
-            // Pick "best" channel among channelsToCheck: highest latestVersionCode, and minApi satisfied.
-            var chosen: UpdateChannel? = null
-            for (channel in manifest.channels) {
-                if (channel.name !in channelsToCheck) continue
-                if (deviceApi < channel.minApi) continue
-                if (chosen == null || channel.latestVersionCode > chosen!!.latestVersionCode) {
-                    chosen = channel
-                }
-            }
-
-            val ch = chosen ?: return UpdateResult.NoUpdate
-
-            val bestUrl = selectBestUrlForAbi(ch, supportedAbis)
+            val bestAsset = selectBestAsset(release.assets, supportedAbis)
+                ?: return UpdateResult.NoUpdate
 
             val info = UpdateInfo(
-                latestVersionCode = ch.latestVersionCode,
-                latestVersionName = ch.latestVersionName,
-                channel = ch.name,
-                downloadUrl = bestUrl,
-                changelog = manifest.changelog,
-                availableChannels = availableChannels
+                versionName = release.tagName.removePrefix("v"),
+                downloadUrl = bestAsset.downloadUrl,
+                changelog = release.body
             )
 
-            if (info.hasUpdate(currentVersionCode)) {
+            if (info.hasUpdate(currentVersionName)) {
                 UpdateResult.HasUpdate(info)
             } else {
                 UpdateResult.NoUpdate
@@ -56,12 +43,14 @@ class UpdateRepository(
         }
     }
 
-    private fun selectBestUrlForAbi(channel: UpdateChannel, supportedAbis: List<String>): String {
-        if (channel.urls.isEmpty()) return channel.url
+    private fun selectBestAsset(assets: List<GitHubAsset>, supportedAbis: List<String>): GitHubAsset? {
+        val primaryAbi = supportedAbis.firstOrNull() ?: return assets.firstOrNull()
 
-        // Your JSON uses APK names ending in e.g. "...arm64-v8a.apk"
-        val primaryAbi = supportedAbis.firstOrNull().orEmpty()
-        val abiMatch = channel.urls.firstOrNull { it.endsWith("$primaryAbi.apk", ignoreCase = true) }
-        return abiMatch ?: channel.url
+        val apkAssets = assets.filter { it.name.endsWith(".apk") && !it.name.contains("-universal") }
+        if (apkAssets.isEmpty()) return assets.firstOrNull()
+
+        return apkAssets.firstOrNull { it.name.contains(primaryAbi) }
+            ?: apkAssets.firstOrNull { it.name.contains("arm64-v8a") }
+            ?: apkAssets.first()
     }
 }

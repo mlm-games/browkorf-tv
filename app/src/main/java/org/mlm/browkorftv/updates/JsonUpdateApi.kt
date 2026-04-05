@@ -1,6 +1,7 @@
 package org.mlm.browkorftv.updates
 
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import org.mlm.browkorftv.core.DispatcherProvider
 import java.net.HttpURLConnection
@@ -10,59 +11,67 @@ class JsonUpdateApi(
     private val dispatchers: DispatcherProvider
 ) : UpdateApi {
 
-    override suspend fun fetchManifest(manifestUrl: String): UpdateManifest = withContext(dispatchers.io) {
-        val conn = (URL(manifestUrl).openConnection() as HttpURLConnection).apply {
+    companion object {
+        private const val BASE_URL = "https://api.github.com/repos/mlm-games/browkorf-tv/releases"
+    }
+
+    override suspend fun fetchLatestRelease(prerelease: Boolean): GitHubRelease? = withContext(dispatchers.io) {
+        val url = if (prerelease) {
+            BASE_URL
+        } else {
+            "$BASE_URL/latest"
+        }
+
+        val conn = (URL(url).openConnection() as HttpURLConnection).apply {
             connectTimeout = 20_000
             readTimeout = 20_000
             useCaches = false
+            setRequestProperty("Accept", "application/vnd.github.v3+json")
         }
 
         try {
+            if (conn.responseCode != HttpURLConnection.HTTP_OK) return@withContext null
+
             val content = conn.inputStream.bufferedReader().use { it.readText() }
-            val json = JSONObject(content)
 
-            val channelsJson = json.getJSONArray("channels")
-            val channels = buildList {
-                for (i in 0 until channelsJson.length()) {
-                    val o = channelsJson.getJSONObject(i)
-
-                    val urls = if (o.has("urls")) {
-                        val arr = o.getJSONArray("urls")
-                        buildList {
-                            for (j in 0 until arr.length()) add(arr.getString(j))
-                        }
-                    } else emptyList()
-
-                    add(
-                        UpdateChannel(
-                            name = o.getString("name"),
-                            latestVersionName = o.getString("latestVersionName"),
-                            latestVersionCode = o.getInt("latestVersionCode"),
-                            minApi = if (o.has("minAPI")) o.getInt("minAPI") else 21,
-                            url = o.getString("url"),
-                            urls = urls
-                        )
-                    )
+            if (prerelease) {
+                val array = JSONArray(content)
+                for (i in 0 until array.length()) {
+                    val obj = array.getJSONObject(i)
+                    if (obj.getBoolean("prerelease")) {
+                        return@withContext parseRelease(obj)
+                    }
                 }
+                null
+            } else {
+                val obj = JSONObject(content)
+                parseRelease(obj)
             }
-
-            val changelogJson = json.getJSONArray("changelog")
-            val changelog = buildList {
-                for (i in 0 until changelogJson.length()) {
-                    val o = changelogJson.getJSONObject(i)
-                    add(
-                        UpdateChangelogEntry(
-                            versionCode = o.getInt("versionCode"),
-                            versionName = o.getString("versionName"),
-                            changes = o.getString("changes")
-                        )
-                    )
-                }
-            }
-
-            UpdateManifest(channels = channels, changelog = changelog)
         } finally {
             conn.disconnect()
         }
+    }
+
+    private fun parseRelease(obj: JSONObject): GitHubRelease {
+        val assetsJson = obj.getJSONArray("assets")
+        val assets = buildList {
+            for (i in 0 until assetsJson.length()) {
+                val asset = assetsJson.getJSONObject(i)
+                add(
+                    GitHubAsset(
+                        name = asset.getString("name"),
+                        downloadUrl = asset.getString("browser_download_url")
+                    )
+                )
+            }
+        }
+
+        return GitHubRelease(
+            tagName = obj.getString("tag_name"),
+            name = obj.getString("name"),
+            prerelease = obj.getBoolean("prerelease"),
+            body = obj.optString("body", ""),
+            assets = assets
+        )
     }
 }

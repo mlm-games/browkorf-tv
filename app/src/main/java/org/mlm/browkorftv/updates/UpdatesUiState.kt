@@ -2,7 +2,13 @@ package org.mlm.browkorftv.updates
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.settings.SettingsManager
@@ -29,11 +35,6 @@ class UpdatesViewModel(
     private val installer: UpdateInstaller
 ) : ViewModel() {
 
-    companion object {
-        // keep your existing URL
-        const val MANIFEST_URL = "https://raw.githubusercontent.com/truefedex/tv-bro/master/latest_version.json"
-    }
-
     private val _state = MutableStateFlow(UpdatesUiState())
     val state: StateFlow<UpdatesUiState> = _state.asStateFlow()
 
@@ -51,7 +52,6 @@ class UpdatesViewModel(
         val now = Calendar.getInstance()
         val last = Calendar.getInstance().apply { timeInMillis = settingsManager.current.lastUpdateUserNotificationTime }
 
-        // Safer than the old approach: throttle checks once per day regardless of update existence.
         if (last.timeInMillis > 0 && last.sameDay(now)) return
 
         check(forced = false, emitDialogEventIfUpdate = true)
@@ -66,14 +66,11 @@ class UpdatesViewModel(
             if (_state.value.isChecking) return@launch
             _state.update { it.copy(isChecking = true, lastResult = null) }
 
-            val channel = settingsManager.current.updateChannel
             val result = repository.checkForUpdates(
-                manifestUrl = MANIFEST_URL,
-                currentVersionCode = BuildConfig.VERSION_CODE,
-                channelsToCheck = listOf(channel)
+                currentVersionName = BuildConfig.VERSION_NAME,
+                prerelease = settingsManager.current.updateChannelIndex != 0
             )
 
-            // mark “checked today” (re-uses existing persisted field; rename later if you want)
             settingsManager.update { it.copy(lastUpdateUserNotificationTime = Calendar.getInstance().timeInMillis) }
 
             _state.update { it.copy(isChecking = false, lastResult = result) }
