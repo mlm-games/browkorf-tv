@@ -594,11 +594,11 @@ class WebViewEx(
         when {
             AppSettings.HOME_URL_ALIAS == url -> {
                 when (settings.homePageMode) {
-                    HomePageMode.BLANK -> {
+                    HomePageMode.Blank -> {
                         loadDataWithBaseURL(null, "", "text/html", "UTF-8", null)
                     }
 
-                    HomePageMode.SEARCH_ENGINE -> {
+                    HomePageMode.SearchEngine -> {
                         val url = AppSettings.searchEngineHomeUrl(
                             settings.searchEngineIndex,
                             settings.searchEngineCustomUrl
@@ -607,7 +607,7 @@ class WebViewEx(
                         super.loadUrl(url)
                     }
 
-                    HomePageMode.CUSTOM -> {
+                    HomePageMode.Custom -> {
                         try {
                             currentOriginalUrl = settings.homePage.toUri()
                             super.loadUrl(settings.homePage)
@@ -616,7 +616,7 @@ class WebViewEx(
                         }
                     }
 
-                    HomePageMode.HOME_PAGE -> {
+                    HomePageMode.HomePage -> {
                         currentOriginalUrl = HOME_PAGE_URL.toUri()
                         super.loadUrl(HOME_PAGE_URL)
                     }

@@ -1,9 +1,7 @@
 package org.mlm.browkorftv.settings
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
-import androidx.datastore.preferences.core.*
 import io.github.mlmgames.settings.core.SettingsRepository
 import io.github.mlmgames.settings.core.backup.SettingsBackupManager
 import io.github.mlmgames.settings.core.datastore.createSettingsDataStore
@@ -13,7 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
 import org.mlm.browkorftv.utils.Utils
 
 class SettingsManager private constructor(context: Context) {
@@ -111,7 +108,7 @@ class SettingsManager private constructor(context: Context) {
                 updated = updated.copy(searchEngineCustomUrl = customUrl)
             }
 
-            if (s.homePageMode == HomePageMode.SEARCH_ENGINE) {
+            if (s.homePageMode == HomePageMode.SearchEngine) {
                 val home = AppSettings.searchEngineHomeUrl(
                     index = updated.searchEngineIndex,
                     customSearchUrl = updated.searchEngineCustomUrl
@@ -125,13 +122,13 @@ class SettingsManager private constructor(context: Context) {
     suspend fun setHomePageProperties(mode: HomePageMode, customUrl: String? = null) {
         update { s ->
             val home = when (mode) {
-                HomePageMode.SEARCH_ENGINE -> AppSettings.searchEngineHomeUrl(
+                HomePageMode.SearchEngine -> AppSettings.searchEngineHomeUrl(
                     index = s.searchEngineIndex,
                     customSearchUrl = s.searchEngineCustomUrl
                 )
 
-                HomePageMode.CUSTOM -> customUrl ?: AppSettings.HOME_URL_ALIAS
-                HomePageMode.HOME_PAGE, HomePageMode.BLANK -> AppSettings.HOME_URL_ALIAS
+                HomePageMode.Custom -> customUrl ?: AppSettings.HOME_URL_ALIAS
+                HomePageMode.HomePage, HomePageMode.Blank -> AppSettings.HOME_URL_ALIAS
             }
             s.copy(homePageMode = mode, homePage = home)
         }

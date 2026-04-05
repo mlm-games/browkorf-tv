@@ -366,9 +366,9 @@ open class MainActivity : AppCompatActivity() {
             )
 
             val darkTheme = when (themePref) {
-                Theme.BLACK -> true
-                Theme.WHITE -> false
-                Theme.SYSTEM -> isSystemInDarkTheme()
+                Theme.Black -> true
+                Theme.White -> false
+                Theme.System -> isSystemInDarkTheme()
             }
 
             val snackbarHostState = remember { SnackbarHostState() }

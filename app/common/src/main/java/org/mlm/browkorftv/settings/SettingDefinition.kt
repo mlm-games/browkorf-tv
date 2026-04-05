@@ -54,7 +54,7 @@ data class AppSettings(
         key = "theme",
         options = ["System", "Light", "Dark"]
     )
-    val theme: Theme = Theme.SYSTEM,
+    val theme: Theme = Theme.System,
 
     @Setting(
         title = "Force Dark Webpage",
@@ -98,14 +98,14 @@ data class AppSettings(
         type = Dropdown::class,
         key = "home_page_mode",
     )
-    val homePageMode: HomePageMode = HomePageMode.HOME_PAGE,
+    val homePageMode: HomePageMode = HomePageMode.HomePage,
 
     @Setting(
         title = "Custom Home Page URL",
         category = HomePage::class,
         type = TextInput::class,
         key = "home_page",
-        dependsOn = "homePageMode" // Only relevant when mode is CUSTOM
+        dependsOn = "homePageMode" // Only relevant when mode is Custom
     )
     val homePage: String = HOME_URL_ALIAS,
 
@@ -124,7 +124,7 @@ data class AppSettings(
         category = HomePage::class,
         type = TextInput::class,
         key = "search_engine_custom_url",
-        dependsOn = "searchEngineIndex" // Only relevant when mode is CUSTOM
+        dependsOn = "searchEngineIndex" // Only relevant when mode is Custom
     )
     val searchEngineCustomUrl: String = "",
 
@@ -365,9 +365,9 @@ data class AppSettings(
 
 
 enum class Theme {
-    SYSTEM, WHITE, BLACK
+    System, White, Black
 }
 
 enum class HomePageMode {
-    HOME_PAGE, SEARCH_ENGINE, CUSTOM, BLANK
+    HomePage, SearchEngine, Custom, Blank
 }

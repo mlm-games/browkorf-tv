@@ -306,11 +306,11 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
 
         if (HOME_URL_ALIAS == url) {
             when (settings.homePageMode) {
-                HomePageMode.BLANK -> {
+                HomePageMode.Blank -> {
                     session.loadUri("about:blank")
                 }
 
-                HomePageMode.SEARCH_ENGINE -> {
+                HomePageMode.SearchEngine -> {
                     val targetUrl = AppSettings.searchEngineHomeUrl(
                         settings.searchEngineIndex,
                         settings.searchEngineCustomUrl
@@ -318,11 +318,11 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
                     session.loadUri(targetUrl)
                 }
 
-                HomePageMode.CUSTOM -> {
+                HomePageMode.Custom -> {
                     session.loadUri(settings.homePage)
                 }
 
-                HomePageMode.HOME_PAGE -> {
+                HomePageMode.HomePage -> {
                     session.loadUri(HOME_PAGE_URL)
                 }
             }
