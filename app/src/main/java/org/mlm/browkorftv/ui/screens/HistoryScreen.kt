@@ -6,10 +6,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import org.mlm.browkorftv.activity.main.HistoryViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.mlm.browkorftv.R
 import org.mlm.browkorftv.ui.components.BrowkorfTvListItem
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,7 +44,19 @@ fun HistoryScreen(
         ) {
             Text("History", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
-            Button(onClick = onBack) { Text("Back") }
+            if (rows.isNotEmpty()) {
+                IconButton(
+                    onClick = {
+                        viewModel.deleteAll()
+                        viewModel.loadItems()
+                    }
+                ) { Icon(
+                    painterResource(R.drawable.outline_clear_all_24),
+                    "Clear All",
+                    tint = MaterialTheme.colorScheme.error
+                    ) }
+            }
+            IconButton(onClick = onBack) { Icon(painterResource(R.drawable.outline_chevron_forward_24),"Back") }
         }
 
         if (rows.isEmpty()) {
