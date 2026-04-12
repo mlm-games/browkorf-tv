@@ -18,14 +18,18 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.singleton.shortcuts.Shortcut
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
+import org.mlm.browkorftv.ui.SnackbarManager
 import org.mlm.browkorftv.ui.components.BrowkorfTopBar
 import org.mlm.browkorftv.ui.components.BrowkorfTvButton
 import org.mlm.browkorftv.ui.components.BrowkorfTvListItem
 import org.mlm.browkorftv.ui.theme.AppTheme
+import org.mlm.browkorftv.utils.NavigationReservedShortcutKeyCodes
 
 @Composable
 fun ShortcutsScreen(
@@ -36,6 +40,8 @@ fun ShortcutsScreen(
     val shortcutMgr: ShortcutMgr = koinInject()
 
     val bindings by shortcutMgr.bindings.collectAsState()
+    val snackbarManager: SnackbarManager = koinInject()
+    val scope = rememberCoroutineScope()
 
     var editingShortcut by remember { mutableStateOf<Shortcut?>(null) }
 
@@ -71,6 +77,14 @@ fun ShortcutsScreen(
         ShortcutEditDialog(
             shortcut = shortcut,
             onSetKey = { keyCode, modifiers ->
+                if (NavigationReservedShortcutKeyCodes.reservedForUserShortcuts.contains(keyCode)) {
+                    scope.launch {
+                        snackbarManager.show(
+                            message = context.getString(R.string.shortcut_key_reserved_for_navigation),
+                        )
+                    }
+                    return@ShortcutEditDialog
+                }
                 shortcutMgr.updateBinding(
                     shortcut = shortcut,
                     keyCode = keyCode,
