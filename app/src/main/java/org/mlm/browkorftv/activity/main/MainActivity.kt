@@ -16,6 +16,7 @@ import android.provider.Settings
 import android.util.Log
 import android.util.Patterns
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.webkit.CookieManager
@@ -70,6 +71,7 @@ import org.mlm.browkorftv.updates.UpdatesViewModel
 import org.mlm.browkorftv.utils.EdgeToEdgeViews
 import org.mlm.browkorftv.utils.Utils
 import org.mlm.browkorftv.utils.VoiceSearchHelper
+import org.mlm.browkorftv.utils.BackNavigationEventsAdapter
 import org.mlm.browkorftv.webengine.WebEngine
 import org.mlm.browkorftv.webengine.WebEngineFactory
 import org.mlm.browkorftv.webengine.WebEngineWindowProviderCallback
@@ -115,6 +117,12 @@ open class MainActivity : AppCompatActivity() {
     private val downloadsManager: DownloadsManager by inject()
     protected val settingsManager: SettingsManager by inject()
     private val shortcutMgr: ShortcutMgr by inject()
+    private val backNavigationEventsAdapter = BackNavigationEventsAdapter(
+        onEmulatedBackEvent = {
+            onBackPressedDispatcher.onBackPressed()
+            true
+        }
+    )
 
     protected val settings: AppSettings get() = settingsManager.current
 
@@ -870,6 +878,7 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        backNavigationEventsAdapter.resetState()
         tabsViewModel.currentTab.value?.apply {
             webEngine.onPause()
             onPause()
@@ -1006,7 +1015,13 @@ open class MainActivity : AppCompatActivity() {
     @SuppressLint("RestrictedApi")
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (shortcutMgr.handle(event, this, tabsViewModel.currentTab.value)) return true
+        if (backNavigationEventsAdapter.dispatchKeyEvent(event)) return true
         return super.dispatchKeyEvent(event)
+    }
+
+    override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
+        if (backNavigationEventsAdapter.dispatchGenericMotionEvent(event)) return true
+        return super.dispatchGenericMotionEvent(event)
     }
 
     private fun showMenuOverlay() { // Not hiding the webview, doesn't seem to affect perf. that much
