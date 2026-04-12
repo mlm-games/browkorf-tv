@@ -16,7 +16,6 @@ import android.provider.Settings
 import android.util.Log
 import android.util.Patterns
 import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.webkit.CookieManager
@@ -581,7 +580,7 @@ open class MainActivity : AppCompatActivity() {
 
                             is UpdatesEvent.RequestInstallApk -> handleInstallRequest(e.file)
 
-                            is UpdatesEvent.ToastMessage -> snackbarManager.show(e.message)
+            is UpdatesEvent.ToastMessage -> snackbarManager.show(e.message)
                         }
                     }
                 }
@@ -1008,10 +1007,6 @@ open class MainActivity : AppCompatActivity() {
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (shortcutMgr.handle(event, this, tabsViewModel.currentTab.value)) return true
         return super.dispatchKeyEvent(event)
-    }
-
-    override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
-        return super.dispatchGenericMotionEvent(event)
     }
 
     private fun showMenuOverlay() { // Not hiding the webview, doesn't seem to affect perf. that much
