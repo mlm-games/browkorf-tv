@@ -15,6 +15,8 @@ import android.view.MotionEvent
 import android.view.MotionEvent.PointerProperties
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import org.mlm.browkorftv.utils.DPADNavigationEventsAdapter
+import org.mlm.browkorftv.utils.NavigationReservedShortcutKeyCodes
 import org.mlm.browkorftv.utils.Utils
 import org.mlm.browkorftv.utils.dip2px
 import org.mlm.browkorftv.widgets.cursor.CursorDrawerDelegate
@@ -26,6 +28,12 @@ class GeckoViewWithVirtualCursor @JvmOverloads constructor(context: Context, att
     lateinit var cursorDrawerDelegate: CursorDrawerDelegate
 
     private var inputMethodManager: InputMethodManager? = null
+    private val inputEventsAdapter = DPADNavigationEventsAdapter(
+        onEmulatedKeyEvent = { keyEvent ->
+            cursorDrawerDelegate.dispatchKeyEvent(keyEvent)
+        },
+        isSoftwareKeyboardVisible = { inputMethodManager?.isAcceptingText == true }
+    )
 
     init {
         init()
@@ -59,7 +67,8 @@ class GeckoViewWithVirtualCursor @JvmOverloads constructor(context: Context, att
     }
 
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
-        return false
+        val e = event ?: return false
+        return inputEventsAdapter.dispatchGenericMotionEvent(e)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -67,7 +76,13 @@ class GeckoViewWithVirtualCursor @JvmOverloads constructor(context: Context, att
             return super.dispatchKeyEvent(event)
         }
 
-        if (cursorDrawerDelegate.dispatchKeyEvent(event)) {
+        if (inputEventsAdapter.dispatchKeyEvent(event)) {
+            return true
+        }
+
+        if (!NavigationReservedShortcutKeyCodes.dpadNavigationKeys.contains(event.keyCode) &&
+            cursorDrawerDelegate.dispatchKeyEvent(event)
+        ) {
             return true
         }
 
