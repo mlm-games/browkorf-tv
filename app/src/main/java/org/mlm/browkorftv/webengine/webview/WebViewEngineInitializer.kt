@@ -27,8 +27,8 @@ class WebViewEngineInitializer : Initializer<Unit> {
                     WebView(ctx).clearCache(true)
                 }
 
-                override fun onThemeSettingUpdated(value: Theme) {
-                    // TODO: handle webview dark mode globally? or let the current one be as it is?
+                override fun onThemeSettingUpdated(value: Theme, forceDarkWebpage: Boolean) {
+                    WebViewEx.onThemeSettingsChanged(value, forceDarkWebpage)
                 }
 
                 override fun getWebEngineVersionString(): String {

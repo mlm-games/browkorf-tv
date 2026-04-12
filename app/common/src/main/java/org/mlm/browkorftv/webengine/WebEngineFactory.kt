@@ -14,7 +14,7 @@ interface WebEngineProviderCallback {
     suspend fun initialize(context: Context, webViewContainer: CursorLayout)
     fun createWebEngine(tab: WebTabState): WebEngine
     suspend fun clearCache(ctx: Context)
-    fun onThemeSettingUpdated(value: Theme)
+    fun onThemeSettingUpdated(value: Theme, forceDarkWebpage: Boolean)
     fun getWebEngineVersionString(): String
 }
 
@@ -136,8 +136,8 @@ object WebEngineFactory {
         provider.callback.clearCache(ctx)
     }
 
-    fun onThemeSettingUpdated(value: Theme) {
-        initializedProvider?.callback?.onThemeSettingUpdated(value)
+    fun onThemeSettingUpdated(value: Theme, forceDarkWebpage: Boolean) {
+        initializedProvider?.callback?.onThemeSettingUpdated(value, forceDarkWebpage)
     }
 
     fun getWebEngineVersionString(): String {

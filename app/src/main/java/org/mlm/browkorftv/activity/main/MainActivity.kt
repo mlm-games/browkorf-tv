@@ -490,7 +490,13 @@ open class MainActivity : AppCompatActivity() {
 
                 launch {
                     settingsManager.themeFlow.collectLatest { theme ->
-                        WebEngineFactory.onThemeSettingUpdated(theme)
+                        WebEngineFactory.onThemeSettingUpdated(theme, settingsManager.current.forceDarkWebpage)
+                    }
+                }
+
+                launch {
+                    settingsManager.forceDarkWebpageFlow.collectLatest { forceDark ->
+                        WebEngineFactory.onThemeSettingUpdated(settingsManager.current.theme, forceDark)
                     }
                 }
 

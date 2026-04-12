@@ -60,6 +60,9 @@ class SettingsManager private constructor(context: Context) {
     val themeFlow: Flow<Theme> =
         settings.map { it.theme }.distinctUntilChanged()
 
+    val forceDarkWebpageFlow: Flow<Boolean> =
+        settings.map { it.forceDarkWebpage }.distinctUntilChanged()
+
     val keepScreenOnFlow: Flow<Boolean> =
         settings.map { it.keepScreenOn }.distinctUntilChanged()
 

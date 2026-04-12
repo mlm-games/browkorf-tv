@@ -52,6 +52,7 @@ import org.koin.core.component.KoinComponent
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_PAGE_URL
 import org.mlm.browkorftv.settings.SettingsManager
+import org.mlm.browkorftv.settings.Theme
 
 @SuppressLint("SetJavaScriptEnabled", "ViewConstructor")
 class WebViewEx(
@@ -68,6 +69,13 @@ class WebViewEx(
         const val INTERNAL_SCHEME_WARNING_DOMAIN = "warning"
         const val INTERNAL_SCHEME_WARNING_DOMAIN_TYPE_CERT = "certificate"
         val WIDEVINE_UUID = UUID(-0x121074568629b532L, -0x5c37d8232ae2de13L)
+
+        private val activeWebViews = Collections.newSetFromMap(WeakHashMap<WebViewEx, Boolean>())
+
+        fun onThemeSettingsChanged(theme: Theme, forceDarkWebpage: Boolean) {
+            val webViews = synchronized(activeWebViews) { activeWebViews.toList() }
+            webViews.forEach { it.applyWebpageDarkMode(theme, forceDarkWebpage) }
+        }
     }
 
     private var genericInjects: String? = null
@@ -154,35 +162,8 @@ class WebViewEx(
                 setWebContentsDebuggingEnabled(true)
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
-                    when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                        Configuration.UI_MODE_NIGHT_YES -> {
-                            WebSettingsCompat.setAlgorithmicDarkeningAllowed(this, true)
-                        }
-
-                        Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                            WebSettingsCompat.setAlgorithmicDarkeningAllowed(this, false)
-                        }
-                    }
-                }
-            } else {
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                    when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                        Configuration.UI_MODE_NIGHT_YES -> {
-                            WebSettingsCompat.setForceDark(this, WebSettingsCompat.FORCE_DARK_ON)
-                        }
-
-                        Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                            WebSettingsCompat.setForceDark(this, WebSettingsCompat.FORCE_DARK_OFF)
-                        }
-
-                        else -> {
-                            WebSettingsCompat.setForceDark(this, WebSettingsCompat.FORCE_DARK_AUTO)
-                        }
-                    }
-                }
-            }
+            val appSettings = settingsManager.current
+            applyWebpageDarkMode(appSettings.theme, appSettings.forceDarkWebpage)
         }
 
         setOnLongClickListener { v ->
@@ -575,6 +556,38 @@ class WebViewEx(
         }
 
         addJavascriptInterface(jsInterface, "BrowkorfTV")
+
+        synchronized(activeWebViews) {
+            activeWebViews.add(this@WebViewEx)
+        }
+    }
+
+    private fun isDarkThemeActive(theme: Theme): Boolean {
+        return when (theme) {
+            Theme.Black -> true
+            Theme.White -> false
+            Theme.System -> {
+                (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+            }
+        }
+    }
+
+    private fun applyWebpageDarkMode(theme: Theme, forceDarkWebpage: Boolean) {
+        val darkModeEnabled = forceDarkWebpage && isDarkThemeActive(theme)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
+                WebSettingsCompat.setAlgorithmicDarkeningAllowed(settings, darkModeEnabled)
+            }
+            return
+        }
+
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+            WebSettingsCompat.setForceDark(
+                settings,
+                if (darkModeEnabled) WebSettingsCompat.FORCE_DARK_ON else WebSettingsCompat.FORCE_DARK_OFF
+            )
+        }
     }
 
     private fun showCertificateErrorPage(error: SslError) {

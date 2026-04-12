@@ -28,8 +28,8 @@ class GeckoEngineInitializer : Initializer<Unit>, KoinComponent {
                     GeckoWebEngine.clearCache()
                 }
 
-                override fun onThemeSettingUpdated(value: Theme) {
-                    GeckoWebEngine.onThemeSettingUpdated(value, settingsManager.current.forceDarkWebpage)
+                override fun onThemeSettingUpdated(value: Theme, forceDarkWebpage: Boolean) {
+                    GeckoWebEngine.onThemeSettingUpdated(value, forceDarkWebpage)
                 }
 
                 override fun getWebEngineVersionString(): String =
