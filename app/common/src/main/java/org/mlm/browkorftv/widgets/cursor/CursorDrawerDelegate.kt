@@ -134,6 +134,10 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
         cursorSpeed.set(0f, 0f)
         surface.removeCallbacks(cursorUpdateRunnable)
         surface.removeCallbacks(longPressRunnable)
+        if (dpadCenterPressed) {
+            dispatchMotionEvent(cursorPosition.x, cursorPosition.y, MotionEvent.ACTION_CANCEL)
+            dpadCenterPressed = false
+        }
         if (scrollHackStarted) {
             dispatchMotionEvent(scrollHackCoords.x, scrollHackCoords.y, MotionEvent.ACTION_CANCEL)
             scrollHackStarted = false
@@ -337,7 +341,7 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                     centerButtonDownTime = SystemClock.uptimeMillis()
                     surface.keyDispatcherState.startTracking(event, this)
 
-                    if (!isCursorDisappear && !directionalNavMode) {
+                    if (!isCursorDisappear && !directionalNavMode && !dpadCenterPressed) {
                         dpadCenterPressed = true
                         dispatchMotionEvent(
                             cursorPosition.x,
@@ -418,8 +422,11 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
             action, 1, properties,
             pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0
         )
-        surface.dispatchTouchEvent(motionEvent)
-        motionEvent.recycle()
+        try {
+            surface.dispatchTouchEvent(motionEvent)
+        } finally {
+            motionEvent.recycle()
+        }
     }
 
     private fun handleDirectionKeyEvent(event: KeyEvent, x: Int, y: Int, keyDown: Boolean) {
@@ -600,6 +607,10 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
             if (cursorDirection.x == 0 && cursorDirection.y == 0 &&
                 cursorSpeed.x == 0f && cursorSpeed.y == 0f
             ) {
+                if (scrollHackStarted) {
+                    dispatchMotionEvent(scrollHackCoords.x, scrollHackCoords.y, MotionEvent.ACTION_CANCEL)
+                    scrollHackStarted = false
+                }
                 surface.postDelayed(cursorHideRunnable, CURSOR_DISAPPEAR_TIMEOUT.toLong())
                 return
             }
@@ -625,14 +636,6 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                         textSelectionCallback?.onTextSelectionMove(
                             cursorPosition.x.toInt(),
                             cursorPosition.y.toInt()
-                        )
-                    }
-
-                    else -> {
-                        dispatchMotionEvent(
-                            cursorPosition.x,
-                            cursorPosition.y,
-                            MotionEvent.ACTION_HOVER_MOVE
                         )
                     }
                 }

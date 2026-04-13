@@ -37,6 +37,25 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
 
     private val settingsManager: SettingsManager by inject()
 
+    private val cursorScrollCallback = object : CursorDrawerDelegate.CustomScrollCallback {
+        override fun onScroll(scrollX: Int, scrollY: Int): Boolean {
+            val target = webView ?: return false
+            val canScrollX = scrollX != 0 && target.canScrollHorizontally(scrollX)
+            val canScrollY = scrollY != 0 && target.canScrollVertically(scrollY)
+            if (!canScrollX && !canScrollY) return false
+
+            target.scrollBy(scrollX, scrollY)
+            return true
+        }
+    }
+
+    private fun syncCursorScrollCallbacks() {
+        viewParent?.cursorDrawerDelegate?.customScrollCallback = cursorScrollCallback
+        (fullscreenViewParent as? CursorLayout)
+            ?.cursorDrawerDelegate
+            ?.customScrollCallback = cursorScrollCallback
+    }
+
     override fun getWebEngineName(): String = "WebView"
 
     override fun isSameSession(internalRepresentation: Any): Boolean = internalRepresentation == webView
@@ -186,11 +205,16 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
         fullscreenViewParent.removeAllViews()
         parent.addView(webView)
         viewParent?.cursorDrawerDelegate?.callback = this
+        syncCursorScrollCallbacks()
         onResume()
     }
 
     override fun onDetachFromWindow(completely: Boolean, destroyTab: Boolean) {
         onPause()
+        viewParent?.cursorDrawerDelegate?.customScrollCallback = null
+        (fullscreenViewParent as? CursorLayout)
+            ?.cursorDrawerDelegate
+            ?.customScrollCallback = null
         (webView?.parent as? ViewGroup)?.removeView(webView)
         callback = null
         if (completely) {
