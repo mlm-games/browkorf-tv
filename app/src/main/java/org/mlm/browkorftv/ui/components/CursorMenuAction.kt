@@ -124,7 +124,7 @@ fun CursorRadialMenu(
                     onClick = { onAction(CursorMenuAction.Grab) },
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .offset(x = -radius, y = -radius / 2)
+                        .offset(x = -radius / 2, y = -radius)
                 ) {
                     Icon(
                         painterResource(R.drawable.outline_grab_24),
