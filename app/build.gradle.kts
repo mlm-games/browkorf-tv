@@ -32,7 +32,7 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
 
         versionCode = 314
-        versionName = "4.4.6"
+        versionName = "4.5.0"
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -77,12 +77,11 @@ android {
     buildTypes {
         getByName("debug") {
             isDebuggable = true
-            isShrinkResources = false
         }
         getByName("release") {
             isDebuggable = false
             isMinifyEnabled = true
-            isShrinkResources = false
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
