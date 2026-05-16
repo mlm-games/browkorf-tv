@@ -118,13 +118,12 @@ fun CursorRadialMenu(
                     )
                 }
 
-                // Grab mode (not needed rn?: make long-press or add as extra icon)
-                // If you want it visible, add one more direction.
+                // Grab mode ()
                 IconButton(
                     onClick = { onAction(CursorMenuAction.Grab) },
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .offset(x = -radius / 2, y = -radius)
+                        .offset(x = -radius, y = -radius)
                 ) {
                     Icon(
                         painterResource(R.drawable.outline_grab_24),
