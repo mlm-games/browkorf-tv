@@ -1,10 +1,19 @@
 package org.mlm.browkorftv.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -25,6 +34,31 @@ import org.mlm.browkorftv.ui.theme.AppTheme
 enum class CursorMenuAction { Grab, TextSelect, ZoomIn, ZoomOut, LinkActions, Dismiss }
 
 @Composable
+private fun TvIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    content: @Composable BoxScope.() -> Unit
+) {
+    val isPressed by interactionSource.collectIsPressedAsState()
+    var wasPressed by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isPressed) {
+        if (wasPressed && !isPressed) {
+            onClick()
+        }
+        wasPressed = isPressed
+    }
+
+    IconButton(
+        onClick = {},
+        modifier = modifier,
+        interactionSource = interactionSource,
+        content = content
+    )
+}
+
+@Composable
 fun CursorRadialMenu(
     xPx: Int,
     yPx: Int,
@@ -36,6 +70,12 @@ fun CursorRadialMenu(
     val density = LocalDensity.current
 
     val focusRequester = remember { FocusRequester() }
+    val dismissInteractionSource = remember { MutableInteractionSource() }
+    val zoomOutInteractionSource = remember { MutableInteractionSource() }
+    val zoomInInteractionSource = remember { MutableInteractionSource() }
+    val textSelectInteractionSource = remember { MutableInteractionSource() }
+    val linkActionsInteractionSource = remember { MutableInteractionSource() }
+    val grabInteractionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(Unit) {
         delay(100)
@@ -56,9 +96,9 @@ fun CursorRadialMenu(
         ) {
             Box(Modifier.size(size)) {
 
-                // Center (Dismiss)
-                IconButton(
+                TvIconButton(
                     onClick = { onAction(CursorMenuAction.Dismiss) },
+                    interactionSource = dismissInteractionSource,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .focusRequester(focusRequester)
@@ -66,9 +106,9 @@ fun CursorRadialMenu(
                     Icon(painterResource(R.drawable.outline_close_24), contentDescription = "Close")
                 }
 
-                // Zoom out (left)
-                IconButton(
+                TvIconButton(
                     onClick = { onAction(CursorMenuAction.ZoomOut) },
+                    interactionSource = zoomOutInteractionSource,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(x = -radius, y = 0.dp)
@@ -79,9 +119,9 @@ fun CursorRadialMenu(
                     )
                 }
 
-                // Zoom in (right)
-                IconButton(
+                TvIconButton(
                     onClick = { onAction(CursorMenuAction.ZoomIn) },
+                    interactionSource = zoomInInteractionSource,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(x = radius, y = 0.dp)
@@ -92,9 +132,9 @@ fun CursorRadialMenu(
                     )
                 }
 
-                // Text select (bottom)
-                IconButton(
+                TvIconButton(
                     onClick = { onAction(CursorMenuAction.TextSelect) },
+                    interactionSource = textSelectInteractionSource,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(x = 0.dp, y = radius)
@@ -105,9 +145,9 @@ fun CursorRadialMenu(
                     )
                 }
 
-                // Link actions (top)
-                IconButton(
+                TvIconButton(
                     onClick = { onAction(CursorMenuAction.LinkActions) },
+                    interactionSource = linkActionsInteractionSource,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(x = 0.dp, y = -radius)
@@ -118,9 +158,9 @@ fun CursorRadialMenu(
                     )
                 }
 
-                // Grab mode ()
-                IconButton(
+                TvIconButton(
                     onClick = { onAction(CursorMenuAction.Grab) },
+                    interactionSource = grabInteractionSource,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(x = -radius, y = -radius)
