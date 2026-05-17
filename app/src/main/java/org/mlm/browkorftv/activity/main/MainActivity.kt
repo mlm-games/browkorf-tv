@@ -447,10 +447,7 @@ open class MainActivity : AppCompatActivity() {
                     },
 
                     onCursorMenuAction = cursorActionHandler,
-                    onDismissLinkActions = {
-                            browserUiViewModel.hideLinkActions()
-                            webContainer.post { focusWeb() }
-                        },
+                    onDismissLinkActions = { browserUiViewModel.hideLinkActions() },
                     onLinkAction = linkActionHandler,
                     getLinkCapabilities = {
                         val ctx = lastCtxMenu

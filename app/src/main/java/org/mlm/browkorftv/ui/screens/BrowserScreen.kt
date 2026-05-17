@@ -210,7 +210,6 @@ fun BrowserScreen(
                         uiState.isLinkActionsVisible -> {
                             onCursorMenuDismissed()
                             uiVm.hideLinkActions()
-                            postFocusWeb()
                         }
 
                         uiState.isCursorMenuVisible -> {
