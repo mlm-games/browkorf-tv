@@ -18,9 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.tv.material3.Text
+import kotlinx.coroutines.delay
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.ui.theme.AppTheme.colors
 
@@ -39,8 +42,30 @@ fun ActionBar(
     modifier: Modifier = Modifier
 ) {
     val colors = colors
-    var urlText by remember(currentUrl) { mutableStateOf(currentUrl) }
+    var urlTextFieldValue by remember(currentUrl) {
+        mutableStateOf(TextFieldValue(currentUrl))
+    }
     var isUrlFocused by remember { mutableStateOf(false) }
+    var hasSelectedAll by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isUrlFocused) {
+        if (isUrlFocused && !hasSelectedAll) {
+            delay(100)
+            urlTextFieldValue = urlTextFieldValue.copy(
+                selection = TextRange(0, urlTextFieldValue.text.length)
+            )
+            hasSelectedAll = true
+        }
+    }
+
+    fun onUrlTextChange(newValue: TextFieldValue) {
+        urlTextFieldValue = newValue
+        hasSelectedAll = false
+    }
+
+    fun onUrlSubmit() {
+        onUrlSubmit(urlTextFieldValue.text)
+    }
 
     Row(
         modifier = modifier
@@ -57,7 +82,6 @@ fun ActionBar(
             contentDescription = stringResource(R.string.close_application)
         )
 
-        // Voice search
         BrowkorfTvIconButton(
             onClick = onVoiceSearch,
             painter = painterResource(R.drawable.outline_mic_24),
@@ -71,14 +95,12 @@ fun ActionBar(
             contentDescription = stringResource(R.string.history)
         )
 
-        // Favorites
         BrowkorfTvIconButton(
             onClick = onFavorites,
             painter = painterResource(R.drawable.outline_favorite_24),
             contentDescription = stringResource(R.string.favorites)
         )
 
-        // Downloads
         BrowkorfTvIconButton(
             onClick = onDownloads,
             painter = painterResource(R.drawable.outline_download_24),
@@ -107,7 +129,12 @@ fun ActionBar(
                 .weight(1f)
                 .padding(start = 8.dp)
                 .background(colors.topBarBackground)
-                .onFocusChanged { isUrlFocused = it.isFocused }
+                .onFocusChanged { focusState ->
+                    isUrlFocused = focusState.isFocused
+                    if (!focusState.isFocused) {
+                        hasSelectedAll = false
+                    }
+                }
                 .then(
                     if (isUrlFocused) Modifier.border(
                         1.dp,
@@ -118,8 +145,8 @@ fun ActionBar(
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
             BasicTextField(
-                value = urlText,
-                onValueChange = { urlText = it },
+                value = urlTextFieldValue,
+                onValueChange = { onUrlTextChange(it) },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(
                     color = colors.textPrimary,
@@ -132,10 +159,10 @@ fun ActionBar(
                     imeAction = ImeAction.Search
                 ),
                 keyboardActions = KeyboardActions(
-                    onSearch = { onUrlSubmit(urlText) }
+                    onSearch = { onUrlSubmit() }
                 ),
                 decorationBox = { innerTextField ->
-                    if (urlText.isEmpty()) {
+                    if (urlTextFieldValue.text.isEmpty()) {
                         Text(
                             text = stringResource(R.string.url_prompt),
                             color = colors.textSecondary,
