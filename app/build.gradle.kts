@@ -31,8 +31,8 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
 
-        versionCode = 354
-        versionName = "4.5.4"
+        versionCode = 364
+        versionName = "4.5.5"
 
         vectorDrawables.useSupportLibrary = true
     }
