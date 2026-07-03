@@ -13,8 +13,8 @@ on:
         required: true
         default: false
         type: boolean
-  schedule:
-    - cron: '0 0 1 */2 *'
+  # schedule:
+  #   - cron: '0 0 1 */2 *'
 
 concurrency:
   group: android-release-${{ github.ref }}
