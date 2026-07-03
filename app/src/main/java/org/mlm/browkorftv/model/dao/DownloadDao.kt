@@ -17,6 +17,9 @@ interface DownloadDao {
     @Delete
     suspend fun delete(download: Download)
 
+    @Query("DELETE FROM downloads")
+    suspend fun deleteAll()
+
     @Query("SELECT * FROM downloads ORDER BY time DESC LIMIT 100 OFFSET :offset")
     suspend fun allByLimitOffset(offset: Long): List<Download>
 }

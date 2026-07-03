@@ -10,11 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.*
 import org.mlm.browkorftv.BuildConfig
+import org.mlm.browkorftv.R
 import org.mlm.browkorftv.activity.main.DownloadsHistoryViewModel
 import org.mlm.browkorftv.model.Download
 import org.koin.androidx.compose.koinViewModel
@@ -69,7 +71,25 @@ fun DownloadsScreen(
         ) {
             Text("Downloads", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
-            Button(onClick = onBack) { Text("Back") }
+            if (rows.isNotEmpty()) {
+                IconButton(
+                    onClick = {
+                        viewModel.deleteAll()
+                    }
+                ) { Icon(
+                    painterResource(R.drawable.outline_clear_all_24),
+                    "Clear All",
+                    tint = MaterialTheme.colorScheme.error
+                ) }
+            }
+            IconButton(onClick = onBack) { Icon(painterResource(R.drawable.outline_chevron_forward_24),"Back") }
+        }
+
+        if (rows.isEmpty()) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No downloads", style = MaterialTheme.typography.bodyLarge)
+            }
+            return
         }
 
         LazyColumn(

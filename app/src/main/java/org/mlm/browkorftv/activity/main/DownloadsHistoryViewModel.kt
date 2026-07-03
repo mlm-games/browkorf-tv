@@ -19,6 +19,11 @@ class DownloadsHistoryViewModel(
 
     private var loading = false
 
+    fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
+        downloadDao.deleteAll()
+        _items.value = emptyList()
+    }
+
     fun loadNextItems() = viewModelScope.launch(Dispatchers.IO) {
         if (loading) return@launch
         loading = true
