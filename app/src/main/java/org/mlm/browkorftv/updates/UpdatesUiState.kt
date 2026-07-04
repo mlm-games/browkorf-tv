@@ -76,7 +76,7 @@ class UpdatesViewModel(
             _state.update { it.copy(isChecking = false, lastResult = result) }
 
             if (emitDialogEventIfUpdate && result is UpdateResult.HasUpdate) {
-                _events.tryEmit(UpdatesEvent.ShowUpdateAvailable(result.info))
+                _events.emit(UpdatesEvent.ShowUpdateAvailable(result.info))
             }
         }
     }

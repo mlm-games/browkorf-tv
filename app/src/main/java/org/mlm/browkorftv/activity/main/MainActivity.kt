@@ -41,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
@@ -248,6 +249,7 @@ open class MainActivity : AppCompatActivity() {
     @SuppressLint("RequestInstallPackagesPolicy")
     private fun launchInstallAPKIntent(file: File) {
         val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+            ?: "application/vnd.android.package-archive"
         val apkURI = FileProvider.getUriForFile(
             this,
             applicationContext.packageName + ".provider",
@@ -566,20 +568,22 @@ open class MainActivity : AppCompatActivity() {
                                         val (dlg, pb) = UpdateDialogs.showDownloadProgressDialog(
                                             this@MainActivity
                                         )
+                                        updatesViewModel.downloadAndRequestInstall(e.info)
                                         val job = lifecycleScope.launch {
-                                            updatesViewModel.state.collect { st ->
-                                                UpdateDialogs.updateProgressBar(
-                                                    pb,
-                                                    st.downloadProgress
-                                                )
-                                                if (!st.isDownloading) {
-                                                    dlg.dismiss()
-                                                    this.cancel()
+                                            updatesViewModel.state
+                                                .dropWhile { !it.isDownloading }
+                                                .collect { st ->
+                                                    UpdateDialogs.updateProgressBar(
+                                                        pb,
+                                                        st.downloadProgress
+                                                    )
+                                                    if (!st.isDownloading) {
+                                                        dlg.dismiss()
+                                                        this.cancel()
+                                                    }
                                                 }
-                                            }
                                         }
                                         dlg.setOnDismissListener { job.cancel() }
-                                        updatesViewModel.downloadAndRequestInstall(e.info)
                                     }
                                 )
                             }
