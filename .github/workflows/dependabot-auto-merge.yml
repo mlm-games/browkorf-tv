@@ -1,0 +1,12 @@
+name: Dependabot Auto-Merge
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    uses: mlm-games/ci/.github/workflows/dependabot-auto-merge.yml@v1
