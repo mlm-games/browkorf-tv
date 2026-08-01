@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.mlm.adblock.AdblockEngine
+import org.mlm.adblock.BlockDecision
 import org.mlm.adblock.CosmeticResources
 import org.mlm.adblock.RequestTypeMapper
 import org.mlm.browkorftv.settings.AppSettings
@@ -208,16 +209,22 @@ class AdBlockRepository(
         }
     }
 
-    fun isAd(url: Uri, type: String?, baseUri: Uri): Boolean {
-        val eng = engine ?: return false
+    fun isAd(url: Uri, type: String?, baseUri: Uri): Boolean =
+        checkNetworkRequest(url, type, baseUri)?.matched ?: false
+
+    /**
+     * Returns null when the engine isn't ready or the check failed.
+     */
+    fun checkNetworkRequest(url: Uri, type: String?, baseUri: Uri): BlockDecision? {
+        val eng = engine ?: return null
         val baseHost = baseUri.host
-        if (baseHost == null) return false
+        if (baseHost == null) return null
         val requestType = RequestTypeMapper.from(url, type)
         return try {
-            eng.shouldBlock(url.toString(), baseUri.toString(), requestType)
+            eng.checkNetworkRequest(url.toString(), baseUri.toString(), requestType)
         } catch (e: Exception) {
             Log.e(TAG, "Ad block match check failed", e)
-            false
+            null
         }
     }
 }

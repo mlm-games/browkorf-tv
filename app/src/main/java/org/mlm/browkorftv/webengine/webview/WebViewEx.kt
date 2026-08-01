@@ -40,10 +40,12 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.webkit.ScriptHandler
 import androidx.webkit.WebViewCompat
 import org.json.JSONObject
 import org.mlm.browkorftv.activity.main.AdBlockRepository
 import org.mlm.browkorftv.BuildConfig
+import org.mlm.adblock.BlockDecision
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.HomePageMode
 import java.net.URLEncoder
@@ -155,6 +157,7 @@ class WebViewEx(
     }
 
     private var genericInjects: String? = null
+    private var documentStartAdblock: ScriptHandler? = null
     private var webChromeClient_: WebChromeClient
     private var fullscreenViewCallback: CustomViewCallback? = null
     private var pickFileCallback: ValueCallback<Array<Uri>>? = null
@@ -189,7 +192,7 @@ class WebViewEx(
         fun onPageCertificateError(url: String?)
         fun isAdBlockingEnabled(): Boolean
         fun isDialogsBlockingEnabled(): Boolean
-        fun isAd(request: WebResourceRequest, baseUri: Uri): Boolean
+        fun checkNetworkRequest(request: WebResourceRequest, baseUri: Uri): BlockDecision?
         fun onBlockedAd(url: Uri)
         fun onBlockedDialog(newTab: Boolean)
         fun onCreateWindow(dialog: Boolean, userGesture: Boolean): WebViewEx?
@@ -510,14 +513,22 @@ class WebViewEx(
                     return super.shouldInterceptRequest(view, request)
                 }
 
-                val ad = currentOriginalUrl?.let { callback.isAd(request, it) } ?: false
-                return if (ad) {
+                val decision = currentOriginalUrl?.let { callback.checkNetworkRequest(request, it) }
+                if (decision == null || decision.exception || !decision.matched) {
+                    return super.shouldInterceptRequest(view, request)
+                }
+                val redirect = decision.redirect
+                return if (redirect != null) {
+                    Log.d(TAG, "Serving redirect resource for: ${request.url}")
+                    uiHandler.post { callback.onBlockedAd(request.url) }
+                    redirectResponse(redirect)
+                } else {
                     Log.d(TAG, "Blocked ads request: ${request.url}")
                     uiHandler.post { callback.onBlockedAd(request.url) }
                     val response = WebResourceResponse("text/plain", "utf-8", "".byteInputStream())
                     response.setStatusCodeAndReasonPhrase(403, "Blocked")
                     response
-                } else super.shouldInterceptRequest(view, request)
+                }
             }
 
             override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
@@ -638,15 +649,12 @@ class WebViewEx(
 
         // Document-start bootstrap: registered before any page load, queries the native engine
         // per-URL (via the BrowkorfTV JS interface) and injects cosmetic CSS + scriptlets.
-        if (callback.isAdBlockingEnabled() &&
-            WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)
-        ) {
+        // Kept in sync with the adblock toggle (see onUpdateAdblockSetting).
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
             runCatching {
-                WebViewCompat.addDocumentStartJavaScript(
-                    this,
-                    ADBLOCK_BOOTSTRAP_JS,
-                    setOf("*")
-                )
+                if (callback.isAdBlockingEnabled()) {
+                    installDocumentStartAdblock()
+                }
             }
         }
 
@@ -862,5 +870,55 @@ class WebViewEx(
 
     fun onUpdateAdblockSetting(adblockEnabled: Boolean) {
         settings.safeBrowsingEnabled = adblockEnabled
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            runCatching {
+                if (adblockEnabled && documentStartAdblock == null) {
+                    installDocumentStartAdblock()
+                } else if (!adblockEnabled && documentStartAdblock != null) {
+                    documentStartAdblock?.remove()
+                    documentStartAdblock = null
+                }
+            }
+        }
+        reload()
+    }
+
+    private fun installDocumentStartAdblock() {
+        if (documentStartAdblock != null) return
+        documentStartAdblock = WebViewCompat.addDocumentStartJavaScript(
+            this,
+            ADBLOCK_BOOTSTRAP_JS,
+            setOf("*")
+        )
+    }
+
+    /**
+     * Serves the replacement resource (eg: a noop script/image) with permissive CORS.
+     */
+    private fun redirectResponse(dataUrl: String): WebResourceResponse? = try {
+        val comma = dataUrl.indexOf(',')
+        if (comma < 0) {
+            null
+        } else {
+            val meta = dataUrl.substring("data:".length, comma)
+            val mime = meta.substringBefore(';').ifBlank { "text/plain" }
+            val isBase64 = meta.substringAfter(';', "").contains("base64", ignoreCase = true)
+            val payload = dataUrl.substring(comma + 1)
+            val bytes = if (isBase64) {
+                android.util.Base64.decode(payload, android.util.Base64.DEFAULT)
+            } else {
+                java.net.URLDecoder.decode(payload, "UTF-8").toByteArray()
+            }
+            WebResourceResponse(mime, "utf-8", bytes.inputStream()).apply {
+                setStatusCodeAndReasonPhrase(200, "OK")
+                responseHeaders = mapOf(
+                    "Access-Control-Allow-Origin" to "*",
+                    "Cache-Control" to "no-store"
+                )
+            }
+        }
+    } catch (e: Exception) {
+        Log.e(TAG, "Failed to build redirect response for: $dataUrl", e)
+        null
     }
 }

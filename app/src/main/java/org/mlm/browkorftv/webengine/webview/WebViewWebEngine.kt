@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import androidx.core.net.toUri
 import androidx.webkit.WebViewCompat
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
@@ -21,6 +22,7 @@ import org.mlm.browkorftv.webengine.WebEngineProvider
 import org.mlm.browkorftv.webengine.WebEngineProviderCallback
 import org.mlm.browkorftv.webengine.WebEngineWindowProviderCallback
 import org.mlm.browkorftv.model.WebTabState
+import org.mlm.adblock.BlockDecision
 import org.mlm.browkorftv.widgets.cursor.CursorDrawerDelegate
 import org.mlm.browkorftv.widgets.cursor.CursorLayout
 import org.koin.core.component.KoinComponent
@@ -44,6 +46,13 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
         if (callback?.isAdBlockingEnabled() != true) return null
         if (url.startsWith(WebViewEx.INTERNAL_SCHEME)) return null
         return adBlockRepository.cosmeticResourcesJson(url)
+    }
+
+    private fun String.toUriOrNull(): Uri? = try {
+        val uri = toUri()
+        if (uri.scheme == "http" || uri.scheme == "https") uri else null
+    } catch (_: Exception) {
+        null
     }
 
     private val cursorScrollCallback = object : CursorDrawerDelegate.CustomScrollCallback {
@@ -393,8 +402,32 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
             callback?.onPageCertificateError(url)
         }
 
-        override fun isAd(request: WebResourceRequest, baseUri: Uri): Boolean {
-            return callback?.isAd(request.url, request.requestHeaders["Accept"], baseUri) ?: false
+        override fun checkNetworkRequest(
+            request: WebResourceRequest,
+            baseUri: Uri
+        ): BlockDecision? {
+            val type = requestType(request) ?: request.requestHeaders["Accept"]
+            val source = request.requestHeaders["Referer"]?.toUriOrNull() ?: baseUri
+            return adBlockRepository.checkNetworkRequest(request.url, type, source)
+        }
+
+        /** Maps [Sec-Fetch-Dest]/[Sec-Fetch-Mode] to an adblock-rust request type, when present. */
+        private fun requestType(request: WebResourceRequest): String? {
+            if (request.isForMainFrame) return "document"
+            val headers = request.requestHeaders
+            val dest = headers["Sec-Fetch-Dest"]?.trim()?.lowercase()
+            val mode = headers["Sec-Fetch-Mode"]?.trim()?.lowercase()
+            return when (dest) {
+                "script", "worker", "serviceworker", "sharedworker" -> "script"
+                "style" -> "stylesheet"
+                "image" -> "image"
+                "font" -> "font"
+                "media" -> "media"
+                "iframe", "frame" -> "subdocument"
+                "empty" -> if (mode == "websocket") "websocket" else "xmlhttprequest"
+                "manifest", "object", "embed", "document", "navigate" -> "other"
+                else -> null
+            }
         }
 
         override fun isAdBlockingEnabled(): Boolean {
