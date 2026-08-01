@@ -100,11 +100,23 @@ class AdBlockRepository(
                 } else {
                     listOf(settings.adBlockListURL)
                 }
+
                 val combined = buildString {
+                    var any = false
                     for (u in urls) {
-                        append(downloadText(u))
-                        append('\n')
+                        try {
+                            val text = downloadText(u)
+                            if (text.isNotBlank()) {
+                                append(text)
+                                append('\n')
+                                any = true
+                                Log.i(TAG, "Loaded filter list: $u (${text.length} chars)")
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Failed to download filter list: $u", e)
+                        }
                     }
+                    if (!any) throw IllegalStateException("No filter lists downloaded")
                 }
                 success = newEngine.loadFilterList(combined)
                 if (success) {
@@ -145,8 +157,13 @@ class AdBlockRepository(
         val conn = (URL(url).openConnection() as HttpURLConnection).apply {
             connectTimeout = 30_000
             readTimeout = 60_000
-            setRequestProperty("User-Agent", "BrowkorfTV-Adblock/1.0")
             instanceFollowRedirects = true
+            setRequestProperty("User-Agent", "BrowkorfTV-AdBlock/1.0")
+        }
+        val code = conn.responseCode
+        if (code !in 200..299) {
+            conn.disconnect()
+            throw IllegalStateException("HTTP $code for $url")
         }
         return conn.inputStream.bufferedReader().use { it.readText() }
     }
