@@ -638,7 +638,9 @@ class WebViewEx(
 
         // Document-start bootstrap: registered before any page load, queries the native engine
         // per-URL (via the BrowkorfTV JS interface) and injects cosmetic CSS + scriptlets.
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+        if (callback.isAdBlockingEnabled() &&
+            WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)
+        ) {
             runCatching {
                 WebViewCompat.addDocumentStartJavaScript(
                     this,

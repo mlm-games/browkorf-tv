@@ -40,7 +40,11 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
     private val adBlockRepository: AdBlockRepository by inject()
 
     /** Backs the `BrowkorfTV.getCosmetic` JS interface used by the adblock bootstrap. */
-    fun getCosmeticFor(url: String): String? = adBlockRepository.cosmeticResourcesJson(url)
+    fun getCosmeticFor(url: String): String? {
+        if (callback?.isAdBlockingEnabled() != true) return null
+        if (url.startsWith(WebViewEx.INTERNAL_SCHEME)) return null
+        return adBlockRepository.cosmeticResourcesJson(url)
+    }
 
     private val cursorScrollCallback = object : CursorDrawerDelegate.CustomScrollCallback {
         override fun onScroll(scrollX: Int, scrollY: Int): Boolean {

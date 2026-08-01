@@ -35,8 +35,7 @@ class AdBlockRepository(
 
         /**
          * EasyList/EasyPrivacy cover general network + cosmetic rules; uBO filters +
-         * quick-fixes carry the `##+js()` scriptlet rules that actually kill YouTube's
-         * in-video ads (they strip adPlacements/adSlots from the player response).
+         * quick-fixes add scriptlet rules that improve coverage on video/other sites.
          */
         val DEFAULT_LISTS = listOf(
             "https://easylist.to/easylist/easylist.txt",
@@ -146,7 +145,10 @@ class AdBlockRepository(
         engine = newEngine
         old?.close()
 
-        settingsManager.setAdBlockListLastUpdate(now.timeInMillis)
+        // A total failure doesn't delay the next auto-retry by a full interval.
+        if (success) {
+            settingsManager.setAdBlockListLastUpdate(now.timeInMillis)
+        }
 
         if (!success) snackbar.show("Error loading ad-blocker list")
 
