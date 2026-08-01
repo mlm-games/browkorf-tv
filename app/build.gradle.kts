@@ -190,7 +190,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.androidx.startup.runtime)
-    implementation(libs.ad.block) // TODO: replace with latest adblock-rust by brave (wrap it or maybe check the v0.5.3 ver once)
+    implementation(libs.adblock)
 
     // UI
     val composeBom = platform(libs.androidx.compose.bom)

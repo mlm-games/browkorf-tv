@@ -3,20 +3,23 @@ package org.mlm.browkorftv.activity.main
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import com.brave.adblock.AdBlockClient
-import com.brave.adblock.AdBlockClient.FilterOption
-import com.brave.adblock.Utils.uriHasExtension
-import org.mlm.browkorftv.settings.SettingsManager
-import org.mlm.browkorftv.utils.Utils
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.mlm.adblock.AdblockEngine
+import org.mlm.adblock.RequestTypeMapper
+import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.ui.SnackbarManager
 import java.io.File
+import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
+import java.util.Calendar
 
 class AdBlockRepository(
     private val settingsManager: SettingsManager,
@@ -24,21 +27,30 @@ class AdBlockRepository(
 ) {
     companion object : KoinComponent {
         val TAG = AdBlockRepository::class.java.simpleName
-        const val SERIALIZED_LIST_FILE = "adblock_ser.dat"
-        const val AUTO_UPDATE_INTERVAL_MINUTES = 60 * 24 * 30 // 30 days
+        const val SERIALIZED_LIST_FILE = "adblock_rust.bin"
+        const val AUTO_UPDATE_INTERVAL_MINUTES = 60 * 24 * 7 // 7 days
 
         private val snackbar: SnackbarManager by inject()
-
     }
 
-    private var client: AdBlockClient? = null
+    @Volatile
+    private var engine: AdblockEngine? = null
     private val _clientLoading = MutableStateFlow(false)
     val clientLoading = _clientLoading.asStateFlow()
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     init {
+        cleanupOldCache()
         scope.launch { loadAdBlockList(false) }
+    }
+
+    /** Old engine serialized a different format; remove the stale cache once. */
+    private fun cleanupOldCache() {
+        val old = File(context.filesDir, "adblock_ser.dat")
+        if (old.exists() && old.delete()) {
+            Log.i(TAG, "Removed stale adblock cache from old engine")
+        }
     }
 
     suspend fun loadAdBlockList(forceReload: Boolean) {
@@ -52,77 +64,66 @@ class AdBlockRepository(
         val needUpdate = forceReload || checkDate.before(now)
 
         _clientLoading.value = true
-        val newClient = AdBlockClient()
+        val newEngine = AdblockEngine.create()
         var success = false
 
         withContext(Dispatchers.IO) {
             val serializedFile = File(context.filesDir, SERIALIZED_LIST_FILE)
-            if ((!needUpdate) && serializedFile.exists() && newClient.deserialize(serializedFile.absolutePath)) {
+            if ((!needUpdate) && serializedFile.exists() && newEngine.deserializeFrom(serializedFile)) {
                 success = true
                 return@withContext
             }
             try {
-                val easyList =
-                    URL(settings.adBlockListURL).openConnection().inputStream.bufferedReader()
-                        .use { it.readText() }
-                success = newClient.parse(easyList)
-                newClient.serialize(serializedFile.absolutePath)
+                val listUrl = settings.adBlockListURL.ifBlank {
+                    "https://easylist.to/easylist/easylist.txt"
+                }
+                val easyList = downloadText(listUrl)
+                success = newEngine.loadFilterList(easyList)
+                if (success) {
+                    newEngine.serializeTo(serializedFile)
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load ad block list", e)
-                snackbar.postError("Error loading ad-blocker list", e.message)
+                if (serializedFile.exists() && newEngine.deserializeFrom(serializedFile)) {
+                    success = true
+                    Log.w(TAG, "Using stale adblock cache")
+                } else {
+                    snackbar.postError("Error loading ad-blocker list", e.message)
+                }
             }
         }
 
-        this.client = newClient
-        settingsManager.setAdBlockListLastUpdate(now.timeInMillis)
+        val old = engine
+        engine = newEngine
+        old?.close()
 
+        settingsManager.setAdBlockListLastUpdate(now.timeInMillis)
 
         if (!success) snackbar.show("Error loading ad-blocker list")
 
         _clientLoading.value = false
     }
 
-    fun isAd(url: Uri, type: String?, baseUri: Uri): Boolean {
-        val client = client ?: return false
-        val baseHost = baseUri.host
-        val filterOption = try {
-            mapRequestToFilterOption(url, type)
-        } catch (e: Exception) {
-            return false
+    private fun downloadText(url: String): String {
+        val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+            connectTimeout = 30_000
+            readTimeout = 60_000
+            setRequestProperty("User-Agent", "BrowkorfTV-Adblock/1.0")
+            instanceFollowRedirects = true
         }
-        val result = try {
-            baseHost != null && client.matches(url.toString(), filterOption, baseHost)
+        return conn.inputStream.bufferedReader().use { it.readText() }
+    }
+
+    fun isAd(url: Uri, type: String?, baseUri: Uri): Boolean {
+        val eng = engine ?: return false
+        val baseHost = baseUri.host
+        if (baseHost == null) return false
+        val requestType = RequestTypeMapper.from(url, type)
+        return try {
+            eng.shouldBlock(url.toString(), baseUri.toString(), requestType)
         } catch (e: Exception) {
             Log.e(TAG, "Ad block match check failed", e)
             false
         }
-        return result
-    }
-
-    private fun mapRequestToFilterOption(url: Uri?, type: String?): FilterOption {
-        if (type != null) {
-            if (type == "image" || type.contains("image/")) return FilterOption.IMAGE
-            if (type == "style" || type.contains("/css")) return FilterOption.CSS
-            if (type == "script" || type.contains("javascript")) return FilterOption.SCRIPT
-            if (type.contains("video/")) return FilterOption.OBJECT
-        }
-        if (url != null) {
-            if (uriHasExtension(url, "css")) return FilterOption.CSS
-            if (uriHasExtension(url, "js")) return FilterOption.SCRIPT
-            if (uriHasExtension(
-                    url,
-                    "png",
-                    "jpg",
-                    "jpeg",
-                    "webp",
-                    "svg",
-                    "gif",
-                    "bmp",
-                    "tiff"
-                )
-            ) return FilterOption.IMAGE
-            if (uriHasExtension(url, "mp4", "mov", "avi")) return FilterOption.OBJECT
-        }
-        return FilterOption.UNKNOWN
     }
 }

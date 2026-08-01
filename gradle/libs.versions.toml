@@ -16,7 +16,7 @@ lifecycle = "2.11.0"
 room = "2.8.4"
 
 coroutines = "1.11.0"
-ad-block = "0.0.4"
+adblock = "0.1.1"
 geckoview = "146.0.20251201213807"
 
 junit = "4.13.2"
@@ -77,7 +77,7 @@ androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecy
 androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startup" }
 
 # Third Party
-ad-block = { group = "com.github.truefedex", name = "ad-block", version.ref = "ad-block" }
+adblock = { module = "io.github.mlm-games:adblock", version.ref = "adblock" }
 geckoview = { group = "org.mozilla.geckoview", name = "geckoview", version.ref = "geckoview" }
 
 # Test
