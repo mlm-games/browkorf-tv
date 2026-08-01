@@ -122,6 +122,11 @@
             android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
 
+        <!-- Required by WebView's bundled barcode/shape-detection (Chromium).  -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="12451000" />
+
         <service
             android:name=".service.downloads.DownloadService"
             android:foregroundServiceType="dataSync"
