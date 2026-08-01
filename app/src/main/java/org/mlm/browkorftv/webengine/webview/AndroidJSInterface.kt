@@ -15,6 +15,17 @@ class AndroidJSInterface(private val webEngine: WebViewWebEngine) {
         return webEngine.tab.url
     }
 
+    /** Used by the adblock document-start bootstrap to fetch cosmetic rules for the page. */
+    @JavascriptInterface
+    fun getCosmetic(url: String): String? {
+        val result = webEngine.getCosmeticFor(url)
+        android.util.Log.d(
+            "btv-adblock",
+            "getCosmetic($url) -> " + (if (result == null) "null" else "len=${result.length}")
+        )
+        return result
+    }
+
     @JavascriptInterface
     fun reloadWithSslTrust() {
         val callback = webEngine.callback ?: return

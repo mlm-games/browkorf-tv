@@ -13,6 +13,7 @@ import android.webkit.WebView
 import androidx.webkit.WebViewCompat
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
+import org.mlm.browkorftv.activity.main.AdBlockRepository
 import org.mlm.browkorftv.utils.Utils
 import org.mlm.browkorftv.webengine.WebEngine
 import org.mlm.browkorftv.webengine.WebEngineFactory
@@ -36,6 +37,10 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
     private val jsInterface = AndroidJSInterface(this)
 
     private val settingsManager: SettingsManager by inject()
+    private val adBlockRepository: AdBlockRepository by inject()
+
+    /** Backs the `BrowkorfTV.getCosmetic` JS interface used by the adblock bootstrap. */
+    fun getCosmeticFor(url: String): String? = adBlockRepository.cosmeticResourcesJson(url)
 
     private val cursorScrollCallback = object : CursorDrawerDelegate.CustomScrollCallback {
         override fun onScroll(scrollX: Int, scrollY: Int): Boolean {

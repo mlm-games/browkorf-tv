@@ -13,9 +13,12 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.mlm.adblock.AdblockEngine
+import org.mlm.adblock.CosmeticResources
 import org.mlm.adblock.RequestTypeMapper
+import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.ui.SnackbarManager
+import org.json.JSONObject
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
@@ -27,14 +30,28 @@ class AdBlockRepository(
 ) {
     companion object : KoinComponent {
         val TAG = AdBlockRepository::class.java.simpleName
-        const val SERIALIZED_LIST_FILE = "adblock_rust.bin"
+        const val SERIALIZED_LIST_FILE = "adblock_rust_v2.bin"
         const val AUTO_UPDATE_INTERVAL_MINUTES = 60 * 24 * 7 // 7 days
+
+        /**
+         * EasyList/EasyPrivacy cover general network + cosmetic rules; uBO filters +
+         * quick-fixes carry the `##+js()` scriptlet rules that actually kill YouTube's
+         * in-video ads (they strip adPlacements/adSlots from the player response).
+         */
+        val DEFAULT_LISTS = listOf(
+            "https://easylist.to/easylist/easylist.txt",
+            "https://easylist.to/easylist/easyprivacy.txt",
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt",
+            "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quick-fixes.txt",
+        )
 
         private val snackbar: SnackbarManager by inject()
     }
 
     @Volatile
     private var engine: AdblockEngine? = null
+    @Volatile
+    private var resourcesJson: String? = null
     private val _clientLoading = MutableStateFlow(false)
     val clientLoading = _clientLoading.asStateFlow()
 
@@ -45,11 +62,13 @@ class AdBlockRepository(
         scope.launch { loadAdBlockList(false) }
     }
 
-    /** Old engine serialized a different format; remove the stale cache once. */
+    /** Old engines serialized a different format / filter set; remove stale caches once. */
     private fun cleanupOldCache() {
-        val old = File(context.filesDir, "adblock_ser.dat")
-        if (old.exists() && old.delete()) {
-            Log.i(TAG, "Removed stale adblock cache from old engine")
+        for (name in listOf("adblock_ser.dat", "adblock_rust.bin")) {
+            val old = File(context.filesDir, name)
+            if (old.exists() && old.delete()) {
+                Log.i(TAG, "Removed stale adblock cache: $name")
+            }
         }
     }
 
@@ -74,11 +93,20 @@ class AdBlockRepository(
                 return@withContext
             }
             try {
-                val listUrl = settings.adBlockListURL.ifBlank {
-                    "https://easylist.to/easylist/easylist.txt"
+                val urls = if (settings.adBlockListURL.isBlank() ||
+                    settings.adBlockListURL == AppSettings.DEFAULT_ADBLOCK_LIST_URL
+                ) {
+                    DEFAULT_LISTS
+                } else {
+                    listOf(settings.adBlockListURL)
                 }
-                val easyList = downloadText(listUrl)
-                success = newEngine.loadFilterList(easyList)
+                val combined = buildString {
+                    for (u in urls) {
+                        append(downloadText(u))
+                        append('\n')
+                    }
+                }
+                success = newEngine.loadFilterList(combined)
                 if (success) {
                     newEngine.serializeTo(serializedFile)
                 }
@@ -92,6 +120,15 @@ class AdBlockRepository(
                 }
             }
         }
+
+        loadResources(newEngine)
+
+        // Diagnostic: confirm the engine returns YouTube scriptlets/cosmetic rules.
+        val probe = newEngine.cosmeticResources("https://www.youtube.com/watch?v=probe")
+        Log.i(
+            TAG,
+            "Engine ready: youtube probe selectors=${probe?.selectors?.size} jsLen=${probe?.js?.length}"
+        )
 
         val old = engine
         engine = newEngine
@@ -112,6 +149,44 @@ class AdBlockRepository(
             instanceFollowRedirects = true
         }
         return conn.inputStream.bufferedReader().use { it.readText() }
+    }
+
+    /** Reads the bundled scriptlet resources once and registers them on the engine. */
+    private fun loadResources(engine: AdblockEngine) {
+        var json = resourcesJson
+        if (json == null) {
+            json = try {
+                context.assets.open("adblock/resources.json").bufferedReader().use { it.readText() }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to read adblock resources asset", e)
+                null
+            }
+            resourcesJson = json
+        }
+        if (json != null) engine.loadResources(json)
+    }
+
+    /** Cosmetic filtering (hide selectors + scriptlet JS) for a page URL. */
+    fun cosmeticResources(url: String): CosmeticResources? {
+        return engine?.cosmeticResources(url)
+    }
+
+    /**
+     * JSON for the in-page document-start bootstrap: `{"css": "...", "js": "..."}`,
+     * or null when the engine isn't ready or no rules apply.
+     */
+    fun cosmeticResourcesJson(url: String): String? {
+        val res = engine?.cosmeticResources(url) ?: return null
+        if (res.selectors.isEmpty() && res.js.isBlank()) return null
+        return try {
+            JSONObject()
+                .put("css", res.css())
+                .put("js", res.js)
+                .toString()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to build cosmetic JSON", e)
+            null
+        }
     }
 
     fun isAd(url: Uri, type: String?, baseUri: Uri): Boolean {

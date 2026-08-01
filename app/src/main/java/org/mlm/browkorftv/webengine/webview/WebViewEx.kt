@@ -40,6 +40,10 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.webkit.WebViewCompat
+import org.json.JSONObject
+import org.mlm.adblock.CosmeticResources
+import org.mlm.browkorftv.activity.main.AdBlockRepository
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.HomePageMode
@@ -49,6 +53,7 @@ import androidx.core.graphics.createBitmap
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.mlm.browkorftv.R
 import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_PAGE_URL
 import org.mlm.browkorftv.settings.SettingsManager
@@ -62,6 +67,8 @@ class WebViewEx(
     private val settingsManager: SettingsManager
 ) : WebView(context), KoinComponent {
 
+    private val adBlockRepository: AdBlockRepository by inject()
+
     companion object {
         val TAG = WebViewEx::class.java.simpleName
         const val WEB_VIEW_TAG = "Browkorf TV WebView"
@@ -69,6 +76,66 @@ class WebViewEx(
         const val INTERNAL_SCHEME_WARNING_DOMAIN = "warning"
         const val INTERNAL_SCHEME_WARNING_DOMAIN_TYPE_CERT = "certificate"
         val WIDEVINE_UUID = UUID(-0x121074568629b532L, -0x5c37d8232ae2de13L)
+
+        /**
+         * Runs at document start of every page. Fetches cosmetic rules (hide selectors + scriptlet
+         * JS) for the current URL from the native engine and injects them. Retries while the
+         * engine is still loading its filter lists.
+         */
+        private const val ADBLOCK_BOOTSTRAP_JS = """(function () {
+            if (window.__btvAdblockCss && window.__btvAdblockScriptlets) return;
+            console.log('[btv-adblock] bootstrap start', location.href);
+            var attempts = 0;
+            var maxAttempts = 40;
+            function apply() {
+                if (window.__btvAdblockCss && window.__btvAdblockScriptlets) return;
+                var raw = null;
+                try {
+                    if (window.BrowkorfTV === undefined || window.BrowkorfTV.getCosmetic === undefined) {
+                        throw new Error('BrowkorfTV.getCosmetic missing');
+                    }
+                    raw = window.BrowkorfTV.getCosmetic(location.href);
+                } catch (e) {
+                    console.error('[btv-adblock] getCosmetic error: ' + e.message);
+                    raw = null;
+                }
+                if (!raw) {
+                    if (attempts < maxAttempts) { attempts++; setTimeout(apply, 500); }
+                    else { console.warn('[btv-adblock] engine never returned rules for ' + location.href); }
+                    return;
+                }
+                var res;
+                try { res = JSON.parse(raw); } catch (e) { console.error('[btv-adblock] bad json'); return; }
+                if (res.css && !window.__btvAdblockCss) {
+                    try {
+                        var st = document.createElement('style');
+                        st.setAttribute('data-browkorftv-adblock', '');
+                        st.textContent = res.css;
+                        (document.head || document.documentElement).appendChild(st);
+                        window.__btvAdblockCss = true;
+                        console.log('[btv-adblock] css injected, ' + res.css.length + ' chars');
+                    } catch (e) { console.error('[btv-adblock] css error: ' + e.message); }
+                }
+                if (res.js && !window.__btvAdblockScriptlets) {
+                    try {
+                        var code = res.js;
+                        try {
+                            if (window.trustedTypes && window.trustedTypes.createPolicy) {
+                                var policy = window.trustedTypes.createPolicy('browkorftv-adblock', { createScript: function (str) { return str; } });
+                                code = policy.createScript(code);
+                            }
+                        } catch (e) { }
+                        var s = document.createElement('script');
+                        s.setAttribute('data-browkorftv-adblock', '');
+                        s.textContent = code;
+                        (document.head || document.documentElement).appendChild(s);
+                        window.__btvAdblockScriptlets = true;
+                        console.log('[btv-adblock] scriptlets injected, ' + res.js.length + ' chars');
+                    } catch (e) { console.error('[btv-adblock] scriptlet inject error: ' + e.message); }
+                }
+            }
+            apply();
+        })();"""
 
         private val activeWebViews = Collections.newSetFromMap(WeakHashMap<WebViewEx, Boolean>())
 
@@ -448,6 +515,7 @@ class WebViewEx(
                 super.onPageStarted(view, url, favicon)
                 Log.d(TAG, "onPageStarted url: $url")
                 currentOriginalUrl = url?.toUri()
+                applyCosmeticFilters(url)
                 callback.onPageStarted(url)
             }
 
@@ -456,6 +524,7 @@ class WebViewEx(
                 Log.d(TAG, "onPageFinished url: $url")
                 callback.onPageFinished(url)
                 evaluateJavascript(getGenericJSInjects(), null)
+                applyCosmeticCss(url)
             }
 
             override fun onLoadResource(view: WebView, url: String) {
@@ -556,6 +625,18 @@ class WebViewEx(
         }
 
         addJavascriptInterface(jsInterface, "BrowkorfTV")
+
+        // Document-start bootstrap: registered before any page load, queries the native engine
+        // per-URL (via the BrowkorfTV JS interface) and injects cosmetic CSS + scriptlets.
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            runCatching {
+                WebViewCompat.addDocumentStartJavaScript(
+                    this,
+                    ADBLOCK_BOOTSTRAP_JS,
+                    setOf("*")
+                )
+            }
+        }
 
         synchronized(activeWebViews) {
             activeWebViews.add(this@WebViewEx)
@@ -672,6 +753,67 @@ class WebViewEx(
         }
         return injects
     }
+
+    /**
+     * Registers a document-start script that injects cosmetic CSS (hide selectors) and
+     * scriptlet JS for the given page URL, so it runs before any page scripts load.
+     * Also injects the CSS immediately into the currently loaded DOM via onPageFinished.
+     */
+    fun applyCosmeticFilters(url: String?) {
+        if (!callback.isAdBlockingEnabled()) return
+        val pageUrl = url ?: return
+        val resources = adBlockRepository.cosmeticResources(pageUrl) ?: return
+        val script = buildCosmeticScript(resources)
+        if (script.isBlank()) return
+
+        val host = pageUrl.toUri().host
+        if (host == null) return
+        runCatching {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+                WebViewCompat.addDocumentStartJavaScript(
+                    this,
+                    script,
+                    setOf("https://$host", "http://$host")
+                )
+            }
+        }
+    }
+
+    /** Inject the cosmetic CSS into the already-loaded DOM (document-start covers future loads). */
+    fun applyCosmeticCss(url: String?) {
+        if (!callback.isAdBlockingEnabled()) return
+        val pageUrl = url ?: return
+        val resources = adBlockRepository.cosmeticResources(pageUrl) ?: return
+        val css = resources.css()
+        if (css.isBlank()) return
+        evaluateJavascript(buildCssInjector(css), null)
+    }
+
+    private fun buildCosmeticScript(resources: CosmeticResources): String {
+        val css = resources.css()
+        return buildString {
+            append("(function(){ if (window.__btvAdblockCss && window.__btvAdblockScriptlets) return;")
+            if (resources.js.isNotBlank()) {
+                append("if(!window.__btvAdblockScriptlets){")
+                append(resources.js)
+                append("window.__btvAdblockScriptlets=true;}")
+                append("\n")
+            }
+            if (css.isNotBlank()) {
+                append("if(!window.__btvAdblockCss){")
+                append(buildCssInjector(css))
+                append("window.__btvAdblockCss=true;}")
+            }
+            append("})();")
+        }
+    }
+
+    private fun buildCssInjector(css: String): String =
+        "(() => { if(window.__btvAdblockCss)return; window.__btvAdblockCss=true;" +
+            "const s = document.createElement('style');" +
+            "s.setAttribute('data-browkorftv-adblock','');" +
+            "s.textContent = ${JSONObject.quote(css)};" +
+            "(document.head || document.documentElement).appendChild(s); })();"
 
     fun renderThumbnail(bitmap: Bitmap?): Bitmap? {
         if (width == 0 || height == 0) return null
