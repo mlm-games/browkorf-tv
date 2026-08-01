@@ -7,12 +7,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.mlm.browkorftv.common.R
+import org.mlm.browkorftv.R as AppR
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import org.mlm.browkorftv.activity.main.FavoritesViewModel
-import org.mlm.browkorftv.ui.components.BrowkorfTvButton
 import org.mlm.browkorftv.ui.components.BrowkorfTvClickableSurface
 import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 import org.mlm.browkorftv.ui.theme.AppTheme
@@ -44,15 +44,15 @@ fun FavoritesScreen(
         ) {
             Text("Favorites", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
-            BrowkorfTvButton(
+            BrowkorfTvIconButton(
                 onClick = onAddBookmark,
-                text = "Add Bookmark",
-                colors = ButtonDefaults.colors()
+                painter = painterResource(AppR.drawable.outline_add_24),
+                contentDescription = "Add Bookmark"
             )
-            BrowkorfTvButton(
+            BrowkorfTvIconButton(
                 onClick = onBack,
-                text = "Back",
-                colors = ButtonDefaults.colors()
+                painter = painterResource(AppR.drawable.outline_chevron_forward_24),
+                contentDescription = "Back"
             )
         }
 

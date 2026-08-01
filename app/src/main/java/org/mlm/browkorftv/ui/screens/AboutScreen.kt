@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import androidx.webkit.WebViewCompat
 import org.mlm.browkorftv.BuildConfig
-import org.mlm.browkorftv.ui.components.BrowkorfTvButton
+import org.mlm.browkorftv.R
+import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 
 @Composable
 fun AboutScreen(
@@ -30,10 +32,10 @@ fun AboutScreen(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Text("About", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
-            BrowkorfTvButton(
+            BrowkorfTvIconButton(
                 onClick = onBack,
-                text = "Back",
-                colors = ButtonDefaults.colors()
+                painter = painterResource(R.drawable.outline_chevron_forward_24),
+                contentDescription = "Back"
             )
         }
 
