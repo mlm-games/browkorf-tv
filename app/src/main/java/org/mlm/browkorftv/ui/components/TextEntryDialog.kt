@@ -92,11 +92,20 @@ fun TextEntryDialog(
                     }
                 )
 
+                val confirm = { onConfirm(value) }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Button(onClick = onDismiss) { Text("Cancel") }
-                    Button(onClick = { onConfirm(value) }) { Text("OK") }
+                    BrowkorfTvButton(
+                        onClick = onDismiss,
+                        text = "Cancel",
+                        colors = ButtonDefaults.colors()
+                    )
+                    BrowkorfTvButton(
+                        onClick = confirm,
+                        text = "OK",
+                        colors = ButtonDefaults.colors()
+                    )
                 }
             }
         }

@@ -112,7 +112,7 @@ private fun TabItem(
         else -> colors.tabBackground
     }
 
-    Surface(
+    BrowkorfTvClickableSurface(
         onClick = onClick,
         modifier = Modifier
             .width(200.dp)
@@ -175,7 +175,7 @@ private fun AddTabButton(
     val colors = AppTheme.colors
     var isFocused by remember { mutableStateOf(false) }
 
-    Surface(
+    BrowkorfTvClickableSurface(
         onClick = onClick,
         modifier = modifier
             .size(40.dp)

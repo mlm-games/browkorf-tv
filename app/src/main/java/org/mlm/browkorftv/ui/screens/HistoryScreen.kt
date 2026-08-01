@@ -12,6 +12,7 @@ import androidx.tv.material3.*
 import org.mlm.browkorftv.activity.main.HistoryViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.mlm.browkorftv.R
+import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 import org.mlm.browkorftv.ui.components.BrowkorfTvListItem
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,6 +32,11 @@ fun HistoryScreen(
     val timeFmt = remember { SimpleDateFormat("HH:mm", Locale.getDefault()) }
     val dateFmt = remember { SimpleDateFormat.getDateInstance() }
 
+    val clearHistory: () -> Unit = {
+        viewModel.deleteAll()
+        viewModel.loadItems()
+    }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -45,18 +51,18 @@ fun HistoryScreen(
             Text("History", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             if (rows.isNotEmpty()) {
-                IconButton(
-                    onClick = {
-                        viewModel.deleteAll()
-                        viewModel.loadItems()
-                    }
-                ) { Icon(
-                    painterResource(R.drawable.outline_clear_all_24),
-                    "Clear All",
+                BrowkorfTvIconButton(
+                    onClick = clearHistory,
+                    painter = painterResource(R.drawable.outline_clear_all_24),
+                    contentDescription = "Clear All",
                     tint = MaterialTheme.colorScheme.error
-                    ) }
+                )
             }
-            IconButton(onClick = onBack) { Icon(painterResource(R.drawable.outline_chevron_forward_24),"Back") }
+            BrowkorfTvIconButton(
+                onClick = onBack,
+                painter = painterResource(R.drawable.outline_chevron_forward_24),
+                contentDescription = "Back"
+            )
         }
 
         if (rows.isEmpty()) {

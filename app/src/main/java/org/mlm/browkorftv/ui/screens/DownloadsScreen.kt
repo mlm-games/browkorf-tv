@@ -24,6 +24,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.core.net.toUri
+import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 import org.mlm.browkorftv.ui.components.BrowkorfTvListItem
 
 @Composable
@@ -72,17 +73,19 @@ fun DownloadsScreen(
             Text("Downloads", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             if (rows.isNotEmpty()) {
-                IconButton(
-                    onClick = {
-                        viewModel.deleteAll()
-                    }
-                ) { Icon(
-                    painterResource(R.drawable.outline_clear_all_24),
-                    "Clear All",
+                val clearDownloads: () -> Unit = { viewModel.deleteAll() }
+                BrowkorfTvIconButton(
+                    onClick = clearDownloads,
+                    painter = painterResource(R.drawable.outline_clear_all_24),
+                    contentDescription = "Clear All",
                     tint = MaterialTheme.colorScheme.error
-                ) }
+                )
             }
-            IconButton(onClick = onBack) { Icon(painterResource(R.drawable.outline_chevron_forward_24),"Back") }
+            BrowkorfTvIconButton(
+                onClick = onBack,
+                painter = painterResource(R.drawable.outline_chevron_forward_24),
+                contentDescription = "Back"
+            )
         }
 
         if (rows.isEmpty()) {

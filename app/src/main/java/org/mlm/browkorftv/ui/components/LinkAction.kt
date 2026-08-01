@@ -8,7 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.Button
+import androidx.tv.material3.ButtonDefaults
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import androidx.tv.material3.MaterialTheme
@@ -16,6 +16,18 @@ import androidx.tv.material3.SurfaceDefaults
 import org.mlm.browkorftv.ui.theme.AppTheme
 
 enum class LinkAction { Refresh, OpenInNewTab, OpenExternal, Copy, Download, Share }
+
+@Composable
+private fun LinkActionButton(
+    text: String,
+    onClick: () -> Unit,
+) {
+    BrowkorfTvButton(
+        onClick = onClick,
+        text = text,
+        colors = ButtonDefaults.colors()
+    )
+}
 
 @Composable
 fun LinkActionsDialog(
@@ -39,20 +51,20 @@ fun LinkActionsDialog(
             ) {
                 Text("Link actions", style = MaterialTheme.typography.titleLarge)
 
-                Button(onClick = { onAction(LinkAction.Refresh) }) { Text("Refresh") }
+                LinkActionButton("Refresh") { onAction(LinkAction.Refresh) }
 
                 if (canOpenUrlActions) {
-                    Button(onClick = { onAction(LinkAction.OpenInNewTab) }) { Text("Open in new tab") }
-                    Button(onClick = { onAction(LinkAction.OpenExternal) }) { Text("Open in external app") }
-                    Button(onClick = { onAction(LinkAction.Download) }) { Text("Download") }
+                    LinkActionButton("Open in new tab") { onAction(LinkAction.OpenInNewTab) }
+                    LinkActionButton("Open in external app") { onAction(LinkAction.OpenExternal) }
+                    LinkActionButton("Download") { onAction(LinkAction.Download) }
                 }
 
                 if (canCopyShare) {
-                    Button(onClick = { onAction(LinkAction.Copy) }) { Text("Copy") }
-                    Button(onClick = { onAction(LinkAction.Share) }) { Text("Share") }
+                    LinkActionButton("Copy") { onAction(LinkAction.Copy) }
+                    LinkActionButton("Share") { onAction(LinkAction.Share) }
                 }
 
-                Button(onClick = onDismiss) { Text("Close") }
+                LinkActionButton("Close", onDismiss)
             }
         }
     }

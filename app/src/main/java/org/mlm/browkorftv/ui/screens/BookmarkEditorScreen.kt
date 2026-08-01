@@ -13,6 +13,8 @@ import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 import org.mlm.browkorftv.ui.components.TextEntryDialog
 import org.mlm.browkorftv.ui.components.BrowkorfTopBar
+import org.mlm.browkorftv.ui.components.BrowkorfTvButton
+import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 import org.mlm.browkorftv.ui.components.BrowkorfTvListItem
 import org.mlm.browkorftv.common.R
 
@@ -66,8 +68,7 @@ fun BookmarkEditorScreen(
             title = if (id == null) "New Bookmark" else "Edit Bookmark",
             onBack = onDone,
             actions = {
-                // Save
-                IconButton(onClick = {
+                val saveBookmark = {
                     val norm = normalizeUrl(url)
                     if (norm.isNotBlank()) {
                         val item = FavoriteItem().apply {
@@ -80,24 +81,26 @@ fun BookmarkEditorScreen(
                         viewModel.saveFavorite(item)
                         onDone()
                     }
-                }) {
-                    Icon(
-                        painterResource(R.drawable.outline_bookmark_check_24),
-                        contentDescription = "Save"
-                    )
                 }
+
+                // Save
+                BrowkorfTvIconButton(
+                    onClick = saveBookmark,
+                    painter = painterResource(R.drawable.outline_bookmark_check_24),
+                    contentDescription = "Save"
+                )
 
                 // Delete (only if editing)
                 if (existingId != null) {
-                    IconButton(onClick = {
+                    val deleteBookmark = {
                         viewModel.deleteFavorite(existingId!!)
                         onDone()
-                    }) {
-                        Icon(
-                            painterResource(R.drawable.outline_delete_24),
-                            contentDescription = "Delete"
-                        )
                     }
+                    BrowkorfTvIconButton(
+                        onClick = deleteBookmark,
+                        painter = painterResource(R.drawable.outline_delete_24),
+                        contentDescription = "Delete"
+                    )
                 }
             }
         )
@@ -127,15 +130,10 @@ fun BookmarkEditorScreen(
         // Action Buttons
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
 
-            Button(
+            BrowkorfTvButton(
                 onClick = onDone,
-                colors = ButtonDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            ) {
-                Text("Cancel")
-            }
+                text = "Cancel"
+            )
         }
     }
 

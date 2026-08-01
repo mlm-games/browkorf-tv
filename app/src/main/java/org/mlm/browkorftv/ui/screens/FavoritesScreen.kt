@@ -12,6 +12,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import org.mlm.browkorftv.activity.main.FavoritesViewModel
+import org.mlm.browkorftv.ui.components.BrowkorfTvButton
+import org.mlm.browkorftv.ui.components.BrowkorfTvClickableSurface
+import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 import org.mlm.browkorftv.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,8 +44,16 @@ fun FavoritesScreen(
         ) {
             Text("Favorites", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
-            Button(onClick = onAddBookmark) { Text("Add Bookmark") }
-            Button(onClick = onBack) { Text("Back") }
+            BrowkorfTvButton(
+                onClick = onAddBookmark,
+                text = "Add Bookmark",
+                colors = ButtonDefaults.colors()
+            )
+            BrowkorfTvButton(
+                onClick = onBack,
+                text = "Back",
+                colors = ButtonDefaults.colors()
+            )
         }
 
         if (loading) {
@@ -89,7 +100,7 @@ private fun FavoriteItem(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically // Align items vertically
     ) {
-        Surface(
+        BrowkorfTvClickableSurface(
             onClick = onOpen,
             modifier = Modifier.weight(1f),
             shape = ClickableSurfaceDefaults.shape(shape = MaterialTheme.shapes.medium),
@@ -118,44 +129,30 @@ private fun FavoriteItem(
 
         Spacer(Modifier.width(8.dp))
 
-        IconButton(
+        BrowkorfTvIconButton(
             onClick = onEdit,
-            modifier = Modifier.size(
-                width = 45.dp,
-                height = 45.dp
-            ),
+            painter = painterResource(R.drawable.outline_movie_edit_24),
+            contentDescription = "Edit",
             colors = ButtonDefaults.colors(
                 containerColor = colors.buttonBackground,
                 focusedContainerColor = colors.buttonBackgroundFocused,
                 contentColor = colors.textPrimary,
                 focusedContentColor = colors.textPrimary
             )
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.outline_movie_edit_24),
-                contentDescription = "Edit",
-            )
-        }
+        )
 
         Spacer(Modifier.width(8.dp))
 
-        IconButton(
+        BrowkorfTvIconButton(
             onClick = onEdit,
-            modifier = Modifier.size(
-                width = 45.dp,
-                height = 45.dp
-            ),
+            painter = painterResource(R.drawable.outline_bookmark_remove_24),
+            contentDescription = "Remove",
             colors = ButtonDefaults.colors(
                 containerColor = colors.buttonBackground,
                 focusedContainerColor = colors.buttonBackgroundFocused,
                 contentColor = colors.textPrimary,
                 focusedContentColor = colors.textPrimary
             )
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.outline_bookmark_remove_24),
-                contentDescription = "Remove",
-            )
-        }
+        )
     }
 }

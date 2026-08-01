@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import androidx.webkit.WebViewCompat
 import org.mlm.browkorftv.BuildConfig
+import org.mlm.browkorftv.ui.components.BrowkorfTvButton
 
 @Composable
 fun AboutScreen(
@@ -29,7 +30,11 @@ fun AboutScreen(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Text("About", style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
-            Button(onClick = onBack) { Text("Back") }
+            BrowkorfTvButton(
+                onClick = onBack,
+                text = "Back",
+                colors = ButtonDefaults.colors()
+            )
         }
 
         Surface {

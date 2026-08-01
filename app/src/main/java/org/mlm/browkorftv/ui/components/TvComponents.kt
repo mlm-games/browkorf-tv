@@ -1,6 +1,7 @@
 package org.mlm.browkorftv.ui.components
 
 import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
@@ -29,24 +30,29 @@ fun BrowkorfTvIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     checked: Boolean = false,
-    badgeCount: Int? = null
+    badgeCount: Int? = null,
+    tint: Color? = null,
+    colors: ButtonColors = IconButtonDefaults.colors(
+        containerColor = if (checked) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+        contentColor = if (checked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+        focusedContainerColor = MaterialTheme.colorScheme.primary,
+        focusedContentColor = MaterialTheme.colorScheme.onPrimary
+    ),
 ) {
     Box(modifier = modifier) {
         IconButton(
             onClick = onClick,
             enabled = enabled,
-            colors = IconButtonDefaults.colors(
-                containerColor = if (checked) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-                contentColor = if (checked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
-                focusedContainerColor = MaterialTheme.colorScheme.primary,
-                focusedContentColor = MaterialTheme.colorScheme.onPrimary
-            ),
-            modifier = Modifier.size(48.dp)
+            colors = colors,
+            modifier = Modifier
+                .size(48.dp)
+                .tvPointerClick(onClick, enabled)
         ) {
             Icon(
                 painter = painter,
                 contentDescription = contentDescription,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
+                tint = tint ?: LocalContentColor.current
             )
         }
 
@@ -71,18 +77,19 @@ fun BrowkorfTvButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    colors: ButtonColors = ButtonDefaults.colors(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        focusedContainerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        focusedContentColor = MaterialTheme.colorScheme.onPrimary
+    ),
 ) {
     Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier,
-        colors = ButtonDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            focusedContainerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            focusedContentColor = MaterialTheme.colorScheme.onPrimary
-        ),
+        modifier = modifier.tvPointerClick(onClick, enabled),
+        colors = colors,
         // scale = ButtonDefaults.scale(focusedScale = 1.1f)
     ) {
         Text(
@@ -100,13 +107,16 @@ fun BrowkorfTvIconButton(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     enabled: Boolean = true,
+    tint: Color? = null,
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier.size(
-            width = 45.dp,
-            height = 45.dp
-        ),
+        modifier = modifier
+            .size(
+                width = 45.dp,
+                height = 45.dp
+            )
+            .tvPointerClick(onClick, enabled),
         colors = ButtonDefaults.colors(
             containerColor = colors.buttonBackground,
             focusedContainerColor = colors.buttonBackgroundFocused,
@@ -118,6 +128,7 @@ fun BrowkorfTvIconButton(
         Icon(
             painter,
             contentDescription,
+            tint = tint ?: LocalContentColor.current
         )
     }
 }
@@ -150,12 +161,11 @@ fun BrowkorfTopBar(
         modifier = Modifier.fillMaxWidth(),
         title = { Text(title) },
         navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(
-                    painterResource(R.drawable.outline_chevron_backward_24),
-                    contentDescription = "Back"
-                )
-            }
+            BrowkorfTvIconButton(
+                onClick = onBack,
+                painter = painterResource(R.drawable.outline_chevron_backward_24),
+                contentDescription = "Back"
+            )
         },
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
@@ -167,6 +177,31 @@ fun BrowkorfTopBar(
     )
 }
 
+
+@Composable
+fun BrowkorfTvClickableSurface(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onLongClick: (() -> Unit)? = null,
+    enabled: Boolean = true,
+    shape: ClickableSurfaceShape = ClickableSurfaceDefaults.shape(),
+    colors: ClickableSurfaceColors = ClickableSurfaceDefaults.colors(),
+    scale: ClickableSurfaceScale = ClickableSurfaceDefaults.scale(),
+    interactionSource: MutableInteractionSource? = null,
+    content: @Composable (BoxScope.() -> Unit),
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.tvPointerClick(onClick, enabled),
+        onLongClick = onLongClick,
+        enabled = enabled,
+        shape = shape,
+        colors = colors,
+        scale = scale,
+        interactionSource = interactionSource,
+        content = content
+    )
+}
 
 /**
  * Reusable TV List Item
@@ -180,7 +215,7 @@ fun BrowkorfTvListItem(
 ) {
     val colors = colors
 
-    Surface(
+    BrowkorfTvClickableSurface(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = ClickableSurfaceDefaults.shape(shape = MaterialTheme.shapes.medium),
