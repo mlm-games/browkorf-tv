@@ -79,8 +79,9 @@ fun ShortcutsScreen(
             onSetKey = { keyCode, modifiers ->
                 if (NavigationReservedShortcutKeyCodes.reservedForUserShortcuts.contains(keyCode)) {
                     scope.launch {
-                        snackbarManager.show(
-                            message = context.getString(R.string.shortcut_key_reserved_for_navigation),
+                        @Suppress("LocalContextGetResourceValueCall")
+                        val msg = context.getString(R.string.shortcut_key_reserved_for_navigation)
+                        snackbarManager.show(message = msg,
                         )
                     }
                     return@ShortcutEditDialog

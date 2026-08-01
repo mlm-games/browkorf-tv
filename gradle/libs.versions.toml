@@ -1,8 +1,8 @@
 [versions]
-agp = "9.2.1"
+agp = "9.3.0"
 datastorePreferences = "1.2.1"
-kotlin = "2.4.0"
-ksp = "2.3.5"
+kotlin = "2.4.10"
+ksp = "2.3.10"
 jvmTarget = "21"
 compileSdk = "37"
 targetSdk = "37"
