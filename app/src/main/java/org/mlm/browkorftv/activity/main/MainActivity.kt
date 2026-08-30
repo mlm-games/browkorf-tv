@@ -639,6 +639,18 @@ open class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
 
         intent.data?.let { uri ->
+            if (uri.scheme == "content") {
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (_: Exception) {
+                    try {
+                        grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    } catch (_: Exception) {}
+                }
+            }
             openInNewTab(
                 uri.toString(),
                 tabsViewModel.tabsStates.value.size,
@@ -666,7 +678,20 @@ open class MainActivity : AppCompatActivity() {
             return@launch
         }
 
-        val intentUri = intent.data
+        val intentUri = intent.data?.also { uri ->
+            if (uri.scheme == "content") {
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (_: Exception) {
+                    try {
+                        grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    } catch (_: Exception) {}
+                }
+            }
+        }
         val tabs = tabsViewModel.tabsStates.value
 
         if (intentUri == null) {
@@ -1187,6 +1212,8 @@ open class MainActivity : AppCompatActivity() {
             if (uri.scheme == null) return true
 
             if (URLUtil.isNetworkUrl(url) ||
+                uri.scheme.equals("file", true) ||
+                uri.scheme.equals("content", true) ||
                 uri.scheme.equals("javascript", true) ||
                 uri.scheme.equals("data", true) ||
                 uri.scheme.equals("about", true) ||
