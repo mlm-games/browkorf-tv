@@ -148,10 +148,12 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
         }
     }
 
-    private val settingsManager: SettingsManager by inject()
+    internal val settingsManager: SettingsManager by inject()
 
     private val settings: AppSettings
         get() = settingsManager.current
+
+    fun isLongPressMenuEnabled(): Boolean = settingsManager.current.showContextMenuOnLongPress
 
     private var webView: GeckoViewWithVirtualCursor? = null
     var session: GeckoSession
@@ -548,6 +550,7 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
     }
 
     override fun onLongPress(x: Int, y: Int) {
+        if (!isLongPressMenuEnabled()) return
         callback?.onContextMenu(
             webView!!.cursorDrawerDelegate, navigationDelegate.locationURL,
             null, null, null, null, null, x, y

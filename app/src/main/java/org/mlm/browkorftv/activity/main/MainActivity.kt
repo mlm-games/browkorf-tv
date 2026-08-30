@@ -347,6 +347,11 @@ open class MainActivity : AppCompatActivity() {
             isFocusableInTouchMode = true
         }
 
+        webContainer.cursorDrawerDelegate.isLongPressMenuEnabled =
+            settingsManager.current.showContextMenuOnLongPress
+        fullscreenContainer.cursorDrawerDelegate.isLongPressMenuEnabled =
+            settingsManager.current.showContextMenuOnLongPress
+
         if (!BuildConfig.GECKO_INCLUDED) {
             val webViewIndex = AppSettings.SupportedWebEngines
                 .indexOf(AppSettings.ENGINE_WEB_VIEW)
@@ -554,6 +559,13 @@ open class MainActivity : AppCompatActivity() {
 
                         webContainer.cursorDrawerDelegate.directionalNavCallback = callback
                         fullscreenContainer.cursorDrawerDelegate.directionalNavCallback = callback
+                    }
+                }
+
+                launch {
+                    settingsManager.showContextMenuOnLongPressFlow.collectLatest { enabled ->
+                        webContainer.cursorDrawerDelegate.isLongPressMenuEnabled = enabled
+                        fullscreenContainer.cursorDrawerDelegate.isLongPressMenuEnabled = enabled
                     }
                 }
 

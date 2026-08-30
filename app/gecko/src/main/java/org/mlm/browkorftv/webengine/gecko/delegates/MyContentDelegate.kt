@@ -54,6 +54,7 @@ class MyContentDelegate(private val webEngine: GeckoWebEngine): GeckoSession.Con
         screenY: Int,
         element: GeckoSession.ContentDelegate.ContextElement
     ) {
+        if (!webEngine.isLongPressMenuEnabled()) return
         Log.d(TAG,"onContextMenu screenX="
                     + screenX
                     + " screenY="

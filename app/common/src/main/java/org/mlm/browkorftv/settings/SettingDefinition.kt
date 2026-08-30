@@ -234,6 +234,15 @@ data class AppSettings(
     )
     val newTabButtonBeforeTabs: Boolean = false,
 
+    @Setting(
+        title = "Context menu on long press",
+        description = "disable to allow page actions on long press",
+        category = General::class,
+        type = Toggle::class,
+        key = "show_context_menu_on_long_press"
+    )
+    val showContextMenuOnLongPress: Boolean = true,
+
 
     @Persisted(key = "incognito_mode_hint_suppress")
     @NoReset

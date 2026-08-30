@@ -17,6 +17,7 @@ import kotlin.math.abs
 
 class CursorDrawerDelegate(val context: Context, val surface: View) {
     var enabled: Boolean = true
+    var isLongPressMenuEnabled: Boolean = true
 
     /**
      * When true, D-pad directions are passed through to the webpage as arrow key events
@@ -68,6 +69,7 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
     private var centerButtonDownTime = 0L
 
     private val longPressRunnable = Runnable {
+        if (!isLongPressMenuEnabled) return@Runnable
         // Cancel any ongoing touch on the surface first
         if (dpadCenterPressed) {
             dispatchMotionEvent(cursorPosition.x, cursorPosition.y, MotionEvent.ACTION_CANCEL)
@@ -341,7 +343,7 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                     centerButtonDownTime = SystemClock.uptimeMillis()
                     surface.keyDispatcherState.startTracking(event, this)
 
-                    if (!isCursorDisappear && !directionalNavMode && !dpadCenterPressed) {
+                    if (!isCursorDisappear && !directionalNavMode && isLongPressMenuEnabled && !dpadCenterPressed) {
                         dpadCenterPressed = true
                         dispatchMotionEvent(
                             cursorPosition.x,
@@ -350,6 +352,16 @@ class CursorDrawerDelegate(val context: Context, val surface: View) {
                         )
                         surface.postInvalidate()
                         surface.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT)
+                    } else if (!isLongPressMenuEnabled && !isCursorDisappear && !directionalNavMode) {
+                        if (!dpadCenterPressed) {
+                            dpadCenterPressed = true
+                            dispatchMotionEvent(
+                                cursorPosition.x,
+                                cursorPosition.y,
+                                MotionEvent.ACTION_DOWN
+                            )
+                            surface.postInvalidate()
+                        }
                     }
                     return true
 
