@@ -37,6 +37,7 @@ import org.mlm.browkorftv.settings.AdBlock
 import org.mlm.browkorftv.settings.AppSettingsSchema
 import org.mlm.browkorftv.settings.General
 import org.mlm.browkorftv.settings.HomePage
+import org.mlm.browkorftv.settings.Proxy
 import org.mlm.browkorftv.settings.Search
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Updates
@@ -165,6 +166,7 @@ fun SettingsScreen(
                         CategoryConfig(WebEngine::class, "Web Engine"),
                         CategoryConfig(AdBlock::class, "Ad Blocker"),
                         CategoryConfig(Updates::class, "Updates"),
+                        CategoryConfig(Proxy::class, "Proxy"),
                     )
                 )
             }

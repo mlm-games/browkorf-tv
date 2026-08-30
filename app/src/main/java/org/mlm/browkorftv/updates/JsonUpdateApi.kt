@@ -4,6 +4,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import org.mlm.browkorftv.core.DispatcherProvider
+import org.mlm.browkorftv.network.ProxyManager
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -22,7 +23,7 @@ class JsonUpdateApi(
             "$BASE_URL/latest"
         }
 
-        val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+        val conn = (ProxyManager.openConnection(URL(url)) as HttpURLConnection).apply {
             connectTimeout = 20_000
             readTimeout = 20_000
             useCaches = false

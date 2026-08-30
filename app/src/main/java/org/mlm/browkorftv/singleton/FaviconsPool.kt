@@ -13,6 +13,7 @@ import org.koin.core.component.inject
 import org.mlm.browkorftv.core.DispatcherProvider
 import org.mlm.browkorftv.model.HostConfig
 import org.mlm.browkorftv.model.dao.HostsDao
+import org.mlm.browkorftv.network.ProxyManager
 import org.mlm.browkorftv.utils.FaviconExtractor
 import java.io.File
 import java.net.URL
@@ -140,7 +141,7 @@ object FaviconsPool : KoinComponent {
 
     private suspend fun downloadIcon(iconInfo: FaviconExtractor.IconInfo): Bitmap? = withContext(dispatchers.io) {
         val url = URL(iconInfo.src)
-        val conn = url.openConnection().apply {
+        val conn = ProxyManager.openConnection(url).apply {
             connectTimeout = 15_000
             readTimeout = 15_000
         }
@@ -160,7 +161,7 @@ object FaviconsPool : KoinComponent {
             inSampleSize = scale
         }
 
-        url.openConnection().getInputStream().use { BitmapFactory.decodeStream(it, null, opts) }
+        ProxyManager.openConnection(url).getInputStream().use { BitmapFactory.decodeStream(it, null, opts) }
     }
 
     private fun chooseNearestSizeIcon(

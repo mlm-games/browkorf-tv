@@ -84,6 +84,11 @@ class SettingsManager private constructor(context: Context) {
     val bookmarksFlow: Flow<List<BookmarkEntry>> =
         settings.map { it.bookmarks.sortedByDescending(BookmarkEntry::id) }.distinctUntilChanged()
 
+    val proxyFlow: Flow<AppSettings> =
+        settings.distinctUntilChanged { old, new ->
+            old.proxyEnabled == new.proxyEnabled && old.proxyUrl == new.proxyUrl
+        }
+
     suspend fun update(transform: (AppSettings) -> AppSettings) {
         repository.update(transform)
     }

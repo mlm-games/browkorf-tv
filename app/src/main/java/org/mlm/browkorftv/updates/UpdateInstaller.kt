@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.mlm.browkorftv.core.DispatcherProvider
+import org.mlm.browkorftv.network.ProxyManager
 import org.mlm.browkorftv.utils.Utils
 import java.io.File
 import java.net.HttpURLConnection
@@ -39,7 +40,7 @@ class UpdateInstaller(
         emit(Pair(DownloadProgress(bytesRead = 0, totalBytes = null, percent = null), null))
 
         val resultFile = withContext(dispatchers.io) {
-            val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+            val conn = (ProxyManager.openConnection(URL(url)) as HttpURLConnection).apply {
                 connectTimeout = 20_000
                 readTimeout = 20_000
                 useCaches = false

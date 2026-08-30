@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.annotation.UiThread
 import androidx.startup.Initializer
+import kotlinx.coroutines.flow.first
 import org.mlm.browkorftv.model.WebTabState
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.SettingsManager
@@ -85,7 +86,23 @@ object WebEngineFactory {
     ) {
         ensureProvidersRegistered(context)
 
-        val settings = settingsManager.current
+        // Use persisted settings if available; current may still be default during cold start.
+        val settings = try {
+            kotlinx.coroutines.withTimeoutOrNull(800) {
+                settingsManager.settings.first()
+            } ?: settingsManager.current
+        } catch (_: Exception) {
+            settingsManager.current
+        }
+
+        // Ensure JVM proxy system properties are set before any engine (WebView/Gecko) is created.
+        // This covers cold-start where ProxyManager observer may not have fired yet.
+        // Use reflection to avoid compile dependency from common -> app.
+        runCatching {
+            Class.forName("org.mlm.browkorftv.network.ProxyManager")
+                .getMethod("apply", AppSettings::class.java)
+                .invoke(null, settings)
+        }
 
         if (engineProviders.isEmpty()) {
             Log.e(TAG, "CRITICAL: No WebEngineProviders found after bootstrap attempt.")

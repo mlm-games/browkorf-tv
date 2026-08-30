@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import org.mlm.browkorftv.di.appModule
+import org.mlm.browkorftv.network.ProxyManager
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.singleton.AppDatabase
@@ -57,11 +58,18 @@ class BrowkorfTV : Application(), Application.ActivityLifecycleCallbacks {
         initNotificationChannels()
 
         applyTheme(settingsManager.current.theme)
+        ProxyManager.apply(settingsManager.current)
 
         // Observe theme changes
         ProcessLifecycleOwner.get().lifecycleScope.launch {
             settingsManager.themeFlow.collectLatest { theme ->
                 applyTheme(theme)
+            }
+        }
+
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            settingsManager.proxyFlow.collectLatest { settings ->
+                ProxyManager.apply(settings)
             }
         }
 

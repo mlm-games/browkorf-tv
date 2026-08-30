@@ -15,6 +15,7 @@ import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
 import androidx.core.net.toUri
+import org.mlm.browkorftv.network.ProxyManager
 
 const val MAX_CONNECT_RETRIES = 5
 
@@ -49,7 +50,7 @@ class FileDownloadTask(
         try {
             var retries = 0
             do {
-                connection = url.openConnection() as HttpURLConnection
+                connection = ProxyManager.openConnection(url) as HttpURLConnection
                 connection.apply {
                     readTimeout = 10000
                     connectTimeout = 20000

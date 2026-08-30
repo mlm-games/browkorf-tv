@@ -24,6 +24,7 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Calendar
+import org.mlm.browkorftv.network.ProxyManager
 
 class AdBlockRepository(
     private val settingsManager: SettingsManager,
@@ -157,7 +158,7 @@ class AdBlockRepository(
     }
 
     private fun downloadText(url: String): String {
-        val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+        val conn = (ProxyManager.openConnection(URL(url)) as HttpURLConnection).apply {
             connectTimeout = 30_000
             readTimeout = 60_000
             instanceFollowRedirects = true

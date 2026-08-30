@@ -27,6 +27,9 @@ object AdBlock
 @CategoryDefinition(order = 6)
 object Updates
 
+@CategoryDefinition(order = 7)
+object Proxy
+
 // Internal category - not shown in UI, just for grouping
 @CategoryDefinition(order = 100)
 object Internal
@@ -193,6 +196,25 @@ data class AppSettings(
         dependsOn = "autoCheckUpdates"
     )
     val updateChannelIndex: Int = 0,
+
+    @Setting(
+        title = "Use HTTP Proxy",
+        description = "Route traffic through HTTP proxy (e.g. Clash on 127.0.0.1:7890). Restart may be required for WebView",
+        category = Proxy::class,
+        type = Toggle::class,
+        key = "proxy_enabled"
+    )
+    val proxyEnabled: Boolean = false,
+
+    @Setting(
+        title = "Proxy URL",
+        description = "http://127.0.0.1:7890 (http/socks5). Leave blank to disable",
+        category = Proxy::class,
+        type = TextInput::class,
+        key = "proxy_url",
+        dependsOn = "proxyEnabled"
+    )
+    val proxyUrl: String = "http://127.0.0.1:7890",
 
     @Setting(
         title = "Directional Navigation Mode",
