@@ -37,6 +37,7 @@ jobs:
       application-id: 'org.mlm.browkorftv'
       java-version: '21'
       java-distribution: 'temurin'
+      flavors: '["GenericGeckoIncluded","GenericGeckoExcluded","FossGeckoIncluded","FossGeckoExcluded"]'
       bump-type: ${{ inputs.bump_type }}
     secrets:
       KEYSTORE: ${{ secrets.KEYSTORE }}
