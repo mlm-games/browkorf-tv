@@ -41,7 +41,7 @@ interface HistoryDao {
     @Query("SELECT * FROM history ORDER BY time DESC LIMIT 100 OFFSET :offset")
     suspend fun allByLimitOffset(offset: Long): List<HistoryItem>
 
-    @Query("SELECT * FROM history WHERE (title LIKE :titleQuery) OR (url LIKE :urlQuery) ORDER BY time DESC LIMIT 100")
+    @Query("SELECT * FROM history WHERE (title LIKE :titleQuery ESCAPE '\\') OR (url LIKE :urlQuery ESCAPE '\\') ORDER BY time DESC LIMIT 100")
     suspend fun search(titleQuery: String, urlQuery: String): List<HistoryItem>
 
     @Query("UPDATE history SET title = :title WHERE id = :id")

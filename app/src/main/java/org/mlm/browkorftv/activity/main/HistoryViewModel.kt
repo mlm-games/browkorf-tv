@@ -23,22 +23,31 @@ class HistoryViewModel(
     fun loadItems(offset: Long = 0) = viewModelScope.launch(Dispatchers.IO) {
         if (loading) return@launch
         loading = true
+        try {
+            val items = if (searchQuery.isEmpty()) {
+                historyDao.allByLimitOffset(offset)
+            } else {
+                val pattern = "%" + searchQuery
+                    .replace("\\", "\\\\")
+                    .replace("%", "\\%")
+                    .replace("_", "\\_") + "%"
+                historyDao.search(pattern, pattern)
+            }
 
-        val items = if (searchQuery.isEmpty()) {
-            historyDao.allByLimitOffset(offset)
-        } else {
-            historyDao.search(searchQuery, searchQuery)
+            _lastLoadedItems.value = items
+        } finally {
+            loading = false
         }
-
-        _lastLoadedItems.value = items
-        loading = false
     }
 
     fun deleteItems(items: List<HistoryItem>) = viewModelScope.launch(Dispatchers.IO) {
         historyDao.delete(*items.toTypedArray())
+        val ids = items.map { it.id }.toSet()
+        _lastLoadedItems.value = _lastLoadedItems.value.filterNot { it.id in ids }
     }
 
     fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         historyDao.deleteWhereTimeLessThan(Long.MAX_VALUE)
+        _lastLoadedItems.value = emptyList()
     }
 }

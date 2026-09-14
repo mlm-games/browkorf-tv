@@ -79,14 +79,21 @@ class MainViewModel(
             return
         }
 
-        val now = System.currentTimeMillis()
-        val minVisitedInterval = 5000L
-
-        lastHistoryItem?.let {
-            if ((!it.saved) && (it.time + minVisitedInterval) > now) {
-                lastHistoryItemSaveJob?.cancel()
+        val pending = lastHistoryItem
+        val pendingJob = lastHistoryItemSaveJob
+        if (pending != null && !pending.saved) {
+            pendingJob?.cancel()
+            if (pending.url != AppSettings.HOME_PAGE_URL && pending.url.startsWith("http", true)) {
+                val toSave = pending
+                lastHistoryItemSaveJob = viewModelScope.launch(Dispatchers.IO) {
+                    toSave.id = historyDao.insert(toSave)
+                    toSave.saved = true
+                }
             }
         }
+
+        val now = System.currentTimeMillis()
+        val minVisitedInterval = 5000L
 
         val item = HistoryItem()
         item.url = url
@@ -94,7 +101,7 @@ class MainViewModel(
         item.time = now
         item.favicon = faviconHash
         lastHistoryItem = item
-        lastHistoryItemSaveJob = viewModelScope.launch(Dispatchers.Main) {
+        lastHistoryItemSaveJob = viewModelScope.launch(Dispatchers.IO) {
             delay(minVisitedInterval)
             item.id = historyDao.insert(item)
             item.saved = true
@@ -108,7 +115,7 @@ class MainViewModel(
         if (tab.url == item.url) {
             item.title = tab.title
             if (item.saved) {
-                viewModelScope.launch(Dispatchers.Main) {
+                viewModelScope.launch(Dispatchers.IO) {
                     historyDao.updateTitle(item.id, item.title)
                 }
             }

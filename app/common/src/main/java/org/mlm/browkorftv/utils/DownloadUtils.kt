@@ -94,7 +94,7 @@ object DownloadUtils {
 
         // Split filename between base and extension
         // Add an extension if filename does not have one
-        val dotIndex = filename.indexOf('.')
+        val dotIndex = filename.lastIndexOf('.')
         if (dotIndex < 0) {
             if (mimeType != null) {
                 extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)

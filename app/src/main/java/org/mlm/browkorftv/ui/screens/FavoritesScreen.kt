@@ -80,7 +80,8 @@ fun FavoritesScreen(
                     title = b.title ?: b.url.orEmpty(),
                     url = b.url.orEmpty(),
                     onOpen = { b.url?.let(onPickUrl) },
-                    onEdit = { onEditBookmark(b.id) }
+                    onEdit = { onEditBookmark(b.id) },
+                    onDelete = { viewModel.deleteFavorite(b.id) }
                 )
             }
         }
@@ -92,7 +93,8 @@ private fun FavoriteItem(
     title: String,
     url: String,
     onOpen: () -> Unit,
-    onEdit: () -> Unit
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
 ) {
     val colors = AppTheme.colors
 
@@ -144,7 +146,7 @@ private fun FavoriteItem(
         Spacer(Modifier.width(8.dp))
 
         BrowkorfTvIconButton(
-            onClick = onEdit,
+            onClick = onDelete,
             painter = painterResource(R.drawable.outline_bookmark_remove_24),
             contentDescription = "Remove",
             colors = ButtonDefaults.colors(

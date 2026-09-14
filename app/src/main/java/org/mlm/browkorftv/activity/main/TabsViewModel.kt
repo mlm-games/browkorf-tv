@@ -52,13 +52,13 @@ class TabsViewModel(
     }
 
     suspend fun saveTab(tab: WebTabState) {
-        val isIncognito = settingsManager.current.incognitoMode
-        if (tab.selected) {
-            withContext(Dispatchers.IO) { tabsDao.unselectAll(isIncognito) }
-        }
         withContext(Dispatchers.IO) {
             tab.saveWebViewStateToFile(appContext)
-            if (tab.id != 0L) tabsDao.update(tab) else tab.id = tabsDao.insert(tab)
+            if (tab.selected) {
+                tabsDao.saveSelected(tab)
+            } else {
+                if (tab.id != 0L) tabsDao.update(tab) else tab.id = tabsDao.insert(tab)
+            }
         }
         loadState()
     }

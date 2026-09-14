@@ -233,6 +233,15 @@ class SettingsManager private constructor(context: Context) {
         }
     }
 
+    suspend fun replaceBookmarksAndMarkMigrated(bookmarks: List<BookmarkEntry>) {
+        update { state ->
+            state.copy(
+                bookmarks = bookmarks.sortedByDescending { it.id },
+                bookmarksMigratedFromRoom = true
+            )
+        }
+    }
+
     suspend fun markBookmarksMigratedFromRoom() {
         update { it.copy(bookmarksMigratedFromRoom = true) }
     }

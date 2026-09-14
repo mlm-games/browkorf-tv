@@ -48,7 +48,8 @@ class BookmarksRepository(
                     .sortedByDescending { it.id }
 
                 if (legacyBookmarks.isNotEmpty()) {
-                    settingsManager.replaceBookmarks(legacyBookmarks)
+                    settingsManager.replaceBookmarksAndMarkMigrated(legacyBookmarks)
+                    return
                 }
             }
 

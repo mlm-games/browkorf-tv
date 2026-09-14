@@ -36,7 +36,7 @@ object ProxyManager {
                 if (siteAddr != null) {
                     val cfgAddrs = runCatching { InetAddress.getAllByName(cfg.host) }.getOrNull()
                     if (cfgAddrs == null || cfgAddrs.none { it.hostAddress == siteAddr }) {
-                        if (host != null || requestingSite != null) return null
+                        return null
                     }
                 } else {
                     return null

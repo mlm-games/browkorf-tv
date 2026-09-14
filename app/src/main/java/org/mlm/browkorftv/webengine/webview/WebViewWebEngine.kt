@@ -170,6 +170,7 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
 
     override fun onFilePicked(resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK || data == null) {
+            webView?.onFilePickedCancelled()
             return
         }
         webView?.onFilePicked(data)
@@ -250,7 +251,10 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
     override fun onPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray): Boolean {
         val isGeolocationPermissionRequest = permissionsRequests[requestCode] ?: return false
         permissionsRequests.remove(requestCode)
-        if (grantResults.isEmpty()) return true
+        if (grantResults.isEmpty()) {
+            webView?.onPermissionsResult(permissions, grantResults, isGeolocationPermissionRequest)
+            return true
+        }
         webView?.onPermissionsResult(permissions, grantResults, isGeolocationPermissionRequest)
         return true
     }
@@ -275,12 +279,14 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
         //detect is selection in editable field (with js standard way)
         webView?. let {
             it.evaluateJavascript("BROKORFTV_processSelection()") { resultStr ->
-                val unescaped: String = resultStr.trim('"')
-                    .replace("\\\\", "\\") // unescape \\ -> \
-                    .replace("\\\"", "\"")
-                val result = Utils.jsonToMap(unescaped)
-                val selectedText = result["selectedText"] as String
-                val editable = result["editable"] as Boolean
+                val result = runCatching {
+                    val unescaped: String = resultStr.trim('"')
+                        .replace("\\\\", "\\") // unescape \\ -> \
+                        .replace("\\\"", "\"")
+                    Utils.jsonToMap(unescaped)
+                }.getOrNull() ?: return@evaluateJavascript
+                val selectedText = result["selectedText"] as? String ?: return@evaluateJavascript
+                val editable = result["editable"] as? Boolean ?: false
                 callback?.onSelectedTextActionRequested(selectedText, editable)
             }
         }
@@ -295,13 +301,13 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
     }
 
     override fun replaceSelection(newText: String) {
-        val escapedText = newText.replace("'", "\\'")
+        val quoted = org.json.JSONObject.quote(newText)
         webView?.let {
             it.evaluateJavascript("""
                 let selection = window.getSelection();
                 let range = selection.getRangeAt(0);
                 range.deleteContents();
-                range.insertNode(document.createTextNode('$escapedText'));
+                range.insertNode(document.createTextNode($quoted));
             """.trimIndent()) {
                 //nop
             }
@@ -313,7 +319,7 @@ class WebViewWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.C
             it.evaluateJavascript(Scripts.LONG_PRESS_SCRIPT) { href ->
                 val linkUrl = if (href == "null") null else href
                 webViewCallback.onContextMenu(
-                    it.currentOriginalUrl.toString(),
+                    it.currentOriginalUrl?.toString(),
                     linkUrl, x, y
                 )
             }

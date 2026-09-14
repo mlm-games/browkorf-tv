@@ -49,7 +49,9 @@ class FileDownloadTask(
         var connection: HttpURLConnection? = null
         try {
             var retries = 0
+            var responded = false
             do {
+                connection?.disconnect()
                 connection = ProxyManager.openConnection(url) as HttpURLConnection
                 connection.apply {
                     readTimeout = 10000
@@ -67,7 +69,10 @@ class FileDownloadTask(
                 }
 
                 when (connection.responseCode) {
-                    HttpURLConnection.HTTP_OK -> break
+                    HttpURLConnection.HTTP_OK -> {
+                        responded = true
+                        break
+                    }
                     HttpURLConnection.HTTP_GATEWAY_TIMEOUT,
                     HttpURLConnection.HTTP_UNAVAILABLE -> {
                         retries++
@@ -113,6 +118,11 @@ class FileDownloadTask(
                 downloadInfo.bytesReceived = total
                 callback.onProgress(this)
                 count = input.read(data)
+            }
+            if (fileLength >= 0 && total != fileLength.toLong()) {
+                throw IOException(
+                    "Truncated download: received $total of $fileLength bytes"
+                )
             }
         } catch (e: Exception) {
             downloadInfo.size = Download.BROKEN_MARK

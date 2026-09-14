@@ -44,13 +44,13 @@ class UpdateRepository(
     }
 
     private fun selectBestAsset(assets: List<GitHubAsset>, supportedAbis: List<String>): GitHubAsset? {
-        val primaryAbi = supportedAbis.firstOrNull() ?: return assets.firstOrNull()
+        val apkAssets = assets.filter { it.name.endsWith(".apk") }
+        if (apkAssets.isEmpty()) return null
 
-        val apkAssets = assets.filter { it.name.endsWith(".apk") && !it.name.contains("-universal") }
-        if (apkAssets.isEmpty()) return assets.firstOrNull()
-
-        return apkAssets.firstOrNull { it.name.contains(primaryAbi) }
-            ?: apkAssets.firstOrNull { it.name.contains("arm64-v8a") }
-            ?: apkAssets.first()
+        val abiSpecific = apkAssets.filterNot { it.name.contains("-universal") }
+        for (abi in supportedAbis) {
+            abiSpecific.firstOrNull { it.name.contains(abi) }?.let { return it }
+        }
+        return abiSpecific.firstOrNull() ?: apkAssets.first()
     }
 }

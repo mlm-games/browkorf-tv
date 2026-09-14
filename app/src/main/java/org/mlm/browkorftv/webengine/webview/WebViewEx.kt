@@ -824,17 +824,29 @@ class WebViewEx(
     }
 
     fun onFilePicked(data: Intent) {
-        pickFileCallback?.apply {
-            if (data.data != null) {
-                val uris = arrayOf(data.data!!)
-                onReceiveValue(uris)
+        val cb = pickFileCallback ?: return
+        pickFileCallback = null
+        val uris = mutableListOf<Uri>()
+        data.clipData?.let { clip ->
+            for (i in 0 until clip.itemCount) {
+                clip.getItemAt(i)?.uri?.let { uris.add(it) }
             }
         }
+        if (uris.isEmpty()) {
+            data.data?.let { uris.add(it) }
+        }
+        cb.onReceiveValue(if (uris.isEmpty()) null else uris.toTypedArray())
+    }
+
+    fun onFilePickedCancelled() {
+        val cb = pickFileCallback ?: return
+        pickFileCallback = null
+        cb.onReceiveValue(null)
     }
 
     fun onPermissionsResult(permissions: Array<String>, grantResults: IntArray, typeGeo: Boolean) {
         if (typeGeo) geoPermissionsCallback?.apply {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (!grantResults.isEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 this.invoke(geoPermissionOrigin, true, true)
             } else {
                 this.invoke(geoPermissionOrigin, false, false)
@@ -847,7 +859,7 @@ class WebViewEx(
             // If request is cancelled, the result arrays are empty.
             val resources = ArrayList<String>()
             for (i in permissions.indices) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                if (i < grantResults.size && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     if (Manifest.permission.CAMERA == permissions[i]) {
                         resources.add(PermissionRequest.RESOURCE_VIDEO_CAPTURE)
                     } else if (Manifest.permission.RECORD_AUDIO == permissions[i]) {

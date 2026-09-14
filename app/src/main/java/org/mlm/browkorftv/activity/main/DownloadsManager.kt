@@ -67,8 +67,9 @@ class DownloadsManager(
 
     fun cancelDownload(download: Download) {
         for (task in activeDownloads) {
-            if (task.downloadInfo.id == download.id) {
-                task.downloadInfo.cancelled = true
+            val info = task.downloadInfo
+            if (info === download || (info.id != 0L && info.id == download.id)) {
+                info.cancelled = true
                 break
             }
         }

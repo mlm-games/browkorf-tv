@@ -125,6 +125,7 @@ class FaviconExtractor {
                                 "type" -> {
                                     type = jsonReader.nextString()
                                 }
+                                else -> jsonReader.skipValue()
                             }
                         }
                         jsonReader.endObject()
