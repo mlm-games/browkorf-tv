@@ -83,12 +83,19 @@ class MainViewModel(
         val pendingJob = lastHistoryItemSaveJob
         if (pending != null && !pending.saved) {
             pendingJob?.cancel()
-            if (pending.url != AppSettings.HOME_PAGE_URL && pending.url.startsWith("http", true)) {
+            if (pending.id == 0L && pending.url != AppSettings.HOME_PAGE_URL && pending.url.startsWith("http", true)) {
                 val toSave = pending
                 lastHistoryItemSaveJob = viewModelScope.launch(Dispatchers.IO) {
-                    toSave.id = historyDao.insert(toSave)
-                    toSave.saved = true
+                    try {
+                        toSave.id = historyDao.insert(toSave)
+                        toSave.saved = true
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to save pending history item", e)
+                        toSave.saved = true
+                    }
                 }
+            } else {
+                pending.saved = true
             }
         }
 
@@ -103,8 +110,13 @@ class MainViewModel(
         lastHistoryItem = item
         lastHistoryItemSaveJob = viewModelScope.launch(Dispatchers.IO) {
             delay(minVisitedInterval)
-            item.id = historyDao.insert(item)
-            item.saved = true
+            try {
+                item.id = historyDao.insert(item)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to save history item", e)
+            } finally {
+                item.saved = true
+            }
         }
     }
 
