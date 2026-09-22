@@ -85,6 +85,23 @@ class TabsViewModel(
         withContext(Dispatchers.IO) { tabsClone.forEach { it.removeFiles(appContext) } }
     }
 
+    fun closeAllTabsExcept(tabToKeep: WebTabState?) = viewModelScope.launch {
+        val kept = tabToKeep ?: _currentTab.value ?: return@launch
+        val tabsClone = ArrayList(_tabsStates.value)
+        if (!tabsClone.contains(kept)) return@launch
+        _tabsStates.value = listOf(kept)
+
+        withContext(Dispatchers.IO) {
+            tabsClone.forEach { tab ->
+                if (tab != kept) {
+                    tab.webEngine.onDetachFromWindow(completely = true, destroyTab = true)
+                    tabsDao.delete(tab)
+                    tab.removeFiles(appContext)
+                }
+            }
+        }
+    }
+
     fun onDetachActivity() {
         for (tab in _tabsStates.value) {
             tab.webEngine.onDetachFromWindow(completely = true, destroyTab = false)

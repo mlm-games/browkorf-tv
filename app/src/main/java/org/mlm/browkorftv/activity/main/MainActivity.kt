@@ -211,6 +211,10 @@ open class MainActivity : AppCompatActivity() {
                 ctx.windowProvider.onOpenInNewTabRequested(url, true)
             }
 
+            LinkAction.OpenInCurrentTab -> if (url != null) {
+                navigate(url)
+            }
+
             LinkAction.OpenExternal -> if (url != null) {
                 ctx.windowProvider.onOpenInExternalAppRequested(url)
             }
@@ -570,6 +574,12 @@ open class MainActivity : AppCompatActivity() {
                 }
 
                 launch {
+                    settingsManager.singleTabModeFlow.collectLatest { singleTab ->
+                        if (singleTab) tabsViewModel.closeAllTabsExcept(null).join()
+                    }
+                }
+
+                launch {
                     updatesViewModel.events.collectLatest { e ->
                         when (e) {
                             is UpdatesEvent.ShowUpdateAvailable -> {
@@ -695,6 +705,10 @@ open class MainActivity : AppCompatActivity() {
             }
         val tabs = tabsViewModel.tabsStates.value
 
+        if (settings.singleTabMode && tabs.size > 1) {
+            tabsViewModel.closeAllTabsExcept(tabs.firstOrNull { it.selected } ?: tabs.first()).join()
+        }
+
         if (intentUri == null) {
             if (tabs.isEmpty()) {
                 openInNewTab(
@@ -737,6 +751,10 @@ open class MainActivity : AppCompatActivity() {
         needToHideMenuOverlay: Boolean = true,
     ): WebEngine? {
         if (url == null) return null
+        if (settings.singleTabMode) {
+            openInCurrentTab(url, needToHideMenuOverlay)
+            return tabsViewModel.currentTab.value?.webEngine
+        }
         val tab = WebTabState(url = url, incognito = settings.incognitoMode)
         createWebView(tab) ?: return null
 
@@ -749,8 +767,27 @@ open class MainActivity : AppCompatActivity() {
         return tab.webEngine
     }
 
+    private fun openInCurrentTab(url: String, needToHideMenuOverlay: Boolean) {
+        val tab = tabsViewModel.currentTab.value
+        if (tab == null) {
+            val newTab = WebTabState(url = url, incognito = settings.incognitoMode)
+            createWebView(newTab) ?: return
+            tabsViewModel.addNewTab(newTab, 0)
+            changeTab(newTab)
+            navigate(url)
+        } else {
+            navigate(url)
+        }
+        if (needToHideMenuOverlay) browserUiViewModel.toggleMenu()
+    }
+
     private fun closeTab(tab: WebTabState?) {
         if (tab == null) return
+        if (settings.singleTabMode) {
+            navigate(settings.homePage)
+            browserUiViewModel.toggleMenu()
+            return
+        }
         val tabs = tabsViewModel.tabsStates.value
         val position = tabs.indexOf(tab)
 
@@ -1106,6 +1143,10 @@ open class MainActivity : AppCompatActivity() {
             url: String,
             navigateImmediately: Boolean
         ): WebEngine? {
+            if (settings.singleTabMode) {
+                openInCurrentTab(url, needToHideMenuOverlay = true)
+                return tabsViewModel.currentTab.value?.webEngine
+            }
             var index = tabsViewModel.tabsStates.value.indexOf(tabsViewModel.currentTab.value)
             index = if (index == -1) tabsViewModel.tabsStates.value.size else index + 1
             return openInNewTab(url, index, true, navigateImmediately)
@@ -1317,9 +1358,12 @@ open class MainActivity : AppCompatActivity() {
                 onBlockedDialog(!dialog)
                 return null
             }
+            val currentTab = tabsViewModel.currentTab.value ?: return null
+            if (settings.singleTabMode) {
+                return currentTab.webEngine.getView()
+            }
             val newTab = WebTabState(incognito = settings.incognitoMode)
             val webView = createWebView(newTab) ?: return null
-            val currentTab = tabsViewModel.currentTab.value ?: return null
             val index = tabsViewModel.tabsStates.value.indexOf(currentTab) + 1
             tabsViewModel.addNewTab(newTab, index)
             changeTab(newTab)

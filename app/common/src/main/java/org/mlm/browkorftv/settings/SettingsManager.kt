@@ -87,6 +87,9 @@ class SettingsManager private constructor(context: Context) {
     val showContextMenuOnLongPressFlow: Flow<Boolean> =
         settings.map { it.showContextMenuOnLongPress }.distinctUntilChanged()
 
+    val singleTabModeFlow: Flow<Boolean> =
+        settings.map { it.singleTabMode }.distinctUntilChanged()
+
     val proxyFlow: Flow<AppSettings> =
         settings.distinctUntilChanged { old, new ->
             old.proxyEnabled == new.proxyEnabled && old.proxyUrl == new.proxyUrl

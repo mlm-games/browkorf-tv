@@ -273,16 +273,18 @@ fun BrowserScreen(
                                 }
                             )
 
-                            TabsRow(
-                                tabs = tabs,
-                                currentTabId = currentTab?.id,
-                                onSelectTab = { tab ->
-                                    onTabSelected(tab)
-                                    uiVm.hideMenu()
-                                },
-                                onAddTab = onAddTab,
-                                isAddButtonBeforeTabs = settings.newTabButtonBeforeTabs
-                            )
+                            if (!settings.singleTabMode) {
+                                TabsRow(
+                                    tabs = tabs,
+                                    currentTabId = currentTab?.id,
+                                    onSelectTab = { tab ->
+                                        onTabSelected(tab)
+                                        uiVm.hideMenu()
+                                    },
+                                    onAddTab = onAddTab,
+                                    isAddButtonBeforeTabs = settings.newTabButtonBeforeTabs
+                                )
+                            }
                         }
                     }
 
@@ -302,6 +304,7 @@ fun BrowserScreen(
                             blockedAdsCount = uiState.blockedAds,
                             popupBlockEnabled = true,
                             blockedPopupsCount = uiState.blockedPopups,
+                            showCloseTab = !settings.singleTabMode,
                             onCloseTab = { currentTab?.let { onCloseTab(it) } },
                             onBack = onBack,
                             onForward = onForward,
@@ -335,6 +338,7 @@ fun BrowserScreen(
                         LinkActionsDialog(
                             canOpenUrlActions = linkCaps.first,
                             canCopyShare = linkCaps.second,
+                            singleTabMode = settings.singleTabMode,
                             onDismiss = onDismissLinkActions,
                             onAction = onLinkAction
                         )

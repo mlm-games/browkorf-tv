@@ -244,6 +244,15 @@ data class AppSettings(
     )
     val showContextMenuOnLongPress: Boolean = true,
 
+    @Setting(
+        title = "Single Tab Mode",
+        description = "Reuses the current tab for every link or intent",
+        category = General::class,
+        type = Toggle::class,
+        key = "single_tab_mode"
+    )
+    val singleTabMode: Boolean = false,
+
 
     @Persisted(key = "incognito_mode_hint_suppress")
     @NoReset

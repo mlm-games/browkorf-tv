@@ -15,7 +15,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.SurfaceDefaults
 import org.mlm.browkorftv.ui.theme.AppTheme
 
-enum class LinkAction { Refresh, OpenInNewTab, OpenExternal, Copy, Download, Share }
+enum class LinkAction { Refresh, OpenInNewTab, OpenInCurrentTab, OpenExternal, Copy, Download, Share }
 
 @Composable
 private fun LinkActionButton(
@@ -33,6 +33,7 @@ private fun LinkActionButton(
 fun LinkActionsDialog(
     canOpenUrlActions: Boolean,
     canCopyShare: Boolean,
+    singleTabMode: Boolean = false,
     onDismiss: () -> Unit,
     onAction: (LinkAction) -> Unit
 ) {
@@ -54,7 +55,11 @@ fun LinkActionsDialog(
                 LinkActionButton("Refresh") { onAction(LinkAction.Refresh) }
 
                 if (canOpenUrlActions) {
-                    LinkActionButton("Open in new tab") { onAction(LinkAction.OpenInNewTab) }
+                    if (singleTabMode) {
+                        LinkActionButton("Open link") { onAction(LinkAction.OpenInCurrentTab) }
+                    } else {
+                        LinkActionButton("Open in new tab") { onAction(LinkAction.OpenInNewTab) }
+                    }
                     LinkActionButton("Open in external app") { onAction(LinkAction.OpenExternal) }
                     LinkActionButton("Download") { onAction(LinkAction.Download) }
                 }

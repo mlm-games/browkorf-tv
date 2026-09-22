@@ -22,6 +22,7 @@ fun BottomNavigationPanel(
     blockedAdsCount: Int,
     popupBlockEnabled: Boolean,
     blockedPopupsCount: Int,
+    showCloseTab: Boolean = true,
     onCloseTab: () -> Unit,
     onBack: () -> Unit,
     onForward: () -> Unit,
@@ -43,12 +44,14 @@ fun BottomNavigationPanel(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Close tab
-        BrowkorfTvIconButton(
-            onClick = onCloseTab,
-            painter = painterResource(R.drawable.outline_close_24),
-            contentDescription = stringResource(R.string.close_tab),
-            modifier = Modifier.padding(3.dp)
-        )
+        if (showCloseTab) {
+            BrowkorfTvIconButton(
+                onClick = onCloseTab,
+                painter = painterResource(R.drawable.outline_close_24),
+                contentDescription = stringResource(R.string.close_tab),
+                modifier = Modifier.padding(3.dp)
+            )
+        }
 
         // Back
         // The 'enabled' property in BrowkorfTvIconButton handles the grey-out/alpha automatically
