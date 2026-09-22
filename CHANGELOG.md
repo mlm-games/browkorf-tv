@@ -1,3 +1,9 @@
+## v4.6.2
+
+- allow disabling tab row
+- fix dup history event crash
+
+
 # Changelog
 
 ## v4.6.1

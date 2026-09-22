@@ -1,0 +1,2 @@
+- allow disabling tab row
+- fix dup history event crash
