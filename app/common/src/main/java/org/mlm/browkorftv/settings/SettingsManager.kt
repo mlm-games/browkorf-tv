@@ -82,7 +82,7 @@ class SettingsManager private constructor(context: Context) {
         settings.map { it.effectiveUserAgent }.distinctUntilChanged()
 
     val bookmarksFlow: Flow<List<BookmarkEntry>> =
-        settings.map { it.bookmarks.sortedByDescending(BookmarkEntry::id) }.distinctUntilChanged()
+        settings.map { it.bookmarks.normalizeOrder().sortedForDisplay() }.distinctUntilChanged()
 
     val showContextMenuOnLongPressFlow: Flow<Boolean> =
         settings.map { it.showContextMenuOnLongPress }.distinctUntilChanged()
@@ -189,33 +189,60 @@ class SettingsManager private constructor(context: Context) {
     }
 
     suspend fun getBookmarks(): List<BookmarkEntry> {
-        return current.bookmarks.sortedByDescending { it.id }
+        return current.bookmarks.normalizeOrder().sortedForDisplay()
     }
 
     suspend fun getBookmark(id: Long): BookmarkEntry? {
         return current.bookmarks.firstOrNull { it.id == id }
     }
 
+    suspend fun moveBookmark(id: Long, delta: Int): Boolean {
+        if (delta == 0) return false
+        var moved = false
+        update { state ->
+            val ordered = state.bookmarks.normalizeOrder().sortedForDisplay().toMutableList()
+            val from = ordered.indexOfFirst { it.id == id }
+            if (from < 0) return@update state
+            val to = (from + delta).coerceIn(0, ordered.lastIndex)
+            if (to == from) return@update state
+            val item = ordered.removeAt(from)
+            ordered.add(to, item)
+            moved = true
+            state.copy(bookmarks = ordered.renumberOrder())
+        }
+        return moved
+    }
+
     suspend fun upsertBookmark(bookmark: BookmarkEntry): BookmarkEntry {
         var saved: BookmarkEntry? = null
 
         update { state ->
-            val items = state.bookmarks.toMutableList()
+            val ordered = state.bookmarks.normalizeOrder().sortedForDisplay().toMutableList()
             val resolved = if (bookmark.id == 0L) {
-                bookmark.copy(id = (items.maxOfOrNull { it.id } ?: 0L) + 1L)
+                bookmark.copy(
+                    id = (ordered.maxOfOrNull { it.id } ?: 0L) + 1L,
+                    sortOrder = (ordered.maxOfOrNull { it.sortOrder } ?: 0L) + 1L,
+                )
             } else {
-                bookmark
+                val existing = ordered.firstOrNull { it.id == bookmark.id }
+                if (existing != null && bookmark.sortOrder == 0L) {
+                    bookmark.copy(sortOrder = existing.sortOrder)
+                } else {
+                    bookmark
+                }
             }
 
-            val existingIndex = items.indexOfFirst { it.id == resolved.id }
+            val existingIndex = ordered.indexOfFirst { it.id == resolved.id }
             if (existingIndex >= 0) {
-                items[existingIndex] = resolved
+                ordered[existingIndex] = resolved
+            } else if (bookmark.id == 0L) {
+                ordered.add(0, resolved)
             } else {
-                items.add(resolved)
+                ordered.add(resolved)
             }
 
             saved = resolved
-            state.copy(bookmarks = items.sortedByDescending { it.id })
+            state.copy(bookmarks = ordered.renumberOrder())
         }
 
         return checkNotNull(saved)
@@ -229,14 +256,14 @@ class SettingsManager private constructor(context: Context) {
 
     suspend fun replaceBookmarks(bookmarks: List<BookmarkEntry>) {
         update { state ->
-            state.copy(bookmarks = bookmarks.sortedByDescending { it.id })
+            state.copy(bookmarks = bookmarks.normalizeOrder().sortedForDisplay().renumberOrder())
         }
     }
 
     suspend fun replaceBookmarksAndMarkMigrated(bookmarks: List<BookmarkEntry>) {
         update { state ->
             state.copy(
-                bookmarks = bookmarks.sortedByDescending { it.id },
+                bookmarks = bookmarks.normalizeOrder().sortedForDisplay().renumberOrder(),
                 bookmarksMigratedFromRoom = true
             )
         }
@@ -255,5 +282,23 @@ class SettingsManager private constructor(context: Context) {
         val cpuCores = Runtime.getRuntime().availableProcessors()
         val threeGB = 3_000_000_000L
         return deviceRAM >= threeGB && cpuHas64Bit && cpuCores >= 6
+    }
+}
+
+internal fun List<BookmarkEntry>.normalizeOrder(): List<BookmarkEntry> {
+    if (isEmpty()) return this
+    if (all { it.sortOrder != 0L }) return this
+    return sortedByDescending { it.id }.mapIndexed { index, entry ->
+        if (entry.sortOrder != 0L) entry else entry.copy(sortOrder = (size - index).toLong())
+    }
+}
+
+internal fun List<BookmarkEntry>.sortedForDisplay(): List<BookmarkEntry> =
+    sortedWith(compareByDescending<BookmarkEntry> { it.sortOrder }.thenByDescending { it.id })
+
+private fun List<BookmarkEntry>.renumberOrder(): List<BookmarkEntry> {
+    val ordered = sortedForDisplay()
+    return ordered.mapIndexed { index, entry ->
+        entry.copy(sortOrder = (ordered.size - index).toLong())
     }
 }

@@ -43,6 +43,7 @@ data class BookmarkEntry(
     val parent: Long = 0L,
     val homePageBookmark: Boolean = false,
     val useful: Boolean = false,
+    val sortOrder: Long = 0L,
 )
 
 

@@ -30,6 +30,11 @@ class BookmarksRepository(
             .toFavoriteItem()
     }
 
+    suspend fun move(id: Long, delta: Int): Boolean {
+        ensureMigrated()
+        return settingsManager.moveBookmark(id, delta)
+    }
+
     suspend fun delete(id: Long) {
         ensureMigrated()
         settingsManager.deleteBookmark(id)
@@ -64,6 +69,7 @@ class BookmarksRepository(
         parent = parent ?: 0L,
         homePageBookmark = homePageBookmark,
         useful = useful,
+        sortOrder = 0L,
     )
 
     private fun BookmarkEntry.toFavoriteItem(): FavoriteItem = FavoriteItem().apply {

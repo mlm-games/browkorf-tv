@@ -649,26 +649,21 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
 
         intent.data?.let { uri ->
-            if (uri.scheme == "content") {
-                try {
-                    contentResolver.takePersistableUriPermission(
-                        uri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                } catch (_: Exception) {
-                    try {
-                        grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    } catch (_: Exception) {}
-                }
+            if (IncomingIntents.isViewableWebIntent(intent)) {
+                IncomingIntents.takePersistablePermissionIfNeeded(
+                    contentResolver, packageName, intent, uri,
+                    grantUriPermission = { pkg, u, flags -> grantUriPermission(pkg, u, flags) }
+                )
+                openInNewTab(
+                    uri.toString(),
+                    tabsViewModel.tabsStates.value.size,
+                    needToHideMenuOverlay = true,
+                    navigateImmediately = true
+                )
             }
-            openInNewTab(
-                uri.toString(),
-                tabsViewModel.tabsStates.value.size,
-                needToHideMenuOverlay = true,
-                navigateImmediately = true
-            )
         }
 
         if (intent.action == ACTION_INSTALL_APK) {
@@ -690,20 +685,14 @@ open class MainActivity : AppCompatActivity() {
             return@launch
         }
 
-        val intentUri = intent.data?.also { uri ->
-            if (uri.scheme == "content") {
-                try {
-                    contentResolver.takePersistableUriPermission(
-                        uri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    )
-                } catch (_: Exception) {
-                    try {
-                        grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    } catch (_: Exception) {}
-                }
+        val intentUri = intent.data
+            ?.takeIf { IncomingIntents.isViewableWebIntent(intent) }
+            ?.also { uri ->
+                IncomingIntents.takePersistablePermissionIfNeeded(
+                    contentResolver, packageName, intent, uri,
+                    grantUriPermission = { pkg, u, flags -> grantUriPermission(pkg, u, flags) }
+                )
             }
-        }
         val tabs = tabsViewModel.tabsStates.value
 
         if (intentUri == null) {

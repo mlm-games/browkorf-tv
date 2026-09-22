@@ -39,6 +39,12 @@ class FavoritesViewModel(
         bookmarksRepository.delete(id)
         _bookmarks.value = bookmarksRepository.getAll()
     }
+
+    fun moveFavorite(id: Long, delta: Int) = viewModelScope.launch(Dispatchers.IO) {
+        if (bookmarksRepository.move(id, delta)) {
+            _bookmarks.value = bookmarksRepository.getAll()
+        }
+    }
     
     fun deleteFavorite(item: FavoriteItem) = viewModelScope.launch(Dispatchers.IO) {
         bookmarksRepository.delete(item.id)

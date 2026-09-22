@@ -75,13 +75,17 @@ fun FavoritesScreen(
             contentPadding = PaddingValues(bottom = 20.dp)
         ) {
             items(bookmarks, key = { it.id }) { b ->
-                // Custom ListItem for Favorites to include the "Edit" button
+                val index = bookmarks.indexOfFirst { it.id == b.id }
                 FavoriteItem(
                     title = b.title ?: b.url.orEmpty(),
                     url = b.url.orEmpty(),
+                    canMoveUp = index > 0,
+                    canMoveDown = index >= 0 && index < bookmarks.lastIndex,
                     onOpen = { b.url?.let(onPickUrl) },
                     onEdit = { onEditBookmark(b.id) },
-                    onDelete = { viewModel.deleteFavorite(b.id) }
+                    onDelete = { viewModel.deleteFavorite(b.id) },
+                    onMoveUp = { viewModel.moveFavorite(b.id, -1) },
+                    onMoveDown = { viewModel.moveFavorite(b.id, 1) }
                 )
             }
         }
@@ -92,9 +96,13 @@ fun FavoritesScreen(
 private fun FavoriteItem(
     title: String,
     url: String,
+    canMoveUp: Boolean,
+    canMoveDown: Boolean,
     onOpen: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onMoveUp: () -> Unit,
+    onMoveDown: () -> Unit
 ) {
     val colors = AppTheme.colors
 
@@ -135,6 +143,36 @@ private fun FavoriteItem(
             onClick = onEdit,
             painter = painterResource(R.drawable.outline_movie_edit_24),
             contentDescription = "Edit",
+            colors = ButtonDefaults.colors(
+                containerColor = colors.buttonBackground,
+                focusedContainerColor = colors.buttonBackgroundFocused,
+                contentColor = colors.textPrimary,
+                focusedContentColor = colors.textPrimary
+            )
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        BrowkorfTvIconButton(
+            onClick = onMoveUp,
+            painter = painterResource(AppR.drawable.outline_chevron_backward_24),
+            contentDescription = "Move up",
+            enabled = canMoveUp,
+            colors = ButtonDefaults.colors(
+                containerColor = colors.buttonBackground,
+                focusedContainerColor = colors.buttonBackgroundFocused,
+                contentColor = colors.textPrimary,
+                focusedContentColor = colors.textPrimary
+            )
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        BrowkorfTvIconButton(
+            onClick = onMoveDown,
+            painter = painterResource(AppR.drawable.outline_chevron_forward_24),
+            contentDescription = "Move down",
+            enabled = canMoveDown,
             colors = ButtonDefaults.colors(
                 containerColor = colors.buttonBackground,
                 focusedContainerColor = colors.buttonBackgroundFocused,
