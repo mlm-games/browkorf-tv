@@ -1358,10 +1358,16 @@ open class MainActivity : AppCompatActivity() {
                 onBlockedDialog(!dialog)
                 return null
             }
-            val currentTab = tabsViewModel.currentTab.value ?: return null
             if (settings.singleTabMode) {
-                return currentTab.webEngine.getView()
+                val currentTab = tabsViewModel.currentTab.value ?: return null
+                val popupTab = WebTabState(url = currentTab.url, incognito = settings.incognitoMode)
+                val popup = createWebView(popupTab) ?: return null
+                (popup as? android.webkit.WebView)?.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+                    WebEngineCallback(currentTab).onDownloadRequested(url, userAgent, contentDisposition, mimetype, contentLength)
+                }
+                return popup
             }
+            val currentTab = tabsViewModel.currentTab.value ?: return null
             val newTab = WebTabState(incognito = settings.incognitoMode)
             val webView = createWebView(newTab) ?: return null
             val index = tabsViewModel.tabsStates.value.indexOf(currentTab) + 1
@@ -1371,6 +1377,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         override fun closeWindow(internalRepresentation: Any) {
+            if (settings.singleTabMode) return
             for (t in tabsViewModel.tabsStates.value) {
                 if (t.webEngine.isSameSession(internalRepresentation)) {
                     closeTab(t)

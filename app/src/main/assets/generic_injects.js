@@ -27,11 +27,15 @@ if (!window.browkorfTvClicksListener) {
 }
 
 // video playback control support
-Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
-    get: function () {
-        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+try {
+    if (!Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'playing')?.get) {
+        Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+            get: function () {
+                return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+            }
+        })
     }
-})
+} catch (e) { console.warn('[btv] playing prop:', e && e.message); }
 
 window.browkorfTvTogglePlayback = function () {
     var video = document.querySelector('video');
