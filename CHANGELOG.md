@@ -1,3 +1,8 @@
+## v4.6.3
+
+- Fix single tabbed popup downloads
+
+
 ## v4.6.2
 
 - allow disabling tab row
