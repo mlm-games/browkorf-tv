@@ -2,8 +2,8 @@
 <resources>
     <string name="language">زبان</string>
     <string name="language_system_default">پیش‌فرض سیستم</string>
-    <string name="settings_import">وارد کردن تنظیمات</string>
-    <string name="settings_export">صادر کردن تنظیمات</string>
+    <string name="browkorf_settings_import">وارد کردن تنظیمات</string>
+    <string name="browkorf_settings_export">صادر کردن تنظیمات</string>
     <string name="category_general">عمومی</string>
     <string name="category_home_page">صفحهٔ اصلی</string>
     <string name="category_search">جست‌وجو</string>

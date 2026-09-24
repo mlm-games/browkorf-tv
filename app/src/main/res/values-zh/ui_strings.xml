@@ -2,8 +2,8 @@
 <resources>
     <string name="language">语言</string>
     <string name="language_system_default">跟随系统</string>
-    <string name="settings_import">导入设置</string>
-    <string name="settings_export">导出设置</string>
+    <string name="browkorf_settings_import">导入设置</string>
+    <string name="browkorf_settings_export">导出设置</string>
     <string name="category_general">常规</string>
     <string name="category_home_page">主页</string>
     <string name="category_search">搜索</string>

@@ -55,7 +55,7 @@
     <string name="shortcut_key_reserved_for_navigation">Эта клавиша зарезервирована для навигации в браузере</string>
     <string name="refresh_page">Обновить страницу</string>
     <string name="set_key_for_action">Установить клавишу для действия</string>
-    <string name="settings">Настройки</string>
+    <string name="browkorf_settings">Настройки</string>
     <string name="shortcut">\"Быстрая\" клавиша</string>
     <string name="shortcuts">\"Быстрые\" клавиши</string>
     <string name="toggle_main_menu">Отобразить меню</string>

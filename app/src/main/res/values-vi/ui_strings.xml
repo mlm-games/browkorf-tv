@@ -2,8 +2,8 @@
 <resources>
     <string name="language">Ngôn ngữ</string>
     <string name="language_system_default">Mặc định của hệ thống</string>
-    <string name="settings_import">Nhập cài đặt</string>
-    <string name="settings_export">Xuất cài đặt</string>
+    <string name="browkorf_settings_import">Nhập cài đặt</string>
+    <string name="browkorf_settings_export">Xuất cài đặt</string>
     <string name="category_general">Chung</string>
     <string name="category_home_page">Trang chủ</string>
     <string name="category_search">Tìm kiếm</string>

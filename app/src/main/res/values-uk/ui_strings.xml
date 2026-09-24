@@ -2,8 +2,8 @@
 <resources>
     <string name="language">Мова</string>
     <string name="language_system_default">Системний за замовчуванням</string>
-    <string name="settings_import">Імпортувати налаштування</string>
-    <string name="settings_export">Експортувати налаштування</string>
+    <string name="browkorf_settings_import">Імпортувати налаштування</string>
+    <string name="browkorf_settings_export">Експортувати налаштування</string>
     <string name="category_general">Загальні</string>
     <string name="category_home_page">Головна сторінка</string>
     <string name="category_search">Пошук</string>

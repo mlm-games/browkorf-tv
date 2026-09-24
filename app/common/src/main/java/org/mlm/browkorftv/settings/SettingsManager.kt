@@ -99,7 +99,7 @@ class SettingsManager private constructor(context: Context) {
         repository.update(transform)
     }
 
-    suspend fun set(name: String, value: Any) {
+    suspend fun set(name: String, value: Any?) {
         repository.set(name, value)
     }
 

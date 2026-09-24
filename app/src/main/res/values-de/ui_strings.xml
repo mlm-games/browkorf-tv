@@ -2,8 +2,8 @@
 <resources>
     <string name="language">Sprache</string>
     <string name="language_system_default">Systemstandard</string>
-    <string name="settings_import">Einstellungen importieren</string>
-    <string name="settings_export">Einstellungen exportieren</string>
+    <string name="browkorf_settings_import">Einstellungen importieren</string>
+    <string name="browkorf_settings_export">Einstellungen exportieren</string>
     <string name="category_general">Allgemein</string>
     <string name="category_home_page">Startseite</string>
     <string name="category_search">Suche</string>

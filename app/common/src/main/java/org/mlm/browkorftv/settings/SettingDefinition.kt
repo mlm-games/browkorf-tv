@@ -1,33 +1,34 @@
 package org.mlm.browkorftv.settings
 
 import io.github.mlmgames.settings.core.annotations.*
+import io.github.mlmgames.settings.core.resources.SettingsTextKeys
 import io.github.mlmgames.settings.core.types.*
 import androidx.core.net.toUri
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
-@CategoryDefinition(order = 0)
+@CategoryDefinition(order = 0, titleKey = BrowkorfSettingsKeys.CATEGORY_GENERAL)
 object General
 
-@CategoryDefinition(order = 1)
+@CategoryDefinition(order = 1, titleKey = BrowkorfSettingsKeys.CATEGORY_HOME_PAGE)
 object HomePage
 
-@CategoryDefinition(order = 2)
+@CategoryDefinition(order = 2, titleKey = BrowkorfSettingsKeys.CATEGORY_SEARCH)
 object Search
 
-@CategoryDefinition(order = 3)
+@CategoryDefinition(order = 3, titleKey = BrowkorfSettingsKeys.CATEGORY_USER_AGENT)
 object UserAgent
 
-@CategoryDefinition(order = 4)
+@CategoryDefinition(order = 4, titleKey = BrowkorfSettingsKeys.CATEGORY_WEB_ENGINE)
 object WebEngine
 
-@CategoryDefinition(order = 5)
+@CategoryDefinition(order = 5, titleKey = BrowkorfSettingsKeys.CATEGORY_AD_BLOCK)
 object AdBlock
 
-@CategoryDefinition(order = 6)
+@CategoryDefinition(order = 6, titleKey = BrowkorfSettingsKeys.CATEGORY_UPDATES)
 object Updates
 
-@CategoryDefinition(order = 7)
+@CategoryDefinition(order = 7, titleKey = BrowkorfSettingsKeys.CATEGORY_PROXY)
 object Proxy
 
 // Internal category - not shown in UI, just for grouping
@@ -53,15 +54,18 @@ data class AppSettings(
 
     @Setting(
         title = "Theme",
+        titleKey = BrowkorfSettingsKeys.THEME,
         category = General::class,
         type = Dropdown::class,
         key = "theme",
-        options = ["System", "Light", "Dark"]
+        options = ["System", "Light", "Dark"],
+        optionsKey = BrowkorfSettingsKeys.THEME_OPTIONS
     )
     val theme: Theme = Theme.System,
 
     @Setting(
         title = "Language",
+        titleKey = BrowkorfSettingsKeys.LANGUAGE,
         category = General::class,
         type = LanguageSetting::class,
         key = "language_index"
@@ -70,7 +74,9 @@ data class AppSettings(
 
     @Setting(
         title = "Force Dark Webpage",
+        titleKey = BrowkorfSettingsKeys.FORCE_DARK_WEBPAGE,
         description = "Apply dark theme to web pages when using dark mode",
+        descriptionKey = BrowkorfSettingsKeys.FORCE_DARK_WEBPAGE_DESCRIPTION,
         category = General::class,
         type = Toggle::class,
         key = "force_dark_webpage"
@@ -79,7 +85,9 @@ data class AppSettings(
 
     @Setting(
         title = "Keep Screen On",
+        titleKey = BrowkorfSettingsKeys.KEEP_SCREEN_ON,
         description = "Prevent screen from turning off while browsing",
+        descriptionKey = BrowkorfSettingsKeys.KEEP_SCREEN_ON_DESCRIPTION,
         category = General::class,
         type = Toggle::class,
         key = "keep_screen_on"
@@ -88,7 +96,9 @@ data class AppSettings(
 
     @Setting(
         title = "Incognito Mode",
+        titleKey = BrowkorfSettingsKeys.INCOGNITO_MODE,
         description = "Browse without saving history",
+        descriptionKey = BrowkorfSettingsKeys.INCOGNITO_MODE_DESCRIPTION,
         category = General::class,
         type = Toggle::class,
         key = "incognito_mode"
@@ -97,6 +107,7 @@ data class AppSettings(
 
     @Setting(
         title = "Allow Autoplay Media",
+        titleKey = BrowkorfSettingsKeys.ALLOW_AUTOPLAY_MEDIA,
         category = General::class,
         type = Toggle::class,
         key = "allow_autoplay_media"
@@ -106,14 +117,17 @@ data class AppSettings(
 
     @Setting(
         title = "Home Page Mode",
+        titleKey = BrowkorfSettingsKeys.HOME_PAGE_MODE,
         category = HomePage::class,
         type = Dropdown::class,
         key = "home_page_mode",
+        optionsKey = BrowkorfSettingsKeys.HOME_PAGE_MODE_OPTIONS
     )
     val homePageMode: HomePageMode = HomePageMode.HomePage,
 
     @Setting(
         title = "Custom Home Page URL",
+        titleKey = BrowkorfSettingsKeys.CUSTOM_HOME_PAGE_URL,
         category = HomePage::class,
         type = TextInput::class,
         key = "home_page",
@@ -124,15 +138,18 @@ data class AppSettings(
 
     @Setting(
         title = "Search Engine",
+        titleKey = BrowkorfSettingsKeys.SEARCH_ENGINE,
         category = Search::class,
         type = Dropdown::class,
         key = "search_engine_url",
-        options = ["DuckDuckGo Lite", "Google", "Bing", "Yahoo!", "DuckDuckGo", "Yandex", "Startpage", "Custom"]
+        options = ["DuckDuckGo Lite", "Google", "Bing", "Yahoo!", "DuckDuckGo", "Yandex", "Startpage", "Custom"],
+        optionsKey = BrowkorfSettingsKeys.SEARCH_ENGINE_OPTIONS
     )
     val searchEngineIndex: Int = 0,
 
     @Setting(
         title = "Custom Search Engine URL",
+        titleKey = BrowkorfSettingsKeys.CUSTOM_SEARCH_ENGINE_URL,
         category = HomePage::class,
         type = TextInput::class,
         key = "search_engine_custom_url",
@@ -142,11 +159,13 @@ data class AppSettings(
 
     @Setting(
         title = "User Agent",
+        titleKey = BrowkorfSettingsKeys.USER_AGENT,
         category = UserAgent::class,
         type = Dropdown::class,
         key = "user_agent_index",
         options = ["Default (recommended)", "Chrome (Desktop)", "Chrome (Mobile)",
-            "Firefox (Desktop)", "Firefox (Mobile)", "Edge (Desktop)", "Custom"]
+            "Firefox (Desktop)", "Firefox (Mobile)", "Edge (Desktop)", "Custom"],
+        optionsKey = BrowkorfSettingsKeys.USER_AGENT_OPTIONS
     )
     val userAgentIndex: Int = 0,
 
@@ -156,15 +175,22 @@ data class AppSettings(
 
     @Setting(
         title = "Web Engine",
+        titleKey = BrowkorfSettingsKeys.WEB_ENGINE,
         description = "GeckoView recommended for devices with 3GB+ RAM",
+        descriptionKey = BrowkorfSettingsKeys.WEB_ENGINE_DESCRIPTION,
         category = WebEngine::class,
         type = Dropdown::class,
         key = "web_engine",
-        options = ["GeckoView", "WebView"]
+        options = ["GeckoView", "WebView"],
+        optionsKey = BrowkorfSettingsKeys.WEB_ENGINE_OPTIONS
     )
     @RequiresConfirmation(
         title = "Change Web Engine?",
+        titleKey = BrowkorfSettingsKeys.WEB_ENGINE_CONFIRMATION_TITLE,
         message = "You should restart to apply changes",
+        messageKey = BrowkorfSettingsKeys.WEB_ENGINE_CONFIRMATION_MESSAGE,
+        confirmTextKey = SettingsTextKeys.CONFIRM,
+        cancelTextKey = SettingsTextKeys.CANCEL,
         isDangerous = true
     )
     val webEngineIndex: Int = -1, // -1 means not set, will use default
@@ -172,6 +198,7 @@ data class AppSettings(
 
     @Setting(
         title = "Enable Ad Blocker",
+        titleKey = BrowkorfSettingsKeys.AD_BLOCK_ENABLED,
         category = AdBlock::class,
         type = Toggle::class,
         key = "adblock_enabled"
@@ -180,6 +207,7 @@ data class AppSettings(
 
     @Setting(
         title = "Ad Block List URL",
+        titleKey = BrowkorfSettingsKeys.AD_BLOCK_LIST_URL,
         category = AdBlock::class,
         type = TextInput::class,
         key = "adblock_list_url",
@@ -190,6 +218,7 @@ data class AppSettings(
 
     @Setting(
         title = "Auto Check Updates",
+        titleKey = BrowkorfSettingsKeys.AUTO_CHECK_UPDATES,
         category = Updates::class,
         type = Toggle::class,
         key = "auto_check_updates"
@@ -198,17 +227,21 @@ data class AppSettings(
 
     @Setting(
         title = "Update Channel",
+        titleKey = BrowkorfSettingsKeys.UPDATE_CHANNEL,
         category = Updates::class,
         type = Dropdown::class,
         key = "update_channel",
         options = ["Release", "Prerelease"],
+        optionsKey = BrowkorfSettingsKeys.UPDATE_CHANNEL_OPTIONS,
         dependsOn = "autoCheckUpdates"
     )
     val updateChannelIndex: Int = 0,
 
     @Setting(
         title = "Use HTTP Proxy",
+        titleKey = BrowkorfSettingsKeys.USE_HTTP_PROXY,
         description = "Route traffic through HTTP proxy (e.g. Clash on 127.0.0.1:7890). Restart may be required for WebView",
+        descriptionKey = BrowkorfSettingsKeys.USE_HTTP_PROXY_DESCRIPTION,
         category = Proxy::class,
         type = Toggle::class,
         key = "proxy_enabled"
@@ -217,7 +250,9 @@ data class AppSettings(
 
     @Setting(
         title = "Proxy URL",
+        titleKey = BrowkorfSettingsKeys.PROXY_URL,
         description = "http://127.0.0.1:7890 (http/socks5). Leave blank to disable",
+        descriptionKey = BrowkorfSettingsKeys.PROXY_URL_DESCRIPTION,
         category = Proxy::class,
         type = TextInput::class,
         key = "proxy_url",
@@ -227,7 +262,9 @@ data class AppSettings(
 
     @Setting(
         title = "Directional Navigation Mode",
+        titleKey = BrowkorfSettingsKeys.DIRECTIONAL_NAVIGATION_MODE,
         description = "Send arrow keys to webpage instead of moving cursor (for games/apps)",
+        descriptionKey = BrowkorfSettingsKeys.DIRECTIONAL_NAVIGATION_MODE_DESCRIPTION,
         category = General::class,
         type = Toggle::class,
         key = "directional_nav_mode"
@@ -236,7 +273,9 @@ data class AppSettings(
 
     @Setting(
         title = "New Tab Button At The Start",
+        titleKey = BrowkorfSettingsKeys.NEW_TAB_BUTTON_AT_START,
         description = "Places the + button before the tab list instead of after it",
+        descriptionKey = BrowkorfSettingsKeys.NEW_TAB_BUTTON_AT_START_DESCRIPTION,
         category = General::class,
         type = Toggle::class,
         key = "new_tab_button_before_tabs"
@@ -245,7 +284,9 @@ data class AppSettings(
 
     @Setting(
         title = "Context menu on long press",
+        titleKey = BrowkorfSettingsKeys.CONTEXT_MENU_ON_LONG_PRESS,
         description = "disable to allow page actions on long press",
+        descriptionKey = BrowkorfSettingsKeys.CONTEXT_MENU_ON_LONG_PRESS_DESCRIPTION,
         category = General::class,
         type = Toggle::class,
         key = "show_context_menu_on_long_press"
@@ -254,7 +295,9 @@ data class AppSettings(
 
     @Setting(
         title = "Single Tab Mode",
+        titleKey = BrowkorfSettingsKeys.SINGLE_TAB_MODE,
         description = "Reuses the current tab for every link or intent",
+        descriptionKey = BrowkorfSettingsKeys.SINGLE_TAB_MODE_DESCRIPTION,
         category = General::class,
         type = Toggle::class,
         key = "single_tab_mode"

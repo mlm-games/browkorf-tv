@@ -2,8 +2,8 @@
 <resources>
     <string name="language">שפה</string>
     <string name="language_system_default">ברירת מחדל של המערכת</string>
-    <string name="settings_import">ייבוא הגדרות</string>
-    <string name="settings_export">ייצוא הגדרות</string>
+    <string name="browkorf_settings_import">ייבוא הגדרות</string>
+    <string name="browkorf_settings_export">ייצוא הגדרות</string>
     <string name="category_general">כללי</string>
     <string name="category_home_page">דף הבית</string>
     <string name="category_search">חיפוש</string>

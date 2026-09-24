@@ -119,7 +119,7 @@ fun ActionBar(
         BrowkorfTvIconButton(
             onClick = onSettings,
             painter = painterResource(R.drawable.outline_settings_24),
-            contentDescription = stringResource(R.string.settings),
+            contentDescription = stringResource(R.string.browkorf_settings),
             modifier = Modifier.selectedBackground(isIncognito)
         )
 

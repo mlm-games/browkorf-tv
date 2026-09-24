@@ -35,7 +35,7 @@ object UpdateDialogs {
             .setView(textView)
             .setPositiveButton(R.string.download) { _, _ -> onDownload() }
             .setNegativeButton(R.string.later) { _, _ -> onLater() }
-            .setNeutralButton(R.string.settings) { _, _ -> onSettings() }
+            .setNeutralButton(R.string.browkorf_settings) { _, _ -> onSettings() }
             .show()
     }
 

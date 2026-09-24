@@ -23,13 +23,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.mlmgames.settings.core.ConfirmationConfig
 import io.github.mlmgames.settings.core.SettingField
 import io.github.mlmgames.settings.core.backup.ExportResult
 import io.github.mlmgames.settings.core.backup.ImportResult
 import io.github.mlmgames.settings.core.resources.AndroidStringResourceProvider
 import io.github.mlmgames.settings.ui.AutoSettingsScreen
-import io.github.mlmgames.settings.ui.CategoryConfig
 import io.github.mlmgames.settings.ui.CustomTypeHandler
 import io.github.mlmgames.settings.ui.ProvideStringResources
 import io.github.mlmgames.settings.ui.components.SettingsItem
@@ -39,83 +37,14 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.R
-import org.mlm.browkorftv.settings.AdBlock
 import org.mlm.browkorftv.settings.AppLanguage
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.AppSettingsSchema
-import org.mlm.browkorftv.settings.General
-import org.mlm.browkorftv.settings.HomePage
 import org.mlm.browkorftv.settings.LanguageSetting
-import org.mlm.browkorftv.settings.LocalizedSettingsSchema
-import org.mlm.browkorftv.settings.Proxy
-import org.mlm.browkorftv.settings.Search
 import org.mlm.browkorftv.settings.SettingsManager
-import org.mlm.browkorftv.settings.Updates
-import org.mlm.browkorftv.settings.UserAgent
-import org.mlm.browkorftv.settings.WebEngine
+import org.mlm.browkorftv.settings.resolveSettingsResource
 import org.mlm.browkorftv.ui.components.BrowkorfTopBar
 import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
-
-private val settingTitleResources = mapOf(
-    "theme" to R.string.theme,
-    "languageIndex" to R.string.language,
-    "forceDarkWebpage" to R.string.setting_force_dark_webpage,
-    "keepScreenOn" to R.string.setting_keep_screen_on,
-    "incognitoMode" to R.string.incognito_mode,
-    "allowAutoplayMedia" to R.string.setting_allow_autoplay_media,
-    "homePageMode" to R.string.setting_home_page_mode,
-    "homePage" to R.string.setting_custom_home_page_url,
-    "searchEngineIndex" to R.string.setting_search_engine,
-    "searchEngineCustomUrl" to R.string.setting_custom_search_engine_url,
-    "userAgentIndex" to R.string.setting_user_agent,
-    "webEngineIndex" to R.string.setting_web_engine,
-    "adBlockEnabled" to R.string.setting_ad_block,
-    "adBlockListURL" to R.string.setting_ad_block_list_url,
-    "autoCheckUpdates" to R.string.setting_auto_check_updates,
-    "updateChannelIndex" to R.string.setting_update_channel,
-    "proxyEnabled" to R.string.setting_use_http_proxy,
-    "proxyUrl" to R.string.setting_proxy_url,
-    "directionalNavMode" to R.string.setting_directional_navigation_mode,
-    "newTabButtonBeforeTabs" to R.string.setting_new_tab_button_at_start,
-    "showContextMenuOnLongPress" to R.string.setting_context_menu_on_long_press,
-    "singleTabMode" to R.string.setting_single_tab_mode,
-)
-
-private val settingDescriptionResources = mapOf(
-    "forceDarkWebpage" to R.string.setting_force_dark_webpage_description,
-    "keepScreenOn" to R.string.setting_keep_screen_on_description,
-    "incognitoMode" to R.string.setting_incognito_mode_description,
-    "webEngineIndex" to R.string.setting_web_engine_description,
-    "proxyEnabled" to R.string.setting_use_http_proxy_description,
-    "proxyUrl" to R.string.setting_proxy_url_description,
-    "directionalNavMode" to R.string.setting_directional_navigation_mode_description,
-    "newTabButtonBeforeTabs" to R.string.setting_new_tab_button_at_start_description,
-    "showContextMenuOnLongPress" to R.string.setting_context_menu_on_long_press_description,
-    "singleTabMode" to R.string.setting_single_tab_mode_description,
-)
-
-private val settingOptionsResources = mapOf(
-    "theme" to R.array.themes,
-    "homePageMode" to R.array.home_page_modes,
-    "searchEngineIndex" to R.array.search_engine_options,
-    "userAgentIndex" to R.array.user_agent_options,
-    "webEngineIndex" to R.array.web_engine_options,
-    "updateChannelIndex" to R.array.update_channel_options,
-)
-
-private val settingConfirmationResources = mapOf(
-    "webEngineIndex" to ConfirmationConfig(
-        title = "",
-        message = "",
-        titleRes = R.string.change_web_engine,
-        messageRes = R.string.need_restart_message,
-        confirmText = "",
-        confirmTextRes = R.string.ok,
-        cancelText = "",
-        cancelTextRes = R.string.cancel,
-        isDangerous = true,
-    ),
-)
 
 @Composable
 fun SettingsScreen(
@@ -127,14 +56,8 @@ fun SettingsScreen(
     val settings by settingsManager.settingsState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val localizedSchema = remember(context) {
-        LocalizedSettingsSchema(
-            delegate = AppSettingsSchema,
-            titleResources = settingTitleResources,
-            descriptionResources = settingDescriptionResources,
-            optionsResources = settingOptionsResources,
-            confirmationResources = settingConfirmationResources,
-        )
+    val settingsStringProvider = remember(context) {
+        AndroidStringResourceProvider(context, ::resolveSettingsResource)
     }
 
     // Backup/Restore Logic
@@ -191,7 +114,7 @@ fun SettingsScreen(
     }
     // ---
 
-    ProvideStringResources(AndroidStringResourceProvider(context)) {
+    ProvideStringResources(settingsStringProvider) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -199,19 +122,19 @@ fun SettingsScreen(
                     .padding(horizontal = 48.dp, vertical = 24.dp)
             ) {
                 BrowkorfTopBar(
-                    title = stringResource(R.string.settings),
+                    title = stringResource(R.string.browkorf_settings),
                     onBack = onNavigateBack,
                     actions = {
                         BrowkorfTvIconButton(
                             onClick = { importLauncher.launch(arrayOf("application/json", "text/plain")) },
-                            contentDescription = stringResource(R.string.settings_import),
+                            contentDescription = stringResource(R.string.browkorf_settings_import),
                             painter = painterResource(R.drawable.outline_source_notes_24),
                             modifier = Modifier.padding(2.dp)
                         )
 
                         BrowkorfTvIconButton(
                             onClick = { exportLauncher.launch("browkorf-tv-backup.json") },
-                            contentDescription = stringResource(R.string.settings_export),
+                            contentDescription = stringResource(R.string.browkorf_settings_export),
                             painter = painterResource(R.drawable.outline_export_notes_24),
                             modifier = Modifier.padding(2.dp)
                         )
@@ -229,7 +152,7 @@ fun SettingsScreen(
 
                 // Settings Content
                 AutoSettingsScreen(
-                    schema = localizedSchema,
+                    schema = AppSettingsSchema,
                     value = settings.copy(languageIndex = AppLanguage.current().ordinal),
                     modifier = Modifier.weight(1f),
                     snackbarHostState = snackbarHostState,
@@ -247,16 +170,6 @@ fun SettingsScreen(
                             }
                         }
                     },
-                    categoryConfigs = listOf(
-                        CategoryConfig(General::class, "", titleRes = R.string.category_general),
-                        CategoryConfig(HomePage::class, "", titleRes = R.string.category_home_page),
-                        CategoryConfig(Search::class, "", titleRes = R.string.category_search),
-                        CategoryConfig(UserAgent::class, "", titleRes = R.string.category_user_agent),
-                        CategoryConfig(WebEngine::class, "", titleRes = R.string.category_web_engine),
-                        CategoryConfig(AdBlock::class, "", titleRes = R.string.category_ad_block),
-                        CategoryConfig(Updates::class, "", titleRes = R.string.category_updates),
-                        CategoryConfig(Proxy::class, "", titleRes = R.string.category_proxy),
-                    ),
                     customTypeHandlers = listOf(
                         CustomTypeHandler(
                             typeClass = LanguageSetting::class,
