@@ -196,11 +196,11 @@ class SettingsManager private constructor(context: Context) {
     }
 
     suspend fun getBookmarks(): List<BookmarkEntry> {
-        return current.bookmarks.normalizeOrder().sortedForDisplay()
+        return bookmarksFlow.first()
     }
 
     suspend fun getBookmark(id: Long): BookmarkEntry? {
-        return current.bookmarks.firstOrNull { it.id == id }
+        return bookmarksFlow.first().firstOrNull { it.id == id }
     }
 
     suspend fun moveBookmark(id: Long, delta: Int): Boolean {
@@ -304,8 +304,7 @@ internal fun List<BookmarkEntry>.sortedForDisplay(): List<BookmarkEntry> =
     sortedWith(compareByDescending<BookmarkEntry> { it.sortOrder }.thenByDescending { it.id })
 
 private fun List<BookmarkEntry>.renumberOrder(): List<BookmarkEntry> {
-    val ordered = sortedForDisplay()
-    return ordered.mapIndexed { index, entry ->
-        entry.copy(sortOrder = (ordered.size - index).toLong())
+    return mapIndexed { index, entry ->
+        entry.copy(sortOrder = (size - index).toLong())
     }
 }
