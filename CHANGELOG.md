@@ -1,3 +1,9 @@
+## v4.7.1
+
+- Add the lock toggle for bookmarks as per #11
+- Fix bookmarks not being ordered
+
+
 ## v4.7.0
 
 - Add a setting for translation without changing the system lang

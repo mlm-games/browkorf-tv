@@ -1,0 +1,2 @@
+- Add the lock toggle for bookmarks as per #11
+- Fix bookmarks not being ordered
