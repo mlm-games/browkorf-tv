@@ -104,6 +104,16 @@ fun BrowserScreen(
     val uiState by uiVm.uiState.collectAsStateWithLifecycle()
     val currentKey = backStack.lastOrNull()
 
+    LaunchedEffect(uiState.openBookmarksRequest) {
+        if (uiState.openBookmarksRequest) {
+            if (backStack.lastOrNull() != AppKey.Favorites) {
+                backStack.add(AppKey.Favorites)
+            }
+            uiVm.hideMenu()
+            uiVm.consumeOpenBookmarksRequest()
+        }
+    }
+
     // Handle WebView pause/resume when Browser enters/leaves composition
     LaunchedEffect(currentKey) {
         val tab = tabsVm.currentTab.value

@@ -1548,4 +1548,8 @@ open class MainActivity : AppCompatActivity() {
     fun toggleMenu() {
         browserUiViewModel.toggleMenu()
     }
+
+    fun openBookmarks() {
+        browserUiViewModel.requestOpenBookmarks()
+    }
 }

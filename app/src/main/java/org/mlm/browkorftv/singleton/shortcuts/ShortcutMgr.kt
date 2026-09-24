@@ -117,6 +117,7 @@ class ShortcutMgr(
     fun process(shortcut: Shortcut, mainActivity: MainActivity, webEngine: WebEngine?) {
         when (shortcut) {
             Shortcut.MENU -> mainActivity.toggleMenu()
+            Shortcut.BOOKMARKS -> mainActivity.openBookmarks()
 
             Shortcut.NAVIGATE_BACK -> mainActivity.navigateBack()
             Shortcut.NAVIGATE_HOME -> mainActivity.navigate(HOME_URL_ALIAS)

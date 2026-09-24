@@ -35,6 +35,7 @@ data class BrowserUiState(
 
     val isLinkActionsVisible: Boolean = false,
     val isMenuVisible: Boolean = false,
+    val openBookmarksRequest: Boolean = false,
 )
 
 data class NotificationUi(
@@ -126,6 +127,14 @@ class BrowserUiViewModel : ViewModel() {
 
     fun showMenu() {
         _uiState.update { it.copy(isMenuVisible = true) }
+    }
+
+    fun requestOpenBookmarks() {
+        _uiState.update { it.copy(openBookmarksRequest = true) }
+    }
+
+    fun consumeOpenBookmarksRequest() {
+        _uiState.update { it.copy(openBookmarksRequest = false) }
     }
 
     fun hideMenu() {

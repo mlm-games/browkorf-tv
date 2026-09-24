@@ -12,6 +12,7 @@ enum class Shortcut(
     val defaultLongPress: Boolean = false
 ) {
     MENU(R.string.toggle_main_menu, "shortcut_menu", KeyEvent.KEYCODE_MENU),
+    BOOKMARKS(R.string.bookmarks, "shortcut_bookmarks", 0),
 
     // 0 -> blank
     NAVIGATE_BACK(R.string.navigate_back, "shortcut_nav_back", 0),
