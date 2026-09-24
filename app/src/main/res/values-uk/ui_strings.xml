@@ -16,6 +16,8 @@
     <string name="add_bookmark">Додати закладку</string>
     <string name="move_up">Перемістити вгору</string>
     <string name="move_down">Перемістити вниз</string>
+    <string name="lock_bookmark_editing">Заблокувати редагування закладок</string>
+    <string name="unlock_bookmark_editing">Розблокувати редагування закладок</string>
     <string name="remove">Видалити</string>
     <string name="clear_all">Очистити все</string>
     <string name="no_history">Немає історії</string>

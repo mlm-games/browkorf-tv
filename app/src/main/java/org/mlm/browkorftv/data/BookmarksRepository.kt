@@ -1,5 +1,7 @@
 package org.mlm.browkorftv.data
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.mlm.browkorftv.model.FavoriteItem
@@ -17,6 +19,9 @@ class BookmarksRepository(
         ensureMigrated()
         return settingsManager.getBookmarks().map { it.toFavoriteItem() }
     }
+
+    fun observeAll(): Flow<List<FavoriteItem>> =
+        settingsManager.bookmarksFlow.map { bookmarks -> bookmarks.map { it.toFavoriteItem() } }
 
     suspend fun getById(id: Long): FavoriteItem? {
         ensureMigrated()

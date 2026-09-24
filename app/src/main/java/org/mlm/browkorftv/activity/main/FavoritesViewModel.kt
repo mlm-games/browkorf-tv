@@ -3,6 +3,7 @@ package org.mlm.browkorftv.activity.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,10 +21,17 @@ class FavoritesViewModel(
     private val _loading = MutableStateFlow(true)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
-    fun loadData() = viewModelScope.launch(Dispatchers.IO) {
-        _loading.value = true
-        _bookmarks.value = bookmarksRepository.getAll()
-        _loading.value = false
+    private var loadJob: Job? = null
+
+    fun loadData() {
+        if (loadJob != null) return
+        loadJob = viewModelScope.launch(Dispatchers.IO) {
+            bookmarksRepository.getAll()
+            bookmarksRepository.observeAll().collect {
+                _bookmarks.value = it
+                _loading.value = false
+            }
+        }
     }
 
     suspend fun getFavoriteById(id: Long): FavoriteItem? {
@@ -32,22 +40,13 @@ class FavoritesViewModel(
 
     fun saveFavorite(item: FavoriteItem) = viewModelScope.launch(Dispatchers.IO) {
         bookmarksRepository.upsert(item)
-        _bookmarks.value = bookmarksRepository.getAll()
     }
 
     fun deleteFavorite(id: Long) = viewModelScope.launch(Dispatchers.IO) {
         bookmarksRepository.delete(id)
-        _bookmarks.value = bookmarksRepository.getAll()
     }
 
     fun moveFavorite(id: Long, delta: Int) = viewModelScope.launch(Dispatchers.IO) {
-        if (bookmarksRepository.move(id, delta)) {
-            _bookmarks.value = bookmarksRepository.getAll()
-        }
-    }
-    
-    fun deleteFavorite(item: FavoriteItem) = viewModelScope.launch(Dispatchers.IO) {
-        bookmarksRepository.delete(item.id)
-        _bookmarks.value = bookmarksRepository.getAll()
+        bookmarksRepository.move(id, delta)
     }
 }

@@ -16,6 +16,8 @@
     <string name="add_bookmark">افزودن نشانک</string>
     <string name="move_up">انتقال به بالا</string>
     <string name="move_down">انتقال به پایین</string>
+    <string name="lock_bookmark_editing">قفل ویرایش نشانک‌ها</string>
+    <string name="unlock_bookmark_editing">باز کردن قفل ویرایش نشانک‌ها</string>
     <string name="remove">حذف</string>
     <string name="clear_all">پاک کردن همه</string>
     <string name="no_history">بدون تاریخچه</string>

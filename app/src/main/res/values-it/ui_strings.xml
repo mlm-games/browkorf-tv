@@ -16,6 +16,8 @@
     <string name="add_bookmark">Aggiungi segnalibro</string>
     <string name="move_up">Sposta su</string>
     <string name="move_down">Sposta giù</string>
+    <string name="lock_bookmark_editing">Blocca la modifica dei segnalibri</string>
+    <string name="unlock_bookmark_editing">Sblocca la modifica dei segnalibri</string>
     <string name="remove">Rimuovi</string>
     <string name="clear_all">Cancella tutto</string>
     <string name="no_history">Nessuna cronologia</string>

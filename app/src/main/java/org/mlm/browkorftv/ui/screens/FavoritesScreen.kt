@@ -1,23 +1,32 @@
 package org.mlm.browkorftv.ui.screens
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import org.mlm.browkorftv.R as AppR
-import org.mlm.browkorftv.common.R as CommonR
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.koinViewModel
 import org.mlm.browkorftv.activity.main.FavoritesViewModel
+import org.mlm.browkorftv.singleton.FaviconsPool
 import org.mlm.browkorftv.ui.components.BrowkorfTvClickableSurface
 import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 import org.mlm.browkorftv.ui.theme.AppTheme
-import org.koin.androidx.compose.koinViewModel
+import org.mlm.browkorftv.R as AppR
+import org.mlm.browkorftv.common.R as CommonR
 
 @Composable
 fun FavoritesScreen(
@@ -29,6 +38,7 @@ fun FavoritesScreen(
 ) {
     val loading by viewModel.loading.collectAsState()
     val bookmarks by viewModel.bookmarks.collectAsState()
+    var editingEnabled by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { viewModel.loadData() }
 
@@ -38,13 +48,24 @@ fun FavoritesScreen(
             .padding(horizontal = 48.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Header with Actions
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(stringResource(AppR.string.favorites), style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
+            BrowkorfTvIconButton(
+                onClick = { editingEnabled = !editingEnabled },
+                painter = painterResource(
+                    if (editingEnabled) AppR.drawable.outline_lock_24
+                    else AppR.drawable.outline_lock_open_24
+                ),
+                contentDescription = stringResource(
+                    if (editingEnabled) AppR.string.lock_bookmark_editing
+                    else AppR.string.unlock_bookmark_editing
+                ),
+                checked = editingEnabled
+            )
             BrowkorfTvIconButton(
                 onClick = onAddBookmark,
                 painter = painterResource(AppR.drawable.outline_add_24),
@@ -75,18 +96,18 @@ fun FavoritesScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(bottom = 20.dp)
         ) {
-            items(bookmarks, key = { it.id }) { b ->
-                val index = bookmarks.indexOfFirst { it.id == b.id }
+            itemsIndexed(bookmarks, key = { _, bookmark -> bookmark.id }) { index, bookmark ->
                 FavoriteItem(
-                    title = b.title ?: b.url.orEmpty(),
-                    url = b.url.orEmpty(),
+                    title = bookmark.title ?: bookmark.url.orEmpty(),
+                    url = bookmark.url.orEmpty(),
+                    editingEnabled = editingEnabled,
                     canMoveUp = index > 0,
-                    canMoveDown = index >= 0 && index < bookmarks.lastIndex,
-                    onOpen = { b.url?.let(onPickUrl) },
-                    onEdit = { onEditBookmark(b.id) },
-                    onDelete = { viewModel.deleteFavorite(b.id) },
-                    onMoveUp = { viewModel.moveFavorite(b.id, -1) },
-                    onMoveDown = { viewModel.moveFavorite(b.id, 1) }
+                    canMoveDown = index < bookmarks.lastIndex,
+                    onOpen = { bookmark.url?.let(onPickUrl) },
+                    onEdit = { onEditBookmark(bookmark.id) },
+                    onDelete = { viewModel.deleteFavorite(bookmark.id) },
+                    onMoveUp = { viewModel.moveFavorite(bookmark.id, -1) },
+                    onMoveDown = { viewModel.moveFavorite(bookmark.id, 1) }
                 )
             }
         }
@@ -97,6 +118,7 @@ fun FavoritesScreen(
 private fun FavoriteItem(
     title: String,
     url: String,
+    editingEnabled: Boolean,
     canMoveUp: Boolean,
     canMoveDown: Boolean,
     onOpen: () -> Unit,
@@ -106,10 +128,16 @@ private fun FavoriteItem(
     onMoveDown: () -> Unit
 ) {
     val colors = AppTheme.colors
+    val actionColors = ButtonDefaults.colors(
+        containerColor = colors.buttonBackground,
+        focusedContainerColor = colors.buttonBackgroundFocused,
+        contentColor = colors.textPrimary,
+        focusedContentColor = colors.textPrimary
+    )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically // Align items vertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
         BrowkorfTvClickableSurface(
             onClick = onOpen,
@@ -123,77 +151,92 @@ private fun FavoriteItem(
             ),
             scale = ClickableSurfaceDefaults.scale(focusedScale = 1.01f)
         ) {
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(title, style = MaterialTheme.typography.titleMedium, maxLines = 1)
-                Text(
-                    url,
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 1,
-                    color = colors.textSecondary
-                )
+                BookmarkFavicon(url)
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(title, style = MaterialTheme.typography.titleMedium, maxLines = 1)
+                    Text(
+                        url,
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                        color = colors.textSecondary
+                    )
+                }
             }
         }
 
-        Spacer(Modifier.width(8.dp))
+        if (editingEnabled) {
+            Spacer(Modifier.width(8.dp))
 
-        BrowkorfTvIconButton(
-            onClick = onEdit,
-            painter = painterResource(CommonR.drawable.outline_movie_edit_24),
-            contentDescription = stringResource(AppR.string.edit),
-            colors = ButtonDefaults.colors(
-                containerColor = colors.buttonBackground,
-                focusedContainerColor = colors.buttonBackgroundFocused,
-                contentColor = colors.textPrimary,
-                focusedContentColor = colors.textPrimary
+            BrowkorfTvIconButton(
+                onClick = onEdit,
+                painter = painterResource(CommonR.drawable.outline_movie_edit_24),
+                contentDescription = stringResource(AppR.string.edit),
+                colors = actionColors
             )
-        )
 
-        Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(8.dp))
 
-        BrowkorfTvIconButton(
-            onClick = onMoveUp,
-            painter = painterResource(AppR.drawable.outline_chevron_backward_24),
-            contentDescription = stringResource(AppR.string.move_up),
-            enabled = canMoveUp,
-            colors = ButtonDefaults.colors(
-                containerColor = colors.buttonBackground,
-                focusedContainerColor = colors.buttonBackgroundFocused,
-                contentColor = colors.textPrimary,
-                focusedContentColor = colors.textPrimary
+            BrowkorfTvIconButton(
+                onClick = onMoveUp,
+                painter = painterResource(AppR.drawable.outline_arrow_upward_24),
+                contentDescription = stringResource(AppR.string.move_up),
+                enabled = canMoveUp,
+                colors = actionColors
             )
-        )
 
-        Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(8.dp))
 
-        BrowkorfTvIconButton(
-            onClick = onMoveDown,
-            painter = painterResource(AppR.drawable.outline_chevron_forward_24),
-            contentDescription = stringResource(AppR.string.move_down),
-            enabled = canMoveDown,
-            colors = ButtonDefaults.colors(
-                containerColor = colors.buttonBackground,
-                focusedContainerColor = colors.buttonBackgroundFocused,
-                contentColor = colors.textPrimary,
-                focusedContentColor = colors.textPrimary
+            BrowkorfTvIconButton(
+                onClick = onMoveDown,
+                painter = painterResource(AppR.drawable.outline_arrow_downward_24),
+                contentDescription = stringResource(AppR.string.move_down),
+                enabled = canMoveDown,
+                colors = actionColors
             )
-        )
 
-        Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(8.dp))
 
-        BrowkorfTvIconButton(
-            onClick = onDelete,
-            painter = painterResource(CommonR.drawable.outline_bookmark_remove_24),
-            contentDescription = stringResource(AppR.string.remove),
-            colors = ButtonDefaults.colors(
-                containerColor = colors.buttonBackground,
-                focusedContainerColor = colors.buttonBackgroundFocused,
-                contentColor = colors.textPrimary,
-                focusedContentColor = colors.textPrimary
+            BrowkorfTvIconButton(
+                onClick = onDelete,
+                painter = painterResource(CommonR.drawable.outline_bookmark_remove_24),
+                contentDescription = stringResource(AppR.string.remove),
+                colors = actionColors
             )
+        }
+    }
+}
+
+@Composable
+private fun BookmarkFavicon(url: String) {
+    val colors = AppTheme.colors
+    val favicon by produceState<Bitmap?>(initialValue = null, key1 = url) {
+        value = withContext(Dispatchers.IO) {
+            FaviconsPool.get(url)
+        }
+    }
+
+    Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) {
+        favicon?.let { bitmap ->
+            Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Fit
+            )
+        } ?: Icon(
+            painter = painterResource(AppR.drawable.outline_public_24),
+            contentDescription = null,
+            modifier = Modifier.size(28.dp),
+            tint = colors.iconColorDisabled
         )
     }
 }

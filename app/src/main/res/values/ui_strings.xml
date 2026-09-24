@@ -16,6 +16,8 @@
     <string name="add_bookmark">Add Bookmark</string>
     <string name="move_up">Move up</string>
     <string name="move_down">Move down</string>
+    <string name="lock_bookmark_editing">Lock bookmark editing</string>
+    <string name="unlock_bookmark_editing">Unlock bookmark editing</string>
     <string name="remove">Remove</string>
     <string name="clear_all">Clear All</string>
     <string name="no_history">No history</string>

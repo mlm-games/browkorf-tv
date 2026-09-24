@@ -16,6 +16,8 @@
     <string name="add_bookmark">הוספת סימנייה</string>
     <string name="move_up">העברה למעלה</string>
     <string name="move_down">העברה למחץ</string>
+    <string name="lock_bookmark_editing">נעילת עריכת הסימניות</string>
+    <string name="unlock_bookmark_editing">שחרור נעילת עריכת הסימניות</string>
     <string name="remove">הסרה</string>
     <string name="clear_all">ניקוי הכול</string>
     <string name="no_history">אין היסטוריה</string>
