@@ -63,6 +63,7 @@
     <string name="current_key">Tasto impostato:</string>
     <string name="set_key_for_action">Imposta tasto</string>
     <string name="press_eny_key">Premi tasto…</string>
+    <string name="shortcut_key_reserved_for_navigation">Questo tasto è riservato alla navigazione del browser</string>
     <string name="clear">Pulisci</string>
     <string name="install">Installa</string>
     <string name="turn_on_unknown_sources">Attiva \"Fonti sconosciute\"</string>
@@ -167,7 +168,18 @@
     <string name="home_page_links">Link in home page</string>
     <string name="settings_engine_change_gecko_msg">Requisiti di sistema consigliati da GeckoView: 3 GB di RAM, CPU octa-core a 64 bit. Vuoi continuare\?</string>
     <string name="settings_engine_change_webview_msg">WebView avrà meno funzionalità negli aggiornamenti futuri. Vuoi continuare\?</string>
-    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
-    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
-    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
+    <string name="copy">Copia</string>
+    <string name="paste">Incolla</string>
+    <string name="cut">Taglia</string>
+    <string name="share">Condividi</string>
+    <string name="search">Cerca</string>
+    <string name="http_auth_title">Autenticazione richiesta</string>
+    <string name="play_pause">Riproduci/Pausa</string>
+    <string name="media_stop">Interrompi riproduzione multimediale</string>
+    <string name="media_rewind">Riavvolgi contenuto multimediale</string>
+    <string name="media_fast_forward">Avanza rapidamente contenuto multimediale</string>
+    <string name="long_press">Pressione prolungata</string>
+    <string name="toggle_directional_nav">Attiva/disattiva navigazione direzionale</string>
+    <string name="directional_nav_enabled">Navigazione direzionale attivata, il D-pad controlla la pagina web</string>
+    <string name="directional_nav_disabled">Navigazione direzionale disattivata, il D-pad sposta il cursore</string>
 </resources>

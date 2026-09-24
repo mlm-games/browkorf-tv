@@ -64,6 +64,7 @@
     <string name="current_key">"کلید فعلی:"</string>
     <string name="set_key_for_action">"کلید را برای اقدام تنظیم کنید"</string>
     <string name="press_eny_key">"هر کلید را فشار دهید…"</string>
+    <string name="shortcut_key_reserved_for_navigation">"این کلید برای ناوبری در مرورگر رزرو شده است"</string>
     <string name="clear">"پاک کردن"</string>
     <string name="install">"نصب"</string>
     <string name="turn_on_unknown_sources">"لطفاً تنظیمات سیستم \"منابع ناشناخته\" را فعال کنید"</string>
@@ -171,7 +172,18 @@
     <string name="home_page_links">لینک ها در صفحه اصلی</string>
     <string name="settings_engine_change_gecko_msg">سیستم مورد نیاز توصیه شده GeckoView: 3 گیگابایت رم، CPU هشت هسته ای 64 بیتی. می خواهید ادامه دهید؟</string>
     <string name="settings_engine_change_webview_msg">WebView در به روز رسانی های بعدی ویژگی های کمتری خواهد داشت. می خواهید ادامه دهید؟</string>
-    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
-    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
-    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
+    <string name="copy">کپی</string>
+    <string name="paste">چسباندن</string>
+    <string name="cut">برش</string>
+    <string name="share">اشتراک‌گذاری</string>
+    <string name="search">جست‌وجو</string>
+    <string name="http_auth_title">احراز هویت لازم است</string>
+    <string name="play_pause">پخش/مکث</string>
+    <string name="media_stop">توقف پخش</string>
+    <string name="media_rewind">عقب‌بردن رسانه</string>
+    <string name="media_fast_forward">جلوبردن سریع رسانه</string>
+    <string name="long_press">لمس طولانی</string>
+    <string name="toggle_directional_nav">تغییر وضعیت ناوبری جهت‌دار</string>
+    <string name="directional_nav_enabled">ناوبری جهت‌دار فعال است، دکمهٔ جهت‌نما صفحهٔ وب را کنترل می‌کند</string>
+    <string name="directional_nav_disabled">ناوبری جهت‌دار غیرفعال است، دکمهٔ جهت‌نما مکان‌نما را جابه‌جا می‌کند</string>
 </resources>

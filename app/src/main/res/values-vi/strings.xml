@@ -60,6 +60,7 @@
     <string name="current_key">Phím hiện tại:</string>
     <string name="set_key_for_action">Đặt phím cho hành động</string>
     <string name="press_eny_key">Nhấn phím bất kỳ...</string>
+    <string name="shortcut_key_reserved_for_navigation">Phím này được dành riêng cho điều hướng trình duyệt</string>
     <string name="clear">Xoá</string>
     <string name="install">Cài đặt</string>
     <string name="turn_on_unknown_sources">Vui lòng bật cài đặt hệ thống \"Nguồn không xác định\"</string>
@@ -167,7 +168,18 @@
     <string name="home_page_links">Liên kết trên trang chủ</string>
     <string name="settings_engine_change_gecko_msg">Yêu cầu hệ thống được GeckoView đề xuất: RAM 3 GB, CPU lõi tám 64 bit. Bạn có muốn tiếp tục\?</string>
     <string name="settings_engine_change_webview_msg">WebView sẽ có ít tính năng hơn trong các bản cập nhật trong tương lai. Bạn có muốn tiếp tục\?</string>
-    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
-    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
-    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
+    <string name="copy">Sao chép</string>
+    <string name="paste">Dán</string>
+    <string name="cut">Cắt</string>
+    <string name="share">Chia sẻ</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="http_auth_title">Cần xác thực</string>
+    <string name="play_pause">Phát/Tạm dừng</string>
+    <string name="media_stop">Dừng phát</string>
+    <string name="media_rewind">Tua lại</string>
+    <string name="media_fast_forward">Tua nhanh</string>
+    <string name="long_press">Nhấn giữ</string>
+    <string name="toggle_directional_nav">Chuyển đổi điều hướng bằng D-pad</string>
+    <string name="directional_nav_enabled">Đã bật điều hướng bằng D-pad, D-pad điều khiển trang web</string>
+    <string name="directional_nav_disabled">Đã tắt điều hướng bằng D-pad, D-pad di chuyển con trỏ</string>
 </resources>

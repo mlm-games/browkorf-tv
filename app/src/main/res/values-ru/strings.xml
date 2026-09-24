@@ -52,6 +52,7 @@
     <string name="not_set">Не задано</string>
     <string name="open_folder">Открыть содержащую папку</string>
     <string name="press_eny_key">Нажмите любую клавишу...</string>
+    <string name="shortcut_key_reserved_for_navigation">Эта клавиша зарезервирована для навигации в браузере</string>
     <string name="refresh_page">Обновить страницу</string>
     <string name="set_key_for_action">Установить клавишу для действия</string>
     <string name="settings">Настройки</string>
@@ -167,7 +168,18 @@
     <string name="home_page_links">Ссылки на главной странице</string>
     <string name="settings_engine_change_gecko_msg">Рекомендуемые системные требования GeckoView: 3 ГБ ОЗУ, 64-битный восьмиядерный процессор. Вы хотите продолжать\?</string>
     <string name="settings_engine_change_webview_msg">В будущих обновлениях WebView будет меньше функций. Вы хотите продолжать\?</string>
-    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
-    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
-    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
+    <string name="copy">Копировать</string>
+    <string name="paste">Вставить</string>
+    <string name="cut">Вырезать</string>
+    <string name="share">Поделиться</string>
+    <string name="search">Поиск</string>
+    <string name="http_auth_title">Требуется аутентификация</string>
+    <string name="play_pause">Воспроизведение/пауза</string>
+    <string name="media_stop">Остановить воспроизведение</string>
+    <string name="media_rewind">Перемотать назад</string>
+    <string name="media_fast_forward">Перемотать вперёд</string>
+    <string name="long_press">Долгое нажатие</string>
+    <string name="toggle_directional_nav">Переключить режим навигации с помощью D-pad</string>
+    <string name="directional_nav_enabled">Навигация с помощью D-pad включена, D-pad управляет веб-страницей</string>
+    <string name="directional_nav_disabled">Навигация с помощью D-pad отключена, D-pad перемещает курсор</string>
 </resources>

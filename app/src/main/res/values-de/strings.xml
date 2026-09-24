@@ -61,6 +61,7 @@
     <string name="current_key">Aktuelle Taste:</string>
     <string name="set_key_for_action">Taste konfigurieren</string>
     <string name="press_eny_key">Taste drücken...</string>
+    <string name="shortcut_key_reserved_for_navigation">Diese Taste ist für die Browsernavigation reserviert</string>
     <string name="clear">Löschen</string>
     <string name="install">Installieren</string>
     <string name="turn_on_unknown_sources">Bitte \"Unbekannte Quellen\" erlauben</string>
@@ -166,7 +167,18 @@
     <string name="home_page_links">Links auf der Homepage</string>
     <string name="settings_engine_change_gecko_msg">Von GeckoView empfohlene Systemanforderungen: 3 GB RAM, 64-Bit-Octa-Core-CPU. Möchtest du fortfahren\?</string>
     <string name="settings_engine_change_webview_msg">WebView wird in zukünftigen Updates weniger Funktionen haben. Möchtest du fortfahren\?</string>
-    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
-    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
-    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
+    <string name="copy">Kopieren</string>
+    <string name="paste">Einfügen</string>
+    <string name="cut">Ausschneiden</string>
+    <string name="share">Teilen</string>
+    <string name="search">Suchen</string>
+    <string name="http_auth_title">Authentifizierung erforderlich</string>
+    <string name="play_pause">Wiedergabe/Pause</string>
+    <string name="media_stop">Medienwiedergabe beenden</string>
+    <string name="media_rewind">Medienwiedergabe zurückspulen</string>
+    <string name="media_fast_forward">Medienwiedergabe vorspulen</string>
+    <string name="long_press">Langes Drücken</string>
+    <string name="toggle_directional_nav">Richtungsnavigation umschalten</string>
+    <string name="directional_nav_enabled">Richtungsnavigation aktiviert, D-Pad steuert die Webseite</string>
+    <string name="directional_nav_disabled">Richtungsnavigation deaktiviert, D-Pad bewegt den Cursor</string>
 </resources>

@@ -63,6 +63,7 @@
     <string name="current_key">Obecnie wybrany klawisz:</string>
     <string name="set_key_for_action">Ustaw klawisz do akcji</string>
     <string name="press_eny_key">Naciśnij dowolny klawisz...</string>
+    <string name="shortcut_key_reserved_for_navigation">Ten klawisz jest zarezerwowany do nawigacji w przeglądarce</string>
     <string name="clear">Wyczyść</string>
     <string name="install">Zainstaluj</string>
     <string name="turn_on_unknown_sources">Proszę włączyć ustawienie w systemie \"Instalacja z nieznanych źródeł\"</string>
@@ -167,7 +168,18 @@
     <string name="err_no_app_to_handle_url">Nie można znaleźć odpowiedniej aplikacji do obsługi tego adresu URL</string>
     <string name="settings_engine_change_gecko_msg">Zalecane wymagania systemowe GeckoView: 3 GB RAM, 64-bitowy ośmiordzeniowy procesor. Czy chcesz kontynuować\?</string>
     <string name="settings_engine_change_webview_msg">W przyszłych aktualizacjach WebView będzie miał mniej funkcji. Czy chcesz kontynuować\?</string>
-    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
-    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
-    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
+    <string name="copy">Kopiuj</string>
+    <string name="paste">Wklej</string>
+    <string name="cut">Wytnij</string>
+    <string name="share">Udostępnij</string>
+    <string name="search">Szukaj</string>
+    <string name="http_auth_title">Wymagane uwierzytelnienie</string>
+    <string name="play_pause">Odtwórz/Wstrzymaj</string>
+    <string name="media_stop">Zakończ odtwarzanie</string>
+    <string name="media_rewind">Przewiń do tyłu</string>
+    <string name="media_fast_forward">Przewiń szybko do przodu</string>
+    <string name="long_press">Długie naciśnięcie</string>
+    <string name="toggle_directional_nav">Przełącz nawigację kierunkową</string>
+    <string name="directional_nav_enabled">Nawigacja kierunkowa włączona, krzyżek kierunkowy steruje stroną internetową</string>
+    <string name="directional_nav_disabled">Nawigacja kierunkowa wyłączona, krzyżek kierunkowy przesuwa kursor</string>
 </resources>

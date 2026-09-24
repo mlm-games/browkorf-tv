@@ -60,6 +60,7 @@
     <string name="current_key">当前按键：</string>
     <string name="set_key_for_action">更改按键</string>
     <string name="press_eny_key">按任意键...</string>
+    <string name="shortcut_key_reserved_for_navigation">此按键保留用于浏览器导航</string>
     <string name="clear">清除</string>
     <string name="install">安装</string>
     <string name="turn_on_unknown_sources">请打开“未知来源”系统设置</string>
@@ -167,7 +168,18 @@
     <string name="home_page_links">主页上的链接</string>
     <string name="settings_engine_change_gecko_msg">GeckoView 推荐的系统要求：3GB RAM、64 位八核 CPU。 你想继续吗\?</string>
     <string name="settings_engine_change_webview_msg">WebView 在未来的更新中将会减少功能。 你想继续吗\?</string>
-    <string name="toggle_directional_nav">Toggle Directional Navigation</string>
-    <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
-    <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
+    <string name="copy">复制</string>
+    <string name="paste">粘贴</string>
+    <string name="cut">剪切</string>
+    <string name="share">分享</string>
+    <string name="search">搜索</string>
+    <string name="http_auth_title">需要身份验证</string>
+    <string name="play_pause">播放/暂停</string>
+    <string name="media_stop">停止媒体</string>
+    <string name="media_rewind">媒体快退</string>
+    <string name="media_fast_forward">媒体快进</string>
+    <string name="long_press">长按</string>
+    <string name="toggle_directional_nav">切换方向导航</string>
+    <string name="directional_nav_enabled">方向导航已启用，方向键控制网页</string>
+    <string name="directional_nav_disabled">方向导航已禁用，方向键移动光标</string>
 </resources>
