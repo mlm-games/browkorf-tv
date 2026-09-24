@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Language</string>
+    <string name="language_system_default">System default</string>
+    <string name="settings_import">Import Settings</string>
+    <string name="settings_export">Export Settings</string>
+    <string name="category_general">General</string>
+    <string name="category_home_page">Home Page</string>
+    <string name="category_search">Search</string>
+    <string name="category_user_agent">User Agent</string>
+    <string name="category_web_engine">Web Engine</string>
+    <string name="category_ad_block">Ad Blocker</string>
+    <string name="category_updates">Updates</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Link actions</string>
+    <string name="add_bookmark">Add Bookmark</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="remove">Remove</string>
+    <string name="clear_all">Clear All</string>
+    <string name="no_history">No history</string>
+    <string name="no_downloads">No downloads</string>
+    <string name="about">About</string>
+    <string name="app_info">App: %1$s (%2$d)</string>
+    <string name="engine_info">Engine: %1$s</string>
+    <string name="edit_bookmark">Edit Bookmark</string>
+    <string name="edit_title">Edit title</string>
+    <string name="edit_url">Edit URL</string>
+    <string name="set_title">Set title...</string>
+    <string name="set_url">Set URL...</string>
+    <string name="target_sdk">Target SDK: %1$d</string>
+    <string name="open_in_current_tab">Open in current tab</string>
+    <string name="text_selection">Text Selection</string>
+    <string name="grab_mode">Grab Mode</string>
+    <string name="microphone">Microphone</string>
+    <string name="microphone_permission_required">Microphone permission required</string>
+    <string name="voice_no_match">No speech recognized. Please try again.</string>
+    <string name="voice_network_error">Network error. Check connection.</string>
+    <string name="voice_search_error">Voice search error: %1$d</string>
+    <string name="copy_error">Copy Error</string>
+    <string name="error_loading_ad_blocker">Error loading ad-blocker list</string>
+    <string name="setting_force_dark_webpage">Force Dark Webpage</string>
+    <string name="setting_force_dark_webpage_description">Apply dark theme to web pages when using dark mode</string>
+    <string name="setting_keep_screen_on">Keep Screen On</string>
+    <string name="setting_keep_screen_on_description">Prevent screen from turning off while browsing</string>
+    <string name="setting_incognito_mode_description">Browse without saving history</string>
+    <string name="setting_allow_autoplay_media">Allow Autoplay Media</string>
+    <string name="setting_home_page_mode">Home Page Mode</string>
+    <string name="setting_custom_home_page_url">Custom Home Page URL</string>
+    <string name="setting_search_engine">Search Engine</string>
+    <string name="setting_custom_search_engine_url">Custom Search Engine URL</string>
+    <string name="setting_user_agent">User Agent</string>
+    <string name="setting_web_engine">Web Engine</string>
+    <string name="setting_web_engine_description">GeckoView recommended for devices with 3GB+ RAM</string>
+    <string name="setting_ad_block">Enable Ad Blocker</string>
+    <string name="setting_ad_block_list_url">Ad Block List URL</string>
+    <string name="setting_auto_check_updates">Auto Check Updates</string>
+    <string name="setting_update_channel">Update Channel</string>
+    <string name="setting_use_http_proxy">Use HTTP Proxy</string>
+    <string name="setting_use_http_proxy_description">Route traffic through HTTP proxy (e.g. Clash on 127.0.0.1:7890). Restart may be required for WebView</string>
+    <string name="setting_proxy_url">Proxy URL</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Leave blank to disable</string>
+    <string name="setting_directional_navigation_mode">Directional Navigation Mode</string>
+    <string name="setting_directional_navigation_mode_description">Send arrow keys to webpage instead of moving cursor (for games/apps)</string>
+    <string name="setting_new_tab_button_at_start">New Tab Button At The Start</string>
+    <string name="setting_new_tab_button_at_start_description">Places the + button before the tab list instead of after it</string>
+    <string name="setting_context_menu_on_long_press">Context menu on long press</string>
+    <string name="setting_context_menu_on_long_press_description">Disable to allow page actions on long press</string>
+    <string name="setting_single_tab_mode">Single Tab Mode</string>
+    <string name="setting_single_tab_mode_description">Reuses the current tab for every link or intent</string>
+    <string name="change_web_engine">Change Web Engine?</string>
+    <string name="gecko_engine_not_included">GeckoView engine is not included in this build.</string>
+    <string name="backup_exported">Backup exported</string>
+    <string name="export_failed">Export failed</string>
+    <string name="import_failed">Import failed</string>
+    <string name="imported_settings">Imported %1$d settings</string>
+
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Default (recommended)</item>
+        <item>Chrome (Desktop)</item>
+        <item>Chrome (Mobile)</item>
+        <item>Firefox (Desktop)</item>
+        <item>Firefox (Mobile)</item>
+        <item>Edge (Desktop)</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Release</item>
+        <item>Prerelease</item>
+    </string-array>
+</resources>

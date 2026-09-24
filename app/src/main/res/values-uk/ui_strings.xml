@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Мова</string>
+    <string name="language_system_default">Системний за замовчуванням</string>
+    <string name="settings_import">Імпортувати налаштування</string>
+    <string name="settings_export">Експортувати налаштування</string>
+    <string name="category_general">Загальні</string>
+    <string name="category_home_page">Головна сторінка</string>
+    <string name="category_search">Пошук</string>
+    <string name="category_user_agent">Агент користувача</string>
+    <string name="category_web_engine">Вебдвижок</string>
+    <string name="category_ad_block">Блокувальник реклами</string>
+    <string name="category_updates">Оновлення</string>
+    <string name="category_proxy">Проксі</string>
+    <string name="link_actions">Дії з посиланнями</string>
+    <string name="add_bookmark">Додати закладку</string>
+    <string name="move_up">Перемістити вгору</string>
+    <string name="move_down">Перемістити вниз</string>
+    <string name="remove">Видалити</string>
+    <string name="clear_all">Очистити все</string>
+    <string name="no_history">Немає історії</string>
+    <string name="no_downloads">Немає завантажень</string>
+    <string name="about">Про застосунок</string>
+    <string name="app_info">Застосунок: %1$s (%2$d)</string>
+    <string name="engine_info">Движок: %1$s</string>
+    <string name="edit_bookmark">Редагувати закладку</string>
+    <string name="edit_title">Редагувати назву</string>
+    <string name="edit_url">Редагувати URL-адресу</string>
+    <string name="set_title">Встановити назву...</string>
+    <string name="set_url">Встановити URL-адресу...</string>
+    <string name="target_sdk">Цільовий SDK: %1$d</string>
+    <string name="open_in_current_tab">Відкрити в поточній вкладці</string>
+    <string name="text_selection">Вибір тексту</string>
+    <string name="grab_mode">Режим захоплення</string>
+    <string name="microphone">Мікрофон</string>
+    <string name="microphone_permission_required">Потрібен дозвіл на доступ до мікрофона</string>
+    <string name="voice_no_match">Мову не розпізнано. Спробуйте ще раз.</string>
+    <string name="voice_network_error">Помилка мережі. Перевірте з’єднання.</string>
+    <string name="voice_search_error">Помилка голосового пошуку: %1$d</string>
+    <string name="copy_error">Копіювати помилку</string>
+    <string name="error_loading_ad_blocker">Помилка завантаження списку блокування реклами</string>
+    <string name="setting_force_dark_webpage">Примусове затемнення вебсторінок</string>
+    <string name="setting_force_dark_webpage_description">Застосовувати темну тему до вебсторінок, коли ввімкнено темний режим</string>
+    <string name="setting_keep_screen_on">Не вимикати екран</string>
+    <string name="setting_keep_screen_on_description">Не давати екрану вимкнути під час перегляду</string>
+    <string name="setting_incognito_mode_description">Перегляд без збереження історії</string>
+    <string name="setting_allow_autoplay_media">Дозволити автоматичне відтворення медіа</string>
+    <string name="setting_home_page_mode">Режим головної сторінки</string>
+    <string name="setting_custom_home_page_url">URL-адреса власної головної сторінки</string>
+    <string name="setting_search_engine">Пошукова система</string>
+    <string name="setting_custom_search_engine_url">URL-адреса власної пошукової системи</string>
+    <string name="setting_user_agent">Агент користувача</string>
+    <string name="setting_web_engine">Вебдвижок</string>
+    <string name="setting_web_engine_description">GeckoView рекомендовано для пристроїв з оперативною пам’яттю 3 ГБ або більше</string>
+    <string name="setting_ad_block">Увімкнути блокувальник реклами</string>
+    <string name="setting_ad_block_list_url">URL-адреса списку блокування реклами</string>
+    <string name="setting_auto_check_updates">Автоматично перевіряти оновлення</string>
+    <string name="setting_update_channel">Канал оновлень</string>
+    <string name="setting_use_http_proxy">Використовувати HTTP-проксі</string>
+    <string name="setting_use_http_proxy_description">Спрямовувати трафік через HTTP-проксі (наприклад, Clash на 127.0.0.1:7890). WebView може потребувати перезапуску</string>
+    <string name="setting_proxy_url">URL-адреса проксі</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Залиште порожнім, щоб вимкнути проксі</string>
+    <string name="setting_directional_navigation_mode">Режим навігації напрямками</string>
+    <string name="setting_directional_navigation_mode_description">Надсилати натискання клавіш зі стрілками на вебсторінку замість переміщення курсора (для ігор/застосунків)</string>
+    <string name="setting_new_tab_button_at_start">Кнопка нової вкладки на початку</string>
+    <string name="setting_new_tab_button_at_start_description">Розміщує кнопку + перед списком вкладок, а не після нього</string>
+    <string name="setting_context_menu_on_long_press">Контекстне меню під час довгого натискання</string>
+    <string name="setting_context_menu_on_long_press_description">Вимкніть, щоб дозволити дії на вебсторінці під час довгого натискання</string>
+    <string name="setting_single_tab_mode">Режим однієї вкладки</string>
+    <string name="setting_single_tab_mode_description">Повторно використовує поточну вкладку для кожного посилання або запиту від застосунку.</string>
+    <string name="change_web_engine">Змінити вебдвижок?</string>
+    <string name="gecko_engine_not_included">GeckoView не включено до цієї збірки.</string>
+    <string name="backup_exported">Резервну копію експортовано</string>
+    <string name="export_failed">Не вдалося експортувати</string>
+    <string name="import_failed">Не вдалося імпортувати</string>
+    <string name="imported_settings">Імпортовано налаштувань: %1$d</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Власний</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Системний (рекомендовано)</item>
+        <item>Chrome (комп’ютер)</item>
+        <item>Chrome (мобільний)</item>
+        <item>Firefox (комп’ютер)</item>
+        <item>Firefox (мобільний)</item>
+        <item>Edge (комп’ютер)</item>
+        <item>Власний</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Стабільний випуск</item>
+        <item>Передвипуск</item>
+    </string-array>
+</resources>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">שפה</string>
+    <string name="language_system_default">ברירת מחדל של המערכת</string>
+    <string name="settings_import">ייבוא הגדרות</string>
+    <string name="settings_export">ייצוא הגדרות</string>
+    <string name="category_general">כללי</string>
+    <string name="category_home_page">דף הבית</string>
+    <string name="category_search">חיפוש</string>
+    <string name="category_user_agent">סוכן משתמש</string>
+    <string name="category_web_engine">מנוע דפדפן</string>
+    <string name="category_ad_block">חסימת פרסומות</string>
+    <string name="category_updates">עדכונים</string>
+    <string name="category_proxy">פרוקסי</string>
+    <string name="link_actions">פעולות קישור</string>
+    <string name="add_bookmark">הוספת סימנייה</string>
+    <string name="move_up">העברה למעלה</string>
+    <string name="move_down">העברה למחץ</string>
+    <string name="remove">הסרה</string>
+    <string name="clear_all">ניקוי הכול</string>
+    <string name="no_history">אין היסטוריה</string>
+    <string name="no_downloads">אין הורדות</string>
+    <string name="about">אודות</string>
+    <string name="app_info">אפליקציה: %1$s (%2$d)</string>
+    <string name="engine_info">מנוע: %1$s</string>
+    <string name="edit_bookmark">עריכת סימנייה</string>
+    <string name="edit_title">עריכת כותרת</string>
+    <string name="edit_url">עריכת כתובת</string>
+    <string name="set_title">הגדרת כותרת...</string>
+    <string name="set_url">הגדרת כתובת...</string>
+    <string name="target_sdk">SDK יעד: %1$d</string>
+    <string name="open_in_current_tab">פתיחה בכרטיסייה הנוכחית</string>
+    <string name="text_selection">בחירת טקסט</string>
+    <string name="grab_mode">מצב תפיסה</string>
+    <string name="microphone">מיקרופון</string>
+    <string name="microphone_permission_required">נדרשת הרשאת מיקרופון</string>
+    <string name="voice_no_match">לא זוהה דיבור. נסה שוב.</string>
+    <string name="voice_network_error">שגיאת רשת. בדוק את החיבור.</string>
+    <string name="voice_search_error">שגיאת חיפוש קולי: %1$d</string>
+    <string name="copy_error">העתקת השגיאה</string>
+    <string name="error_loading_ad_blocker">שגיאה בטעינת רשימת חסימת הפרסומות</string>
+    <string name="setting_force_dark_webpage">אכף מצב כהה בדפי אינטרנט</string>
+    <string name="setting_force_dark_webpage_description">החל ערכת נושא כהה על דפי אינטרנט בעת השימוש במצב כהה.</string>
+    <string name="setting_keep_screen_on">השאר את המסך פעול</string>
+    <string name="setting_keep_screen_on_description">מנע מהמסך לכבות במהלך גלישה.</string>
+    <string name="setting_incognito_mode_description">גלישה ללא שמירת היסטוריה</string>
+    <string name="setting_allow_autoplay_media">אפשר השמעה אוטומטית של מדיה</string>
+    <string name="setting_home_page_mode">מצב דף הבית</string>
+    <string name="setting_custom_home_page_url">כתובת מותאמת אישית לדף הבית</string>
+    <string name="setting_search_engine">מנוע חיפוש</string>
+    <string name="setting_custom_search_engine_url">כתובת מותאמת אישית למנוע החיפוש</string>
+    <string name="setting_user_agent">סוכן משתמש</string>
+    <string name="setting_web_engine">מנוע דפדפן</string>
+    <string name="setting_web_engine_description">מומלץ להשתמש ב-GeckoView במכשירים עם זיכרון RAM של 3GB+.</string>
+    <string name="setting_ad_block">הפעל חסימת פרסומות</string>
+    <string name="setting_ad_block_list_url">כתובת URL לרשימת חסימת פרסומות</string>
+    <string name="setting_auto_check_updates">בדיקת עדכונים אוטומטית</string>
+    <string name="setting_update_channel">ערוץ עדכון</string>
+    <string name="setting_use_http_proxy">שימוש בפרוקסי HTTP</string>
+    <string name="setting_use_http_proxy_description">נתב תעבורה דרך פרוקסי HTTP (לדוגמה, Clash הפועל בכתובת 127.0.0.1:7890). ייתכן שיהיה צורך להפעיל מחדש את WebView</string>
+    <string name="setting_proxy_url">כתובת פרוקסי</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). השאר ריק כדי להשבית.</string>
+    <string name="setting_directional_navigation_mode">מצב ניווט כיווני</string>
+    <string name="setting_directional_navigation_mode_description">שלח מקשי חצים לדף האינטרנט במקום להזיז את הסמן (עבור משחקים/אפליקציות).</string>
+    <string name="setting_new_tab_button_at_start">כפתור כרטיסייה חדשה בתחילת הרשימה</string>
+    <string name="setting_new_tab_button_at_start_description">ממקם את כפתור + לפני רשימת הכרטיסיות במקום אחריה.</string>
+    <string name="setting_context_menu_on_long_press">תפריט הקשר בלחיצה ארוכה</string>
+    <string name="setting_context_menu_on_long_press_description">השבת כדי לאפשר פעולות בדף בלחיצה ארוכה.</string>
+    <string name="setting_single_tab_mode">מצב כרטיסייה יחידה</string>
+    <string name="setting_single_tab_mode_description">משתמש בכרטיסייה הנוכחית עבור כל קישור או כוונה.</string>
+    <string name="change_web_engine">להחליף את מנוע הדפדפן?</string>
+    <string name="gecko_engine_not_included">מנוע GeckoView אינו כלול בגרסה זו.</string>
+    <string name="backup_exported">הגיבוי יוצא</string>
+    <string name="export_failed">הייצוא נכשל</string>
+    <string name="import_failed">הייבוא נכשל</string>
+    <string name="imported_settings">יובאו %1$d הגדרות</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>מותאם אישית</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>ברירת מחדל (מומלץ)</item>
+        <item>Chrome (שולחן עבודה)</item>
+        <item>Chrome (נייד)</item>
+        <item>Firefox (שולחן עבודה)</item>
+        <item>Firefox (נייד)</item>
+        <item>Edge (שולחן עבודה)</item>
+        <item>מותאם אישית</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>גרסה יציבה</item>
+        <item>גרסה טרום-יציבה</item>
+    </string-array>
+</resources>

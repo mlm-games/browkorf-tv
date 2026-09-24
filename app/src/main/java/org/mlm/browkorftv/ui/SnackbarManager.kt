@@ -22,11 +22,15 @@ class SnackbarManager {
         _events.tryEmit(SnackbarEvent(message, actionLabel, withDismissAction))
     }
 
-    fun postError(message: String, errorDetails: String?) {
+    fun postError(
+        message: String,
+        errorDetails: String?,
+        actionLabel: String? = null,
+    ) {
         _events.tryEmit(
             SnackbarEvent(
                 message = message,
-                actionLabel = "Copy Error",
+                actionLabel = actionLabel,
                 withDismissAction = true,
                 errorDetails = errorDetails
             )

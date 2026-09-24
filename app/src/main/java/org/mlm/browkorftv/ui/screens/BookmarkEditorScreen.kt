@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import org.mlm.browkorftv.activity.main.FavoritesViewModel
@@ -16,7 +17,8 @@ import org.mlm.browkorftv.ui.components.BrowkorfTopBar
 import org.mlm.browkorftv.ui.components.BrowkorfTvButton
 import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
 import org.mlm.browkorftv.ui.components.BrowkorfTvListItem
-import org.mlm.browkorftv.common.R
+import org.mlm.browkorftv.R
+import org.mlm.browkorftv.common.R as CommonR
 
 
 @Composable
@@ -31,6 +33,8 @@ fun BookmarkEditorScreen(
     var existingId by remember { mutableStateOf<Long?>(null) }
     var title by remember { mutableStateOf("") }
     var url by remember { mutableStateOf("") }
+    val setTitle = stringResource(R.string.set_title)
+    val setUrl = stringResource(R.string.set_url)
 
     var editTitle by remember { mutableStateOf(false) }
     var editUrl by remember { mutableStateOf(false) }
@@ -65,7 +69,11 @@ fun BookmarkEditorScreen(
     ) {
         // Header
         BrowkorfTopBar(
-            title = if (id == null) "New Bookmark" else "Edit Bookmark",
+            title = if (id == null) {
+                stringResource(R.string.new_bookmark)
+            } else {
+                stringResource(R.string.edit_bookmark)
+            },
             onBack = onDone,
             actions = {
                 val saveBookmark = {
@@ -86,8 +94,8 @@ fun BookmarkEditorScreen(
                 // Save
                 BrowkorfTvIconButton(
                     onClick = saveBookmark,
-                    painter = painterResource(R.drawable.outline_bookmark_check_24),
-                    contentDescription = "Save"
+                    painter = painterResource(CommonR.drawable.outline_bookmark_check_24),
+                    contentDescription = stringResource(R.string.save)
                 )
 
                 // Delete (only if editing)
@@ -98,8 +106,8 @@ fun BookmarkEditorScreen(
                     }
                     BrowkorfTvIconButton(
                         onClick = deleteBookmark,
-                        painter = painterResource(R.drawable.outline_delete_24),
-                        contentDescription = "Delete"
+                        painter = painterResource(CommonR.drawable.outline_delete_24),
+                        contentDescription = stringResource(R.string.delete)
                     )
                 }
             }
@@ -108,21 +116,21 @@ fun BookmarkEditorScreen(
         Spacer(Modifier.height(16.dp))
 
         if (loading) {
-            Text("Loading…")
+            Text(stringResource(R.string.loading))
             return
         }
 
         // Form Fields (Click row to edit)
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             BrowkorfTvListItem(
-                headline = "Title",
-                supportingText = title.ifBlank { "Set title..." },
+                headline = stringResource(R.string.title),
+                supportingText = title.ifBlank { setTitle },
                 onClick = { editTitle = true }
             )
 
             BrowkorfTvListItem(
-                headline = "URL",
-                supportingText = url.ifBlank { "Set URL..." },
+                headline = stringResource(R.string.url),
+                supportingText = url.ifBlank { setUrl },
                 onClick = { editUrl = true }
             )
         }
@@ -132,7 +140,7 @@ fun BookmarkEditorScreen(
 
             BrowkorfTvButton(
                 onClick = onDone,
-                text = "Cancel"
+                text = stringResource(R.string.cancel)
             )
         }
     }
@@ -140,16 +148,16 @@ fun BookmarkEditorScreen(
     // Dialogs
     if (editTitle) {
         TextEntryDialog(
-            title = "Edit title",
+            title = stringResource(R.string.edit_title),
             initial = title,
-            hint = "Title",
+            hint = stringResource(R.string.title),
             onDismiss = { editTitle = false },
             onConfirm = { title = it; editTitle = false }
         )
     }
     if (editUrl) {
         TextEntryDialog(
-            title = "Edit URL",
+            title = stringResource(R.string.edit_url),
             initial = url,
             hint = "https://example.com",
             onDismiss = { editUrl = false },

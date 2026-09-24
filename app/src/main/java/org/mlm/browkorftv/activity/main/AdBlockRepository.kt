@@ -16,6 +16,7 @@ import org.mlm.adblock.AdblockEngine
 import org.mlm.adblock.BlockDecision
 import org.mlm.adblock.CosmeticResources
 import org.mlm.adblock.RequestTypeMapper
+import org.mlm.browkorftv.R
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.ui.SnackbarManager
@@ -129,7 +130,11 @@ class AdBlockRepository(
                     success = true
                     Log.w(TAG, "Using stale adblock cache")
                 } else {
-                    snackbar.postError("Error loading ad-blocker list", e.message)
+                    snackbar.postError(
+                        message = context.getString(R.string.error_loading_ad_blocker),
+                        errorDetails = e.message,
+                        actionLabel = context.getString(R.string.copy_error),
+                    )
                 }
             }
         }
@@ -152,7 +157,7 @@ class AdBlockRepository(
             settingsManager.setAdBlockListLastUpdate(now.timeInMillis)
         }
 
-        if (!success) snackbar.show("Error loading ad-blocker list")
+        if (!success) snackbar.show(context.getString(R.string.error_loading_ad_blocker))
 
         _clientLoading.value = false
     }

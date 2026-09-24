@@ -26,6 +26,7 @@ import androidx.tv.material3.Icon
 import androidx.tv.material3.IconButton
 import androidx.tv.material3.Surface
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.tv.material3.SurfaceDefaults
 import kotlinx.coroutines.delay
 import org.mlm.browkorftv.R
@@ -103,7 +104,10 @@ fun CursorRadialMenu(
                         .align(Alignment.Center)
                         .focusRequester(focusRequester)
                 ) {
-                    Icon(painterResource(R.drawable.outline_close_24), contentDescription = "Close")
+                    Icon(
+                        painterResource(R.drawable.outline_close_24),
+                        contentDescription = stringResource(R.string.close),
+                    )
                 }
 
                 TvIconButton(
@@ -115,7 +119,7 @@ fun CursorRadialMenu(
                 ) {
                     Icon(
                         painterResource(R.drawable.outline_zoom_out_24),
-                        contentDescription = "Zoom Out"
+                        contentDescription = stringResource(R.string.zoom_out)
                     )
                 }
 
@@ -128,7 +132,7 @@ fun CursorRadialMenu(
                 ) {
                     Icon(
                         painterResource(R.drawable.outline_zoom_in_24),
-                        contentDescription = "Zoom In"
+                        contentDescription = stringResource(R.string.zoom_in)
                     )
                 }
 
@@ -141,7 +145,7 @@ fun CursorRadialMenu(
                 ) {
                     Icon(
                         painterResource(R.drawable.outline_text_select_start_24),
-                        contentDescription = "Text Selection"
+                        contentDescription = stringResource(R.string.text_selection)
                     )
                 }
 
@@ -154,7 +158,7 @@ fun CursorRadialMenu(
                 ) {
                     Icon(
                         painterResource(R.drawable.outline_menu_open_24),
-                        contentDescription = "Link Actions"
+                        contentDescription = stringResource(R.string.link_actions)
                     )
                 }
 
@@ -167,7 +171,7 @@ fun CursorRadialMenu(
                 ) {
                     Icon(
                         painterResource(R.drawable.outline_grab_24),
-                        contentDescription = "Grab Mode"
+                        contentDescription = stringResource(R.string.grab_mode)
                     )
                 }
             }

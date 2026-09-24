@@ -15,6 +15,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -98,6 +99,7 @@ private fun TabItem(
     onClick: () -> Unit
 ) {
     val colors = AppTheme.colors
+    val newTabTitle = stringResource(R.string.open_new_tab)
     var isFocused by remember { mutableStateOf(false) }
 
     // Load Favicon Async
@@ -153,7 +155,7 @@ private fun TabItem(
             Spacer(Modifier.width(8.dp))
 
             Text(
-                text = tab.title.ifBlank { tab.url.ifBlank { "New Tab" } },
+                text = tab.title.ifBlank { tab.url.ifBlank { newTabTitle } },
                 color = if (isSelected || isFocused)
                     colors.tabTextColorSelected
                 else

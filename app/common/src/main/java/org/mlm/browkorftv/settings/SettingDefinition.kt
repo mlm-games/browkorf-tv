@@ -61,6 +61,14 @@ data class AppSettings(
     val theme: Theme = Theme.System,
 
     @Setting(
+        title = "Language",
+        category = General::class,
+        type = LanguageSetting::class,
+        key = "language_index"
+    )
+    val languageIndex: Int = 0,
+
+    @Setting(
         title = "Force Dark Webpage",
         description = "Apply dark theme to web pages when using dark mode",
         category = General::class,
@@ -400,6 +408,8 @@ data class AppSettings(
     }
 }
 
+
+class LanguageSetting
 
 enum class Theme {
     System, White, Black

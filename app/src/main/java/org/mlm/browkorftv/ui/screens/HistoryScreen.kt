@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import org.mlm.browkorftv.activity.main.HistoryViewModel
@@ -48,26 +49,26 @@ fun HistoryScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("History", style = MaterialTheme.typography.headlineSmall)
+            Text(stringResource(R.string.history), style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             if (rows.isNotEmpty()) {
                 BrowkorfTvIconButton(
                     onClick = clearHistory,
                     painter = painterResource(R.drawable.outline_clear_all_24),
-                    contentDescription = "Clear All",
+                    contentDescription = stringResource(R.string.clear_all),
                     tint = MaterialTheme.colorScheme.error
                 )
             }
             BrowkorfTvIconButton(
                 onClick = onBack,
                 painter = painterResource(R.drawable.outline_chevron_forward_24),
-                contentDescription = "Back"
+                contentDescription = stringResource(R.string.navigate_back)
             )
         }
 
         if (rows.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No history", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.no_history), style = MaterialTheme.typography.bodyLarge)
             }
             return
         }

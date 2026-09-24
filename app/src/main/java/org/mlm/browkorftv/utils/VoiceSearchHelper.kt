@@ -81,7 +81,7 @@ class VoiceSearchHelper(
                     startRecognitionAndroid11Plus()
                 }
             } else {
-                showMessage("Microphone permission required")
+                showMessage(activity.getString(R.string.microphone_permission_required))
             }
         }
 
@@ -161,10 +161,10 @@ class VoiceSearchHelper(
         override fun onEndOfSpeech() {}
         override fun onError(error: Int) {
             val message = when (error) {
-                SpeechRecognizer.ERROR_NO_MATCH -> "No speech recognized. Please try again."
-                SpeechRecognizer.ERROR_NETWORK -> "Network error. Check connection."
-                SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Microphone permission required."
-                else -> "Voice search error: $error"
+                SpeechRecognizer.ERROR_NO_MATCH -> activity.getString(R.string.voice_no_match)
+                SpeechRecognizer.ERROR_NETWORK -> activity.getString(R.string.voice_network_error)
+                SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> activity.getString(R.string.microphone_permission_required)
+                else -> activity.getString(R.string.voice_search_error, error)
             }
             stopListening()
             showMessage(activity.getString(R.string.error))
@@ -293,7 +293,7 @@ class VoiceSearchHelper(
 
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.outline_mic_24),
-            contentDescription = "Microphone",
+            contentDescription = stringResource(R.string.microphone),
             tint = displayColor,
             modifier = Modifier
                 .size(72.dp)

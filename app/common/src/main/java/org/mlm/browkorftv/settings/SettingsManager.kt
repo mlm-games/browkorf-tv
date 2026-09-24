@@ -107,6 +107,10 @@ class SettingsManager private constructor(context: Context) {
         update { it.copy(theme = theme) }
     }
 
+    suspend fun setLanguageIndex(index: Int) {
+        update { it.copy(languageIndex = index) }
+    }
+
     suspend fun setKeepScreenOn(value: Boolean) {
         update { it.copy(keepScreenOn = value) }
     }

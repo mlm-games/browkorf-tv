@@ -2,7 +2,6 @@ package org.mlm.browkorftv.activity.main
 
 import android.os.Build
 import android.util.Log
-import android.webkit.WebView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import org.mlm.browkorftv.BuildConfig
@@ -14,6 +13,7 @@ import org.mlm.browkorftv.model.dao.HistoryDao
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.utils.deleteDirectory
+import org.mlm.browkorftv.webengine.webview.IncognitoWebViewData
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
@@ -32,7 +32,7 @@ class MainViewModel(
         const val WEB_VIEW_DATA_FOLDER = "app_webview"
         const val WEB_VIEW_CACHE_FOLDER = "WebView"
         const val WEB_VIEW_DATA_BACKUP_DIRECTORY_SUFFIX = "_backup"
-        const val INCOGNITO_DATA_DIRECTORY_SUFFIX = "incognito"
+        const val INCOGNITO_DATA_DIRECTORY_SUFFIX = IncognitoWebViewData.SUFFIX
     }
 
     var loaded = false
@@ -140,15 +140,7 @@ class MainViewModel(
         //in api >= 28 we just use another directory for WebView data
         //on earlier apis we backup-ing existing WebView data directory
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val incognitoWebViewData = File(
-                BrowkorfTV.instance.filesDir.parentFile!!.absolutePath +
-                        "/" + WEB_VIEW_DATA_FOLDER + "_" + INCOGNITO_DATA_DIRECTORY_SUFFIX
-            )
-            if (incognitoWebViewData.exists()) {
-                Log.i(TAG, "Looks like we already in incognito mode")
-                return
-            }
-            WebView.setDataDirectorySuffix(INCOGNITO_DATA_DIRECTORY_SUFFIX)
+            IncognitoWebViewData.configure()
         } else {
             val webViewData = File(
                 BrowkorfTV.instance.filesDir.parentFile!!.absolutePath +

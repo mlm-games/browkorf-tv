@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import androidx.webkit.WebViewCompat
@@ -30,12 +31,12 @@ fun AboutScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("About", style = MaterialTheme.typography.headlineSmall)
+            Text(stringResource(R.string.about), style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             BrowkorfTvIconButton(
                 onClick = onBack,
                 painter = painterResource(R.drawable.outline_chevron_forward_24),
-                contentDescription = "Back"
+                contentDescription = stringResource(R.string.navigate_back)
             )
         }
 
@@ -46,11 +47,20 @@ fun AboutScreen(
                     .padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text("App: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
-                Text("Engine: $engine", style = MaterialTheme.typography.bodySmall)
                 Text(
-                    "targetSdk: ${ctx.applicationInfo.targetSdkVersion}",
-                    style = MaterialTheme.typography.bodySmall
+                    stringResource(
+                        R.string.app_info,
+                        BuildConfig.VERSION_NAME,
+                        BuildConfig.VERSION_CODE,
+                    ),
+                )
+                Text(
+                    stringResource(R.string.engine_info, engine),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Text(
+                    stringResource(R.string.target_sdk, ctx.applicationInfo.targetSdkVersion),
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
         }

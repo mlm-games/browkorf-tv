@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Ngôn ngữ</string>
+    <string name="language_system_default">Mặc định của hệ thống</string>
+    <string name="settings_import">Nhập cài đặt</string>
+    <string name="settings_export">Xuất cài đặt</string>
+    <string name="category_general">Chung</string>
+    <string name="category_home_page">Trang chủ</string>
+    <string name="category_search">Tìm kiếm</string>
+    <string name="category_user_agent">Tác nhân người dùng</string>
+    <string name="category_web_engine">Động cơ web</string>
+    <string name="category_ad_block">Trình chặn quảng cáo</string>
+    <string name="category_updates">Cập nhật</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Thao tác với liên kết</string>
+    <string name="add_bookmark">Thêm dấu trang</string>
+    <string name="move_up">Chuyển lên</string>
+    <string name="move_down">Chuyển xuống</string>
+    <string name="remove">Xóa</string>
+    <string name="clear_all">Xóa tất cả</string>
+    <string name="no_history">Không có lịch sử</string>
+    <string name="no_downloads">Không có nội dung tải xuống</string>
+    <string name="about">Giới thiệu</string>
+    <string name="app_info">Ứng dụng: %1$s (%2$d)</string>
+    <string name="engine_info">Động cơ: %1$s</string>
+    <string name="edit_bookmark">Chỉnh sửa dấu trang</string>
+    <string name="edit_title">Chỉnh sửa tiêu đề</string>
+    <string name="edit_url">Chỉnh sửa URL</string>
+    <string name="set_title">Đặt tiêu đề...</string>
+    <string name="set_url">Đặt URL...</string>
+    <string name="target_sdk">SDK mục tiêu: %1$d</string>
+    <string name="open_in_current_tab">Mở trong tab hiện tại</string>
+    <string name="text_selection">Chọn văn bản</string>
+    <string name="grab_mode">Chế độ kéo</string>
+    <string name="microphone">Micrô</string>
+    <string name="microphone_permission_required">Cần cấp quyền micrô</string>
+    <string name="voice_no_match">Không nhận dạng được giọng nói. Hãy thử lại.</string>
+    <string name="voice_network_error">Lỗi mạng. Hãy kiểm tra kết nối.</string>
+    <string name="voice_search_error">Lỗi tìm kiếm bằng giọng nói: %1$d</string>
+    <string name="copy_error">Sao chép lỗi</string>
+    <string name="error_loading_ad_blocker">Lỗi tải danh sách chặn quảng cáo</string>
+    <string name="setting_force_dark_webpage">Buộc làm tối trang web</string>
+    <string name="setting_force_dark_webpage_description">Áp dụng giao diện tối cho trang web khi dùng chế độ tối</string>
+    <string name="setting_keep_screen_on">Giữ màn hình luôn bật</string>
+    <string name="setting_keep_screen_on_description">Ngăn màn hình tắt khi duyệt web</string>
+    <string name="setting_incognito_mode_description">Duyệt web mà không lưu lịch sử</string>
+    <string name="setting_allow_autoplay_media">Cho phép tự động phát nội dung đa phương tiện</string>
+    <string name="setting_home_page_mode">Chế độ trang chủ</string>
+    <string name="setting_custom_home_page_url">URL trang chủ tùy chỉnh</string>
+    <string name="setting_search_engine">Động cơ tìm kiếm</string>
+    <string name="setting_custom_search_engine_url">URL động cơ tìm kiếm tùy chỉnh</string>
+    <string name="setting_user_agent">Tác nhân người dùng</string>
+    <string name="setting_web_engine">Động cơ web</string>
+    <string name="setting_web_engine_description">Khuyến nghị dùng GeckoView với thiết bị có RAM từ 3 GB trở lên</string>
+    <string name="setting_ad_block">Bật trình chặn quảng cáo</string>
+    <string name="setting_ad_block_list_url">URL danh sách chặn quảng cáo</string>
+    <string name="setting_auto_check_updates">Tự động kiểm tra cập nhật</string>
+    <string name="setting_update_channel">Kênh cập nhật</string>
+    <string name="setting_use_http_proxy">Sử dụng HTTP proxy</string>
+    <string name="setting_use_http_proxy_description">Định tuyến lưu lượng qua HTTP proxy (ví dụ: Clash tại 127.0.0.1:7890). Có thể cần khởi động lại WebView</string>
+    <string name="setting_proxy_url">URL proxy</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Để trống để tắt</string>
+    <string name="setting_directional_navigation_mode">Chế độ điều hướng theo hướng</string>
+    <string name="setting_directional_navigation_mode_description">Gửi phím mũi tên đến trang web thay vì di chuyển con trỏ (dành cho trò chơi/ứng dụng)</string>
+    <string name="setting_new_tab_button_at_start">Nút tab mới ở đầu</string>
+    <string name="setting_new_tab_button_at_start_description">Đặt nút + trước danh sách tab thay vì sau danh sách</string>
+    <string name="setting_context_menu_on_long_press">Menu ngữ cảnh khi nhấn giữ</string>
+    <string name="setting_context_menu_on_long_press_description">Tắt tùy chọn này để cho phép thao tác trên trang khi nhấn giữ</string>
+    <string name="setting_single_tab_mode">Chế độ một tab</string>
+    <string name="setting_single_tab_mode_description">Tái sử dụng tab hiện tại cho mọi liên kết hoặc yêu cầu từ ứng dụng.</string>
+    <string name="change_web_engine">Đổi động cơ web?</string>
+    <string name="gecko_engine_not_included">Động cơ GeckoView không có trong bản dựng này.</string>
+    <string name="backup_exported">Đã xuất bản sao lưu</string>
+    <string name="export_failed">Xuất không thành công</string>
+    <string name="import_failed">Nhập không thành công</string>
+    <string name="imported_settings">Đã nhập %1$d cài đặt</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Tùy chỉnh</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Mặc định (khuyến nghị)</item>
+        <item>Chrome (máy tính)</item>
+        <item>Chrome (di động)</item>
+        <item>Firefox (máy tính)</item>
+        <item>Firefox (di động)</item>
+        <item>Edge (máy tính)</item>
+        <item>Tùy chỉnh</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Bản phát hành</item>
+        <item>Bản thử nghiệm</item>
+    </string-array>
+</resources>

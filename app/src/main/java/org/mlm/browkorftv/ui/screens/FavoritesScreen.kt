@@ -6,8 +6,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.mlm.browkorftv.common.R
+import androidx.compose.ui.res.stringResource
 import org.mlm.browkorftv.R as AppR
+import org.mlm.browkorftv.common.R as CommonR
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,30 +43,30 @@ fun FavoritesScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Favorites", style = MaterialTheme.typography.headlineSmall)
+            Text(stringResource(AppR.string.favorites), style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             BrowkorfTvIconButton(
                 onClick = onAddBookmark,
                 painter = painterResource(AppR.drawable.outline_add_24),
-                contentDescription = "Add Bookmark"
+                contentDescription = stringResource(AppR.string.add_bookmark)
             )
             BrowkorfTvIconButton(
                 onClick = onBack,
                 painter = painterResource(AppR.drawable.outline_chevron_forward_24),
-                contentDescription = "Back"
+                contentDescription = stringResource(AppR.string.navigate_back)
             )
         }
 
         if (loading) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Loading...")
+                Text(stringResource(AppR.string.loading))
             }
             return
         }
 
         if (bookmarks.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No bookmarks yet")
+                Text(stringResource(AppR.string.no_bookmarks_yet))
             }
             return
         }
@@ -141,8 +142,8 @@ private fun FavoriteItem(
 
         BrowkorfTvIconButton(
             onClick = onEdit,
-            painter = painterResource(R.drawable.outline_movie_edit_24),
-            contentDescription = "Edit",
+            painter = painterResource(CommonR.drawable.outline_movie_edit_24),
+            contentDescription = stringResource(AppR.string.edit),
             colors = ButtonDefaults.colors(
                 containerColor = colors.buttonBackground,
                 focusedContainerColor = colors.buttonBackgroundFocused,
@@ -156,7 +157,7 @@ private fun FavoriteItem(
         BrowkorfTvIconButton(
             onClick = onMoveUp,
             painter = painterResource(AppR.drawable.outline_chevron_backward_24),
-            contentDescription = "Move up",
+            contentDescription = stringResource(AppR.string.move_up),
             enabled = canMoveUp,
             colors = ButtonDefaults.colors(
                 containerColor = colors.buttonBackground,
@@ -171,7 +172,7 @@ private fun FavoriteItem(
         BrowkorfTvIconButton(
             onClick = onMoveDown,
             painter = painterResource(AppR.drawable.outline_chevron_forward_24),
-            contentDescription = "Move down",
+            contentDescription = stringResource(AppR.string.move_down),
             enabled = canMoveDown,
             colors = ButtonDefaults.colors(
                 containerColor = colors.buttonBackground,
@@ -185,8 +186,8 @@ private fun FavoriteItem(
 
         BrowkorfTvIconButton(
             onClick = onDelete,
-            painter = painterResource(R.drawable.outline_bookmark_remove_24),
-            contentDescription = "Remove",
+            painter = painterResource(CommonR.drawable.outline_bookmark_remove_24),
+            contentDescription = stringResource(AppR.string.remove),
             colors = ButtonDefaults.colors(
                 containerColor = colors.buttonBackground,
                 focusedContainerColor = colors.buttonBackgroundFocused,

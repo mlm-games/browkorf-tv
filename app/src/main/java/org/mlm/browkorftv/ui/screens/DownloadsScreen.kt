@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -70,27 +71,27 @@ fun DownloadsScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Downloads", style = MaterialTheme.typography.headlineSmall)
+            Text(stringResource(R.string.downloads), style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             if (rows.isNotEmpty()) {
                 val clearDownloads: () -> Unit = { viewModel.deleteAll() }
                 BrowkorfTvIconButton(
                     onClick = clearDownloads,
                     painter = painterResource(R.drawable.outline_clear_all_24),
-                    contentDescription = "Clear All",
+                    contentDescription = stringResource(R.string.clear_all),
                     tint = MaterialTheme.colorScheme.error
                 )
             }
             BrowkorfTvIconButton(
                 onClick = onBack,
                 painter = painterResource(R.drawable.outline_chevron_forward_24),
-                contentDescription = "Back"
+                contentDescription = stringResource(R.string.navigate_back)
             )
         }
 
         if (rows.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No downloads", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.no_downloads), style = MaterialTheme.typography.bodyLarge)
             }
             return
         }

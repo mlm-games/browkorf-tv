@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Język</string>
+    <string name="language_system_default">Domyślny systemu</string>
+    <string name="settings_import">Importuj ustawienia</string>
+    <string name="settings_export">Eksportuj ustawienia</string>
+    <string name="category_general">Ogólne</string>
+    <string name="category_home_page">Strona główna</string>
+    <string name="category_search">Wyszukiwanie</string>
+    <string name="category_user_agent">Agent użytkownika</string>
+    <string name="category_web_engine">Silnik przeglądarki</string>
+    <string name="category_ad_block">Bloker reklam</string>
+    <string name="category_updates">Aktualizacje</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Działania z linkami</string>
+    <string name="add_bookmark">Dodaj zakładkę</string>
+    <string name="move_up">Przenieś w górę</string>
+    <string name="move_down">Przenieś w dół</string>
+    <string name="remove">Usuń</string>
+    <string name="clear_all">Wyczyść wszystko</string>
+    <string name="no_history">Brak historii</string>
+    <string name="no_downloads">Brak pobrań</string>
+    <string name="about">O aplikacji</string>
+    <string name="app_info">Aplikacja: %1$s (%2$d)</string>
+    <string name="engine_info">Silnik: %1$s</string>
+    <string name="edit_bookmark">Edytuj zakładkę</string>
+    <string name="edit_title">Edytuj tytuł</string>
+    <string name="edit_url">Edytuj adres URL</string>
+    <string name="set_title">Ustaw tytuł...</string>
+    <string name="set_url">Ustaw adres URL...</string>
+    <string name="target_sdk">Docelowy SDK: %1$d</string>
+    <string name="open_in_current_tab">Otwórz w bieżącej karcie</string>
+    <string name="text_selection">Zaznaczanie tekstu</string>
+    <string name="grab_mode">Tryb chwytania</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="microphone_permission_required">Wymagana jest zgoda na dostęp do mikrofonu</string>
+    <string name="voice_no_match">Nie rozpoznano mowy. Spróbuj ponownie.</string>
+    <string name="voice_network_error">Błąd sieci. Sprawdź połączenie.</string>
+    <string name="voice_search_error">Błąd wyszukiwania głosowego: %1$d</string>
+    <string name="copy_error">Kopiuj błąd</string>
+    <string name="error_loading_ad_blocker">Błąd wczytywania listy blokowania reklam</string>
+    <string name="setting_force_dark_webpage">Wymuś ciemny motyw strony</string>
+    <string name="setting_force_dark_webpage_description">Zastosuj ciemny motyw na stronach internetowych podczas korzystania z trybu ciemnego.</string>
+    <string name="setting_keep_screen_on">Utrzymuj ekran włączony</string>
+    <string name="setting_keep_screen_on_description">Zapobiegaj wyłączaniu ekranu podczas przeglądania.</string>
+    <string name="setting_incognito_mode_description">Przeglądaj bez zapisywania historii</string>
+    <string name="setting_allow_autoplay_media">Zezwalaj na automatyczne odtwarzanie multimediów</string>
+    <string name="setting_home_page_mode">Tryb strony głównej</string>
+    <string name="setting_custom_home_page_url">Adres URL własnej strony głównej</string>
+    <string name="setting_search_engine">Wyszukiwarka</string>
+    <string name="setting_custom_search_engine_url">Adres URL własnej wyszukiwarki</string>
+    <string name="setting_user_agent">Agent użytkownika</string>
+    <string name="setting_web_engine">Silnik przeglądarki</string>
+    <string name="setting_web_engine_description">GeckoView jest zalecany w urządzeniach z pamięcią RAM o pojemności 3GB+.</string>
+    <string name="setting_ad_block">Włącz blokowanie reklam</string>
+    <string name="setting_ad_block_list_url">Adres URL listy blokowania reklam</string>
+    <string name="setting_auto_check_updates">Automatyczne sprawdzanie aktualizacji</string>
+    <string name="setting_update_channel">Kanał aktualizacji</string>
+    <string name="setting_use_http_proxy">Używaj proxy HTTP</string>
+    <string name="setting_use_http_proxy_description">Kieruj ruch przez proxy HTTP (np. Clash na 127.0.0.1:7890). Może być wymagane ponowne uruchomienie WebView.</string>
+    <string name="setting_proxy_url">Adres URL proxy</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Pozostaw puste, aby wyłączyć.</string>
+    <string name="setting_directional_navigation_mode">Tryb nawigacji kierunkowej</string>
+    <string name="setting_directional_navigation_mode_description">Wysyłaj klawisze strzałek do strony internetowej zamiast przesuwać kursor (do gier/aplikacji).</string>
+    <string name="setting_new_tab_button_at_start">Przycisk nowej karty na początku</string>
+    <string name="setting_new_tab_button_at_start_description">Umieszcza przycisk + przed listą kart zamiast za nią.</string>
+    <string name="setting_context_menu_on_long_press">Menu kontekstowe po długim naciśnięciu</string>
+    <string name="setting_context_menu_on_long_press_description">Wyłącz, aby umożliwić działania na stronie przy długim naciśnięciu.</string>
+    <string name="setting_single_tab_mode">Tryb jednej karty</string>
+    <string name="setting_single_tab_mode_description">Ponownie wykorzystuje bieżącą kartę dla każdego linku lub intencji.</string>
+    <string name="change_web_engine">Zmienić silnik przeglądarki?</string>
+    <string name="gecko_engine_not_included">Silnik GeckoView nie jest dołączony do tej wersji.</string>
+    <string name="backup_exported">Kopia zapasowa wyeksportowana</string>
+    <string name="export_failed">Eksport nie powiódł się</string>
+    <string name="import_failed">Import nie powiódł się</string>
+    <string name="imported_settings">Zaimportowano ustawienia: %1$d</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Niestandardowy</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Domyślny (zalecany)</item>
+        <item>Chrome (komputer)</item>
+        <item>Chrome (mobile)</item>
+        <item>Firefox (komputer)</item>
+        <item>Firefox (mobile)</item>
+        <item>Edge (komputer)</item>
+        <item>Niestandardowy</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Wersja stabilna</item>
+        <item>Wersja przedpremierowa</item>
+    </string-array>
+</resources>

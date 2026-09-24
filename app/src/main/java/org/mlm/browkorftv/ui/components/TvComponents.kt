@@ -17,6 +17,7 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.*
 import org.mlm.browkorftv.R
@@ -164,7 +165,7 @@ fun BrowkorfTopBar(
             BrowkorfTvIconButton(
                 onClick = onBack,
                 painter = painterResource(R.drawable.outline_chevron_backward_24),
-                contentDescription = "Back"
+                contentDescription = stringResource(R.string.navigate_back)
             )
         },
         actions = actions,

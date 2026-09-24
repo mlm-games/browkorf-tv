@@ -6,6 +6,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.ButtonDefaults
@@ -13,6 +14,7 @@ import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.SurfaceDefaults
+import org.mlm.browkorftv.R
 import org.mlm.browkorftv.ui.theme.AppTheme
 
 enum class LinkAction { Refresh, OpenInNewTab, OpenInCurrentTab, OpenExternal, Copy, Download, Share }
@@ -50,26 +52,32 @@ fun LinkActionsDialog(
                 Modifier.padding(18.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text("Link actions", style = MaterialTheme.typography.titleLarge)
+                Text(stringResource(R.string.link_actions), style = MaterialTheme.typography.titleLarge)
 
-                LinkActionButton("Refresh") { onAction(LinkAction.Refresh) }
+                LinkActionButton(stringResource(R.string.refresh_page)) { onAction(LinkAction.Refresh) }
 
                 if (canOpenUrlActions) {
                     if (singleTabMode) {
-                        LinkActionButton("Open link") { onAction(LinkAction.OpenInCurrentTab) }
+                        LinkActionButton(stringResource(R.string.open_in_current_tab)) {
+                            onAction(LinkAction.OpenInCurrentTab)
+                        }
                     } else {
-                        LinkActionButton("Open in new tab") { onAction(LinkAction.OpenInNewTab) }
+                        LinkActionButton(stringResource(R.string.open_in_new_tab)) {
+                            onAction(LinkAction.OpenInNewTab)
+                        }
                     }
-                    LinkActionButton("Open in external app") { onAction(LinkAction.OpenExternal) }
-                    LinkActionButton("Download") { onAction(LinkAction.Download) }
+                    LinkActionButton(stringResource(R.string.open_in_external_application)) {
+                        onAction(LinkAction.OpenExternal)
+                    }
+                    LinkActionButton(stringResource(R.string.download)) { onAction(LinkAction.Download) }
                 }
 
                 if (canCopyShare) {
-                    LinkActionButton("Copy") { onAction(LinkAction.Copy) }
-                    LinkActionButton("Share") { onAction(LinkAction.Share) }
+                    LinkActionButton(stringResource(R.string.copy)) { onAction(LinkAction.Copy) }
+                    LinkActionButton(stringResource(R.string.share)) { onAction(LinkAction.Share) }
                 }
 
-                LinkActionButton("Close", onDismiss)
+                LinkActionButton(stringResource(R.string.close), onDismiss)
             }
         }
     }

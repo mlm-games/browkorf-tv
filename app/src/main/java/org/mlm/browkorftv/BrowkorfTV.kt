@@ -3,13 +3,17 @@ package org.mlm.browkorftv
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import org.mlm.browkorftv.di.appModule
 import org.mlm.browkorftv.network.ProxyManager
+import org.mlm.browkorftv.settings.AppLanguage
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
+import org.mlm.browkorftv.webengine.webview.IncognitoWebViewData
 import org.mlm.browkorftv.singleton.AppDatabase
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,6 +41,13 @@ class BrowkorfTV : Application(), Application.ActivityLifecycleCallbacks {
 
     private val settingsManager: SettingsManager by inject()
     private val database: AppDatabase by inject()
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && getProcessName().endsWith(":incognito")) {
+            IncognitoWebViewData.configure()
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -100,7 +111,14 @@ class BrowkorfTV : Application(), Application.ActivityLifecycleCallbacks {
         notificationManager.createNotificationChannel(channel)
     }
 
-    override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {}
+    override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {
+        val language = AppLanguage.current()
+        if (settingsManager.current.languageIndex != language.ordinal) {
+            ProcessLifecycleOwner.get().lifecycleScope.launch {
+                settingsManager.setLanguageIndex(language.ordinal)
+            }
+        }
+    }
     override fun onActivityStarted(activity: android.app.Activity) {}
     override fun onActivityResumed(activity: android.app.Activity) {}
     override fun onActivityPaused(activity: android.app.Activity) {}

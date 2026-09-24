@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">زبان</string>
+    <string name="language_system_default">پیش‌فرض سیستم</string>
+    <string name="settings_import">وارد کردن تنظیمات</string>
+    <string name="settings_export">صادر کردن تنظیمات</string>
+    <string name="category_general">عمومی</string>
+    <string name="category_home_page">صفحهٔ اصلی</string>
+    <string name="category_search">جست‌وجو</string>
+    <string name="category_user_agent">عامل کاربر</string>
+    <string name="category_web_engine">موتور وب</string>
+    <string name="category_ad_block">مسدودکنندهٔ تبلیغات</string>
+    <string name="category_updates">به‌روزرسانی‌ها</string>
+    <string name="category_proxy">پراکسی</string>
+    <string name="link_actions">کنش‌های پیوند</string>
+    <string name="add_bookmark">افزودن نشانک</string>
+    <string name="move_up">انتقال به بالا</string>
+    <string name="move_down">انتقال به پایین</string>
+    <string name="remove">حذف</string>
+    <string name="clear_all">پاک کردن همه</string>
+    <string name="no_history">بدون تاریخچه</string>
+    <string name="no_downloads">بدون دانلود</string>
+    <string name="about">درباره</string>
+    <string name="app_info">برنامه: %1$s (%2$d)</string>
+    <string name="engine_info">موتور: %1$s</string>
+    <string name="edit_bookmark">ویرایش نشانک</string>
+    <string name="edit_title">ویرایش عنوان</string>
+    <string name="edit_url">ویرایش نشانی اینترنتی</string>
+    <string name="set_title">تعیین عنوان...</string>
+    <string name="set_url">تعیین نشانی اینترنتی...</string>
+    <string name="target_sdk">SDK هدف: %1$d</string>
+    <string name="open_in_current_tab">باز کردن در زبانهٔ فعلی</string>
+    <string name="text_selection">انتخاب متن</string>
+    <string name="grab_mode">حالت گرفتن</string>
+    <string name="microphone">میکروفون</string>
+    <string name="microphone_permission_required">مجوز میکروفون لازم است</string>
+    <string name="voice_no_match">گفتاری تشخیص داده نشد. دوباره تلاش کنید.</string>
+    <string name="voice_network_error">خطای شبکه. اتصال را بررسی کنید.</string>
+    <string name="voice_search_error">خطای جست‌وجوی صوتی: %1$d</string>
+    <string name="copy_error">کپی خطا</string>
+    <string name="error_loading_ad_blocker">خطا در بارگذاری فهرست مسدودکننده تبلیغات</string>
+    <string name="setting_force_dark_webpage">اعمال اجباری تم تیره به صفحه‌های وب</string>
+    <string name="setting_force_dark_webpage_description">اعمال تم تیره به صفحه‌های وب هنگام استفاده از حالت تیره</string>
+    <string name="setting_keep_screen_on">روشن نگه‌داشتن صفحه‌نمایش</string>
+    <string name="setting_keep_screen_on_description">جلوگیری از خاموش شدن صفحه‌نمایش هنگام مرور</string>
+    <string name="setting_incognito_mode_description">مرور بدون ذخیره تاریخچه</string>
+    <string name="setting_allow_autoplay_media">اجازهٔ پخش خودکار رسانه‌ها</string>
+    <string name="setting_home_page_mode">حالت صفحهٔ اصلی</string>
+    <string name="setting_custom_home_page_url">نشانی اینترنتی سفارشی صفحهٔ اصلی</string>
+    <string name="setting_search_engine">موتور جست‌وجو</string>
+    <string name="setting_custom_search_engine_url">نشانی اینترنتی سفارشی موتور جست‌وجو</string>
+    <string name="setting_user_agent">عامل کاربر</string>
+    <string name="setting_web_engine">موتور وب</string>
+    <string name="setting_web_engine_description">برای دستگاه‌های دارای ۳ گیگابایت یا بیشتر رم، GeckoView توصیه می‌شود</string>
+    <string name="setting_ad_block">فعال کردن مسدودکنندهٔ تبلیغات</string>
+    <string name="setting_ad_block_list_url">نشانی اینترنتی فهرست مسدودسازی تبلیغات</string>
+    <string name="setting_auto_check_updates">بررسی خودکار به‌روزرسانی‌ها</string>
+    <string name="setting_update_channel">کانال به‌روزرسانی</string>
+    <string name="setting_use_http_proxy">استفاده از پراکسی HTTP</string>
+    <string name="setting_use_http_proxy_description">هدایت ترافیک از طریق پراکسی HTTP (برای مثال، Clash در 127.0.0.1:7890). برای WebView ممکن است راه‌اندازی مجدد لازم باشد</string>
+    <string name="setting_proxy_url">نشانی اینترنتی پراکسی</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). برای غیرفعال کردن خالی بگذارید</string>
+    <string name="setting_directional_navigation_mode">حالت ناوبری جهت‌دار</string>
+    <string name="setting_directional_navigation_mode_description">ارسال کلیدهای پیکان به صفحهٔ وب به‌جای حرکت دادن نشانگر (برای بازی‌ها/برنامه‌ها)</string>
+    <string name="setting_new_tab_button_at_start">دکمهٔ زبانهٔ جدید در ابتدا</string>
+    <string name="setting_new_tab_button_at_start_description">دکمهٔ + را به‌جای پس از فهرست زبانه‌ها، پیش از آن قرار می‌دهد</string>
+    <string name="setting_context_menu_on_long_press">منوی زمینه هنگام فشار طولانی</string>
+    <string name="setting_context_menu_on_long_press_description">غیرفعال کنید تا عملیات صفحه با فشار طولانی مجاز شود</string>
+    <string name="setting_single_tab_mode">حالت تک‌زبانه‌ای</string>
+    <string name="setting_single_tab_mode_description">برای هر پیوند یا Intent، زبانهٔ فعلی دوباره استفاده می‌شود</string>
+    <string name="change_web_engine">تغییر موتور وب؟</string>
+    <string name="gecko_engine_not_included">موتور GeckoView در این نسخه وجود ندارد.</string>
+    <string name="backup_exported">پشتیبان صادر شد</string>
+    <string name="export_failed">صادرات ناموفق بود</string>
+    <string name="import_failed">واردسازی ناموفق بود</string>
+    <string name="imported_settings">%1$d تنظیمات وارد شد</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>سفارشی</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>پیش‌فرض (توصیه‌شده)</item>
+        <item>Chrome (دسکتاپ)</item>
+        <item>Chrome (موبایل)</item>
+        <item>Firefox (دسکتاپ)</item>
+        <item>Firefox (موبایل)</item>
+        <item>Edge (دسکتاپ)</item>
+        <item>سفارشی</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>انتشار</item>
+        <item>پیش‌انتشار</item>
+    </string-array>
+</resources>

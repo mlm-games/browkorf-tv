@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">語言</string>
+    <string name="language_system_default">跟隨系統</string>
+    <string name="settings_import">匯入設定</string>
+    <string name="settings_export">匯出設定</string>
+    <string name="category_general">一般</string>
+    <string name="category_home_page">首頁</string>
+    <string name="category_search">搜尋</string>
+    <string name="category_user_agent">使用者代理</string>
+    <string name="category_web_engine">網頁引擎</string>
+    <string name="category_ad_block">廣告阻擋器</string>
+    <string name="category_updates">更新</string>
+    <string name="category_proxy">代理</string>
+    <string name="link_actions">連結操作</string>
+    <string name="add_bookmark">新增書籤</string>
+    <string name="move_up">上移</string>
+    <string name="move_down">下移</string>
+    <string name="remove">移除</string>
+    <string name="clear_all">全部清除</string>
+    <string name="no_history">無歷史紀錄</string>
+    <string name="no_downloads">無下載內容</string>
+    <string name="about">關於</string>
+    <string name="app_info">應用程式：%1$s（%2$d）</string>
+    <string name="engine_info">引擎：%1$s</string>
+    <string name="edit_bookmark">編輯書籤</string>
+    <string name="edit_title">編輯標題</string>
+    <string name="edit_url">編輯網址</string>
+    <string name="set_title">設定標題...</string>
+    <string name="set_url">設定網址...</string>
+    <string name="target_sdk">目標 SDK：%1$d</string>
+    <string name="open_in_current_tab">在目前分頁中開啟</string>
+    <string name="text_selection">文字選取</string>
+    <string name="grab_mode">抓取模式</string>
+    <string name="microphone">麥克風</string>
+    <string name="microphone_permission_required">需要麥克風權限</string>
+    <string name="voice_no_match">無法辨識語音，請重試。</string>
+    <string name="voice_network_error">網路錯誤，請檢查連線。</string>
+    <string name="voice_search_error">語音搜尋錯誤：%1$d</string>
+    <string name="copy_error">複製錯誤</string>
+    <string name="error_loading_ad_blocker">載入廣告阻擋清單時發生錯誤</string>
+    <string name="setting_force_dark_webpage">強制深色網頁</string>
+    <string name="setting_force_dark_webpage_description">使用深色模式時為網頁套用深色主題</string>
+    <string name="setting_keep_screen_on">保持螢幕常亮</string>
+    <string name="setting_keep_screen_on_description">瀏覽時防止螢幕關閉</string>
+    <string name="setting_incognito_mode_description">瀏覽時不儲存歷史紀錄</string>
+    <string name="setting_allow_autoplay_media">允許自動播放媒體</string>
+    <string name="setting_home_page_mode">首頁模式</string>
+    <string name="setting_custom_home_page_url">自訂首頁網址</string>
+    <string name="setting_search_engine">搜尋引擎</string>
+    <string name="setting_custom_search_engine_url">自訂搜尋引擎網址</string>
+    <string name="setting_user_agent">使用者代理</string>
+    <string name="setting_web_engine">網頁引擎</string>
+    <string name="setting_web_engine_description">建議 RAM 為 3 GB 以上的裝置使用 GeckoView</string>
+    <string name="setting_ad_block">啟用廣告阻擋器</string>
+    <string name="setting_ad_block_list_url">廣告阻擋清單網址</string>
+    <string name="setting_auto_check_updates">自動檢查更新</string>
+    <string name="setting_update_channel">更新頻道</string>
+    <string name="setting_use_http_proxy">使用 HTTP 代理</string>
+    <string name="setting_use_http_proxy_description">透過 HTTP 代理傳送流量（例如，在 127.0.0.1:7890 上執行的 Clash）。WebView 可能需要重新啟動</string>
+    <string name="setting_proxy_url">代理網址</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5)。留空以停用</string>
+    <string name="setting_directional_navigation_mode">方向鍵導覽模式</string>
+    <string name="setting_directional_navigation_mode_description">將方向鍵傳送至網頁，而不是移動游標（適用於遊戲/應用程式）</string>
+    <string name="setting_new_tab_button_at_start">新分頁按鈕設於開頭</string>
+    <string name="setting_new_tab_button_at_start_description">將「+」按鈕放在分頁清單之前，而不是之後</string>
+    <string name="setting_context_menu_on_long_press">長按時顯示內容選單</string>
+    <string name="setting_context_menu_on_long_press_description">停用此選項後，長按頁面時可執行網頁操作</string>
+    <string name="setting_single_tab_mode">單一分頁模式</string>
+    <string name="setting_single_tab_mode_description">每個連結或應用程式請求均會重複使用目前分頁。</string>
+    <string name="change_web_engine">變更網頁引擎？</string>
+    <string name="gecko_engine_not_included">此版本未包含 GeckoView 引擎。</string>
+    <string name="backup_exported">備份已匯出</string>
+    <string name="export_failed">匯出失敗</string>
+    <string name="import_failed">匯入失敗</string>
+    <string name="imported_settings">已匯入 %1$d 項設定</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>自訂</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>預設（建議）</item>
+        <item>Chrome（桌面版）</item>
+        <item>Chrome（行動版）</item>
+        <item>Firefox（桌面版）</item>
+        <item>Firefox（行動版）</item>
+        <item>Edge（桌面版）</item>
+        <item>自訂</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>正式版</item>
+        <item>預覽版</item>
+    </string-array>
+</resources>

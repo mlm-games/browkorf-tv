@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.tv.material3.*
+import org.mlm.browkorftv.R
 
 @Composable
 fun TextEntryDialog(
@@ -98,12 +100,12 @@ fun TextEntryDialog(
                 ) {
                     BrowkorfTvButton(
                         onClick = onDismiss,
-                        text = "Cancel",
+                        text = stringResource(R.string.cancel),
                         colors = ButtonDefaults.colors()
                     )
                     BrowkorfTvButton(
                         onClick = confirm,
-                        text = "OK",
+                        text = stringResource(R.string.ok),
                         colors = ButtonDefaults.colors()
                     )
                 }

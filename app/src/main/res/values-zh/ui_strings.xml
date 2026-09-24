@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">语言</string>
+    <string name="language_system_default">跟随系统</string>
+    <string name="settings_import">导入设置</string>
+    <string name="settings_export">导出设置</string>
+    <string name="category_general">常规</string>
+    <string name="category_home_page">主页</string>
+    <string name="category_search">搜索</string>
+    <string name="category_user_agent">用户代理</string>
+    <string name="category_web_engine">网页引擎</string>
+    <string name="category_ad_block">广告拦截器</string>
+    <string name="category_updates">更新</string>
+    <string name="category_proxy">代理</string>
+    <string name="link_actions">链接操作</string>
+    <string name="add_bookmark">添加书签</string>
+    <string name="move_up">上移</string>
+    <string name="move_down">下移</string>
+    <string name="remove">移除</string>
+    <string name="clear_all">全部清除</string>
+    <string name="no_history">无历史记录</string>
+    <string name="no_downloads">无下载内容</string>
+    <string name="about">关于</string>
+    <string name="app_info">应用：%1$s（%2$d）</string>
+    <string name="engine_info">引擎：%1$s</string>
+    <string name="edit_bookmark">编辑书签</string>
+    <string name="edit_title">编辑标题</string>
+    <string name="edit_url">编辑网址</string>
+    <string name="set_title">设置标题...</string>
+    <string name="set_url">设置网址...</string>
+    <string name="target_sdk">目标 SDK：%1$d</string>
+    <string name="open_in_current_tab">在当前标签页中打开</string>
+    <string name="text_selection">文本选择</string>
+    <string name="grab_mode">抓取模式</string>
+    <string name="microphone">麦克风</string>
+    <string name="microphone_permission_required">需要麦克风权限</string>
+    <string name="voice_no_match">未识别到语音，请重试。</string>
+    <string name="voice_network_error">网络错误，请检查连接。</string>
+    <string name="voice_search_error">语音搜索错误：%1$d</string>
+    <string name="copy_error">复制错误</string>
+    <string name="error_loading_ad_blocker">加载广告拦截列表时出错</string>
+    <string name="setting_force_dark_webpage">强制深色网页</string>
+    <string name="setting_force_dark_webpage_description">使用深色模式时为网页应用深色主题</string>
+    <string name="setting_keep_screen_on">保持屏幕常亮</string>
+    <string name="setting_keep_screen_on_description">浏览时防止屏幕关闭</string>
+    <string name="setting_incognito_mode_description">浏览时不保存历史记录</string>
+    <string name="setting_allow_autoplay_media">允许自动播放媒体</string>
+    <string name="setting_home_page_mode">主页模式</string>
+    <string name="setting_custom_home_page_url">自定义主页网址</string>
+    <string name="setting_search_engine">搜索引擎</string>
+    <string name="setting_custom_search_engine_url">自定义搜索引擎网址</string>
+    <string name="setting_user_agent">用户代理</string>
+    <string name="setting_web_engine">网页引擎</string>
+    <string name="setting_web_engine_description">建议 RAM 为 3 GB 及以上的设备使用 GeckoView</string>
+    <string name="setting_ad_block">启用广告拦截器</string>
+    <string name="setting_ad_block_list_url">广告拦截列表网址</string>
+    <string name="setting_auto_check_updates">自动检查更新</string>
+    <string name="setting_update_channel">更新通道</string>
+    <string name="setting_use_http_proxy">使用 HTTP 代理</string>
+    <string name="setting_use_http_proxy_description">通过 HTTP 代理路由流量（例如，在 127.0.0.1:7890 上运行的 Clash）。WebView 可能需要重启</string>
+    <string name="setting_proxy_url">代理网址</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5)。留空以禁用</string>
+    <string name="setting_directional_navigation_mode">方向导航模式</string>
+    <string name="setting_directional_navigation_mode_description">将方向键发送给网页，而不是移动光标（适用于游戏/应用）</string>
+    <string name="setting_new_tab_button_at_start">新建标签页按钮置于开头</string>
+    <string name="setting_new_tab_button_at_start_description">将“+”按钮放在标签页列表之前，而不是之后</string>
+    <string name="setting_context_menu_on_long_press">长按时显示上下文菜单</string>
+    <string name="setting_context_menu_on_long_press_description">禁用此选项后，长按页面时可执行网页操作</string>
+    <string name="setting_single_tab_mode">单标签页模式</string>
+    <string name="setting_single_tab_mode_description">每个链接或应用请求均复用当前标签页。</string>
+    <string name="change_web_engine">更改网页引擎？</string>
+    <string name="gecko_engine_not_included">此版本未包含 GeckoView 引擎。</string>
+    <string name="backup_exported">备份已导出</string>
+    <string name="export_failed">导出失败</string>
+    <string name="import_failed">导入失败</string>
+    <string name="imported_settings">已导入 %1$d 项设置</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>自定义</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>默认（推荐）</item>
+        <item>Chrome（桌面版）</item>
+        <item>Chrome（移动版）</item>
+        <item>Firefox（桌面版）</item>
+        <item>Firefox（移动版）</item>
+        <item>Edge（桌面版）</item>
+        <item>自定义</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>正式版</item>
+        <item>预览版</item>
+    </string-array>
+</resources>
