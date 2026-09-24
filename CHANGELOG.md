@@ -1,3 +1,9 @@
+## v4.7.0
+
+- Add a setting for translation without changing the system lang
+- added missing keys
+
+
 ## v4.6.3
 
 - Fix single tabbed popup downloads

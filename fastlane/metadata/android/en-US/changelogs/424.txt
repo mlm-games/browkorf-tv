@@ -1,0 +1,2 @@
+- Add a setting for translation without changing the system lang
+- added missing keys
