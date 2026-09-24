@@ -217,6 +217,7 @@ private fun FavoriteItem(
 private fun BookmarkFavicon(url: String) {
     val colors = AppTheme.colors
     val favicon by produceState<Bitmap?>(initialValue = null, key1 = url) {
+        value = null
         value = withContext(Dispatchers.IO) {
             FaviconsPool.get(url)
         }

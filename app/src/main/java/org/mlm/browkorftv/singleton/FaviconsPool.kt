@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import android.util.LruCache
 import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.mlm.browkorftv.core.DispatcherProvider
@@ -36,60 +34,54 @@ object FaviconsPool : KoinComponent {
             override fun sizeOf(key: String, value: Bitmap): Int = value.byteCount
         }
 
-    private val inFlightMutex = Mutex()
-    private val inFlight = mutableMapOf<String, Deferred<Bitmap?>>()
-
-    private val scope by lazy { CoroutineScope(SupervisorJob() + dispatchers.io) }
-
-    suspend fun get(urlOrHost: String): Bitmap? {
-        val normalizedUrl = normalizeUrlOrHost(urlOrHost) ?: return null
+    suspend fun get(urlOrHost: String): Bitmap? = withContext(dispatchers.io) {
+        val normalizedUrl = normalizeUrlOrHost(urlOrHost) ?: return@withContext null
         val host = runCatching { URL(normalizedUrl).host }.getOrNull().orEmpty()
-        if (host.isBlank()) return null
+        if (host.isBlank()) return@withContext null
 
-        cache.get(host)?.let { return it }
+        cache.get(host)?.let { return@withContext it }
 
-        return inFlightMutex.withLock {
-            inFlight[host]?.let { return@withLock it }
-
-            val job = scope.async {
-                try {
-                    // 1) DB/disk hit?
-                    val hostConfig = hostsDao.findByHostName(host)
-                    loadFromDisk(host, hostConfig)?.let { bmp ->
-                        cache.put(host, bmp)
-                        return@async bmp
-                    }
-
-                    // 2) Network fetch icons
-                    val icons = runCatching { extractor.extractFavIconsFromURL(URL(normalizedUrl)) }.getOrNull()
-                        ?: emptyList()
-
-                    val chosen = chooseNearestSizeIcon(
-                        icons,
-                        FAVICON_PREFERRED_SIDE_SIZE,
-                        FAVICON_PREFERRED_SIDE_SIZE
-                    ) ?: icons.firstOrNull()
-
-                    val bitmap = if (chosen != null) {
-                        runCatching { downloadIcon(chosen) }.getOrNull()
-                    } else null
-
-                    if (bitmap != null) {
-                        cache.put(host, bitmap)
-                        saveToDiskAndDb(host, bitmap, hostConfig)
-                    }
-                    bitmap
-                } catch (t: Throwable) {
-                    Log.w(TAG, "Failed to load favicon for host=$host url=$normalizedUrl", t)
-                    null
-                } finally {
-                    inFlightMutex.withLock { inFlight.remove(host) }
-                }
+        try {
+            val hostConfig = hostsDao.findByHostName(host)
+            loadFromDisk(host, hostConfig)?.let { bitmap ->
+                cache.put(host, bitmap)
+                return@withContext bitmap
             }
 
-            inFlight[host] = job
-            job
-        }.await()
+            val icons = try {
+                extractor.extractFavIconsFromURL(URL(normalizedUrl))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Throwable) {
+                emptyList()
+            }
+            val chosen = chooseNearestSizeIcon(
+                icons,
+                FAVICON_PREFERRED_SIDE_SIZE,
+                FAVICON_PREFERRED_SIDE_SIZE
+            ) ?: icons.firstOrNull()
+            val bitmap = if (chosen != null) {
+                try {
+                    downloadIcon(chosen)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Throwable) {
+                    null
+                }
+            } else {
+                null
+            }
+
+            if (bitmap != null) {
+                cache.put(host, bitmap)
+                saveToDiskAndDb(host, bitmap, hostConfig)
+            }
+            bitmap
+        } catch (t: Throwable) {
+            if (t is CancellationException) throw t
+            Log.w(TAG, "Failed to load favicon for host=$host url=$normalizedUrl", t)
+            null
+        }
     }
 
     fun clear() {

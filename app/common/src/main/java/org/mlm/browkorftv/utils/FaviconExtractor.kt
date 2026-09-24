@@ -9,6 +9,12 @@ import java.util.regex.Pattern
 
 
 class FaviconExtractor {
+
+    private fun URL.openIconConnection() = openConnection().apply {
+        connectTimeout = 10_000
+        readTimeout = 10_000
+    }
+
     companion object {
         const val DEFAULT_ICON_SRC = "/favicon.ico"
         const val DEFAULT_ICON_TYPE = "image/x-icon"
@@ -73,11 +79,11 @@ class FaviconExtractor {
      * @throws java.io.IOException
      */
     fun extractFavIconsFromURL(url: URL): ArrayList<IconInfo> {
-        val (result, manifestHref) = url.openConnection().inputStream.bufferedReader().use { extractFavIconsFromHTML(url, it) }
+        val (result, manifestHref) = url.openIconConnection().inputStream.bufferedReader().use { extractFavIconsFromHTML(url, it) }
         if (manifestHref != null) {
             val manifestURL = URL(url, manifestHref)
             try {
-                val manifestIcons = manifestURL.openConnection().inputStream.bufferedReader()
+                val manifestIcons = manifestURL.openIconConnection().inputStream.bufferedReader()
                     .use { extractFavIconsFromWebManifest(manifestURL, it) }
                 result.addAll(manifestIcons)
             } catch (e: Exception) {

@@ -47,6 +47,7 @@ fun BrowkorfTvIconButton(
             colors = colors,
             modifier = Modifier
                 .size(48.dp)
+                .focusProperties { canFocus = enabled }
                 .tvPointerClick(onClick, enabled)
         ) {
             Icon(
@@ -117,6 +118,7 @@ fun BrowkorfTvIconButton(
                 width = 45.dp,
                 height = 45.dp
             )
+            .focusProperties { canFocus = enabled }
             .tvPointerClick(onClick, enabled),
         colors = ButtonDefaults.colors(
             containerColor = colors.buttonBackground,

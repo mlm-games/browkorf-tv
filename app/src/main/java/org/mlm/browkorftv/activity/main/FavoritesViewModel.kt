@@ -2,6 +2,8 @@ package org.mlm.browkorftv.activity.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,13 +27,23 @@ class FavoritesViewModel(
 
     fun loadData() {
         if (loadJob != null) return
-        loadJob = viewModelScope.launch(Dispatchers.IO) {
-            bookmarksRepository.getAll()
-            bookmarksRepository.observeAll().collect {
-                _bookmarks.value = it
+        val job = viewModelScope.launch(Dispatchers.IO, start = CoroutineStart.LAZY) {
+            try {
+                bookmarksRepository.getAll()
+                bookmarksRepository.observeAll().collect {
+                    _bookmarks.value = it
+                    _loading.value = false
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Throwable) {
                 _loading.value = false
+            } finally {
+                loadJob = null
             }
         }
+        loadJob = job
+        job.start()
     }
 
     suspend fun getFavoriteById(id: Long): FavoriteItem? {
