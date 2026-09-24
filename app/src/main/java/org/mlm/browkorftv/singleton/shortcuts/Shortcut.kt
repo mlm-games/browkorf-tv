@@ -9,10 +9,14 @@ enum class Shortcut(
     val prefsKey: String,
     val defaultKeyCode: Int,
     val defaultModifiers: Int = 0,
-    val defaultLongPress: Boolean = false
+    val defaultLongPress: Boolean = false,
+    val bookmarkSlotNumber: Int? = null
 ) {
     MENU(R.string.toggle_main_menu, "shortcut_menu", KeyEvent.KEYCODE_MENU),
     BOOKMARKS(R.string.bookmarks, "shortcut_bookmarks", 0),
+    BOOKMARK_1(R.string.bookmarks, "shortcut_bookmark_1", 0, bookmarkSlotNumber = 1),
+    BOOKMARK_2(R.string.bookmarks, "shortcut_bookmark_2", 0, bookmarkSlotNumber = 2),
+    BOOKMARK_3(R.string.bookmarks, "shortcut_bookmark_3", 0, bookmarkSlotNumber = 3),
 
     // 0 -> blank
     NAVIGATE_BACK(R.string.navigate_back, "shortcut_nav_back", 0),

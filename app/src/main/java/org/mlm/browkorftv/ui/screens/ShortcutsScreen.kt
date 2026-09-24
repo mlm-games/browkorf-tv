@@ -19,9 +19,13 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.compose.koinInject
 import org.mlm.browkorftv.R
+import org.mlm.browkorftv.data.BookmarksRepository
+import org.mlm.browkorftv.model.FavoriteItem
 import org.mlm.browkorftv.singleton.shortcuts.Shortcut
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
 import org.mlm.browkorftv.ui.SnackbarManager
@@ -38,12 +42,20 @@ fun ShortcutsScreen(
     val colors = AppTheme.colors
     val context = LocalContext.current
     val shortcutMgr: ShortcutMgr = koinInject()
+    val bookmarksRepository: BookmarksRepository = koinInject()
 
     val bindings by shortcutMgr.bindings.collectAsState()
+    val bookmarkIds by shortcutMgr.bookmarkIds.collectAsState()
+    val bookmarks by produceState<List<FavoriteItem>>(emptyList()) {
+        value = withContext(Dispatchers.IO) {
+            bookmarksRepository.getAll()
+        }
+    }
     val snackbarManager: SnackbarManager = koinInject()
     val scope = rememberCoroutineScope()
 
     var editingShortcut by remember { mutableStateOf<Shortcut?>(null) }
+    var selectingBookmark by remember { mutableStateOf<Shortcut?>(null) }
 
     Column(
         modifier = Modifier
@@ -64,10 +76,31 @@ fun ShortcutsScreen(
         ) {
             items(Shortcut.entries) { shortcut ->
                 val binding = bindings[shortcut] ?: shortcutMgr.bindingFor(shortcut)
+                val bookmark = shortcut.bookmarkSlotNumber?.let {
+                    bookmarks.firstOrNull { bookmark -> bookmark.id == (bookmarkIds[shortcut] ?: 0L) }
+                }
+                val headline = when {
+                    bookmark != null -> bookmark.title?.ifBlank { bookmark.url.orEmpty() }
+                        ?: bookmark.url.orEmpty()
+                    shortcut.bookmarkSlotNumber != null -> {
+                        "${stringResource(R.string.bookmarks)} ${shortcut.bookmarkSlotNumber}"
+                    }
+                    else -> stringResource(shortcut.titleResId)
+                }
+                val supportingText = if (shortcut.bookmarkSlotNumber != null) {
+                    val keyText = Shortcut.shortcutKeysToString(shortcut, binding, context)
+                    if (bookmark == null) {
+                        "$keyText • ${stringResource(R.string.nothing)}"
+                    } else {
+                        "$keyText • ${bookmark.url.orEmpty()}"
+                    }
+                } else {
+                    Shortcut.shortcutKeysToString(shortcut, binding, context)
+                }
                 BrowkorfTvListItem(
                     onClick = { editingShortcut = shortcut },
-                    headline = stringResource(shortcut.titleResId),
-                    supportingText = Shortcut.shortcutKeysToString(shortcut, binding, context)
+                    headline = headline,
+                    supportingText = supportingText
                 )
             }
         }
@@ -98,7 +131,35 @@ fun ShortcutsScreen(
                 shortcutMgr.updateBinding(shortcut, keyCode = 0)
                 editingShortcut = null
             },
+            onSelectBookmark = if (shortcut.bookmarkSlotNumber != null) {
+                {
+                    selectingBookmark = shortcut
+                    editingShortcut = null
+                }
+            } else {
+                null
+            },
             onDismiss = { editingShortcut = null }
+        )
+    }
+
+    selectingBookmark?.let { shortcut ->
+        BookmarkPickerDialog(
+            bookmarks = bookmarks,
+            selectedId = bookmarkIds[shortcut] ?: 0L,
+            assignedIds = bookmarkIds
+                .filterKeys { it != shortcut && it.bookmarkSlotNumber != null }
+                .values
+                .toSet(),
+            onSelect = { id ->
+                shortcutMgr.updateBookmark(shortcut, id)
+                selectingBookmark = null
+            },
+            onClear = {
+                shortcutMgr.updateBookmark(shortcut, 0L)
+                selectingBookmark = null
+            },
+            onDismiss = { selectingBookmark = null }
         )
     }
 }
@@ -108,6 +169,7 @@ private fun ShortcutEditDialog(
     shortcut: Shortcut,
     onSetKey: (keyCode: Int, modifiers: Int) -> Unit,
     onClearKey: () -> Unit,
+    onSelectBookmark: (() -> Unit)?,
     onDismiss: () -> Unit
 ) {
     val colors = AppTheme.colors
@@ -164,10 +226,22 @@ private fun ShortcutEditDialog(
                             text = stringResource(R.string.cancel)
                         )
                     } else {
+                        val actionTitle = if (shortcut.bookmarkSlotNumber != null) {
+                            "${stringResource(R.string.bookmarks)} ${shortcut.bookmarkSlotNumber}"
+                        } else {
+                            stringResource(shortcut.titleResId)
+                        }
                         Text(
-                            text = stringResource(R.string.action) + ": " + stringResource(shortcut.titleResId),
+                            text = stringResource(R.string.action) + ": " + actionTitle,
                             color = colors.textPrimary
                         )
+                        if (onSelectBookmark != null) {
+                            BrowkorfTvButton(
+                                onClick = onSelectBookmark,
+                                text = stringResource(R.string.select_bookmark),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             BrowkorfTvButton(
                                 onClick = { waitingForKey = true },
@@ -183,6 +257,75 @@ private fun ShortcutEditDialog(
                         BrowkorfTvButton(
                             onClick = onDismiss,
                             text = stringResource(R.string.cancel)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BookmarkPickerDialog(
+    bookmarks: List<FavoriteItem>,
+    selectedId: Long,
+    assignedIds: Set<Long>,
+    onSelect: (Long) -> Unit,
+    onClear: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    val colors = AppTheme.colors
+    val selectableBookmarks = bookmarks.filter { it.id == selectedId || it.id !in assignedIds }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Box(
+            modifier = Modifier.fillMaxSize().padding(48.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Surface(
+                modifier = Modifier.widthIn(max = 600.dp),
+                shape = RoundedCornerShape(8.dp),
+                color = colors.background
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.select_bookmark),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = colors.textPrimary
+                    )
+                    if (selectableBookmarks.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.nothing),
+                            color = colors.textSecondary
+                        )
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.heightIn(max = 420.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            items(selectableBookmarks, key = { it.id }) { bookmark ->
+                                BrowkorfTvListItem(
+                                    onClick = { onSelect(bookmark.id) },
+                                    headline = bookmark.title?.ifBlank { bookmark.url.orEmpty() }
+                                        ?: bookmark.url.orEmpty(),
+                                    supportingText = bookmark.url
+                                )
+                            }
+                        }
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        BrowkorfTvButton(
+                            onClick = onClear,
+                            text = stringResource(R.string.clear),
+                            modifier = Modifier.weight(1f)
+                        )
+                        BrowkorfTvButton(
+                            onClick = onDismiss,
+                            text = stringResource(R.string.cancel),
+                            modifier = Modifier.weight(1f)
                         )
                     }
                 }

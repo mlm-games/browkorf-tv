@@ -18,6 +18,7 @@
     <string name="downloading_file">Pobieram plik</string>
     <string name="err_cant_open_file_chooser">Nie można otworzyć programu do wybierania plików</string>
     <string name="bookmarks">Zakładki</string>
+    <string name="select_bookmark">Wybierz zakładkę</string>
     <string name="add">Dodaj</string>
     <string name="edit">Edytuj</string>
     <string name="no_bookmarks_yet">Nie ma jeszcze zakładek</string>

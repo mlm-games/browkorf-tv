@@ -114,6 +114,15 @@ fun BrowserScreen(
         }
     }
 
+    LaunchedEffect(uiState.openUrlRequest) {
+        val url = uiState.openUrlRequest ?: return@LaunchedEffect
+        onNavigateOrSearch(url)
+        backStack.clear()
+        backStack.add(AppKey.Browser)
+        uiVm.hideMenu()
+        uiVm.consumeOpenUrlRequest()
+    }
+
     // Handle WebView pause/resume when Browser enters/leaves composition
     LaunchedEffect(currentKey) {
         val tab = tabsVm.currentTab.value

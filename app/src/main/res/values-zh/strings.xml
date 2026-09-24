@@ -18,6 +18,7 @@
     <string name="downloading_file">正在下载文件…</string>
     <string name="err_cant_open_file_chooser">无法打开文件选择器</string>
     <string name="bookmarks">书签</string>
+    <string name="select_bookmark">选择书签</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
     <string name="new_bookmark">新书签</string>

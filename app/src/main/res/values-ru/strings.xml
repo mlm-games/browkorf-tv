@@ -4,6 +4,7 @@
     <string name="add">Добавить</string>
     <string name="allow">Разрешить</string>
     <string name="bookmarks">Закладки</string>
+    <string name="select_bookmark">Выбрать закладку</string>
     <string name="can_not_recognize">Не могу распознать</string>
     <string name="close">Закрыть</string>
     <string name="deny">Запретить</string>

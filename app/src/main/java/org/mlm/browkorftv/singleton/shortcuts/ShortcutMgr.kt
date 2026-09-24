@@ -32,6 +32,9 @@ class ShortcutMgr(
     private val _bindings = MutableStateFlow(loadAllBindings())
     val bindings: StateFlow<Map<Shortcut, Binding>> = _bindings.asStateFlow()
 
+    private val _bookmarkIds = MutableStateFlow(loadBookmarkIds())
+    val bookmarkIds: StateFlow<Map<Shortcut, Long>> = _bookmarkIds.asStateFlow()
+
     private var trackingShortcuts: List<Shortcut>? = null
 
     private fun loadAllBindings(): Map<Shortcut, Binding> {
@@ -51,6 +54,32 @@ class ShortcutMgr(
             shortcut.defaultModifiers,
             shortcut.defaultLongPress
         )
+
+    private fun loadBookmarkIds(): Map<Shortcut, Long> {
+        val map = LinkedHashMap<Shortcut, Long>()
+        for (shortcut in Shortcut.entries) {
+            if (shortcut.bookmarkSlotNumber != null) {
+                map[shortcut] = prefs.getLong("${shortcut.prefsKey}_bookmark", 0L)
+            }
+        }
+        return map
+    }
+
+    fun bookmarkId(shortcut: Shortcut): Long = _bookmarkIds.value[shortcut] ?: 0L
+
+    fun updateBookmark(shortcut: Shortcut, id: Long) {
+        check(shortcut.bookmarkSlotNumber != null)
+        prefs.edit {
+            if (id == 0L) {
+                remove("${shortcut.prefsKey}_bookmark")
+            } else {
+                putLong("${shortcut.prefsKey}_bookmark", id)
+            }
+        }
+        _bookmarkIds.value = _bookmarkIds.value.toMutableMap().apply {
+            put(shortcut, id)
+        }
+    }
 
     /**
      * Update a shortcut binding. If keyCode==0 => unassign (also clears modifiers/longPress).
@@ -118,6 +147,9 @@ class ShortcutMgr(
         when (shortcut) {
             Shortcut.MENU -> mainActivity.toggleMenu()
             Shortcut.BOOKMARKS -> mainActivity.openBookmarks()
+            Shortcut.BOOKMARK_1 -> mainActivity.openBookmark(bookmarkId(shortcut))
+            Shortcut.BOOKMARK_2 -> mainActivity.openBookmark(bookmarkId(shortcut))
+            Shortcut.BOOKMARK_3 -> mainActivity.openBookmark(bookmarkId(shortcut))
 
             Shortcut.NAVIGATE_BACK -> mainActivity.navigateBack()
             Shortcut.NAVIGATE_HOME -> mainActivity.navigate(HOME_URL_ALIAS)

@@ -1552,4 +1552,13 @@ open class MainActivity : AppCompatActivity() {
     fun openBookmarks() {
         browserUiViewModel.requestOpenBookmarks()
     }
+
+    fun openBookmark(id: Long) {
+        lifecycleScope.launch {
+            val bookmark = withContext(Dispatchers.IO) {
+                favoritesViewModel.getFavoriteById(id)
+            }
+            bookmark?.url?.let { browserUiViewModel.requestOpenUrl(it) }
+        }
+    }
 }
