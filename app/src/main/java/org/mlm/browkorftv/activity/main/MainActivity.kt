@@ -1558,7 +1558,12 @@ open class MainActivity : AppCompatActivity() {
             val bookmark = withContext(Dispatchers.IO) {
                 favoritesViewModel.getFavoriteById(id)
             }
-            bookmark?.url?.let { browserUiViewModel.requestOpenUrl(it) }
+            val url = bookmark?.url
+            if (url.isNullOrBlank()) {
+                snackbarManager.show(getString(R.string.bookmark_not_found))
+            } else {
+                browserUiViewModel.requestOpenUrl(url)
+            }
         }
     }
 }

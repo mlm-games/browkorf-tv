@@ -22,6 +22,7 @@
     <string name="err_cant_open_file_chooser">"לא ניתן לפתוח את בוחר הקבצים"</string>
     <string name="bookmarks">"סימניות"</string>
     <string name="select_bookmark">בחירת סימנייה</string>
+    <string name="bookmark_not_found">הסימנייה אינה קיימת יותר</string>
     <string name="add">"הוסף"</string>
     <string name="edit">"ערוך"</string>
     <string name="new_bookmark">"סימניה חדשה"</string>

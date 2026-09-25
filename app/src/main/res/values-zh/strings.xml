@@ -19,6 +19,7 @@
     <string name="err_cant_open_file_chooser">无法打开文件选择器</string>
     <string name="bookmarks">书签</string>
     <string name="select_bookmark">选择书签</string>
+    <string name="bookmark_not_found">书签已不存在</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
     <string name="new_bookmark">新书签</string>

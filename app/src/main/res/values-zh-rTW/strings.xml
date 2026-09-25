@@ -19,6 +19,7 @@
     <string name="err_cant_open_file_chooser">無法開啟檔案選擇器</string>
     <string name="bookmarks">書籤</string>
     <string name="select_bookmark">選取書籤</string>
+    <string name="bookmark_not_found">書籤已不存在</string>
     <string name="add">新增</string>
     <string name="edit">編輯</string>
     <string name="no_bookmarks_yet">沒有書籤</string>
