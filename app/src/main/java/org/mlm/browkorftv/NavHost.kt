@@ -10,6 +10,9 @@ sealed interface AppKey : NavKey {
     data object Browser : AppKey
 
     @Serializable
+    data object Home : AppKey
+
+    @Serializable
     data object History : AppKey
 
     @Serializable

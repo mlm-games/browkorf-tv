@@ -84,6 +84,7 @@
     <string name="update_channel">Update channel:</string>
     <string name="auto_check_for_updates">Auto check for updates</string>
     <string name="check_for_updates">Check for updates</string>
+    <string name="check_for_updates_description">Check now for a newer version</string>
     <string name="update">Update</string>
     <string name="new_version_available_s">New version available: %s</string>
     <string name="web_browser_optimized_for_tvs">Web browser optimized for TVs</string>
@@ -155,6 +156,7 @@
         <item>Search engine</item>
         <item>Custom</item>
         <item>Blank</item>
+        <item>Bookmarks</item>
     </array>
 
     <array name="home_page_links_modes">
@@ -185,6 +187,8 @@
     <string name="media_fast_forward">Fast Forward Media</string>
     <string name="long_press">Long press</string>
     <string name="toggle_directional_nav">Toggle Directional Navigation</string>
+    <string name="toggle_single_tab_mode">Toggle single tab mode</string>
+    <string name="search_web">Search the web</string>
     <string name="directional_nav_enabled">Directional navigation enabled, D-pad controls webpage</string>
     <string name="directional_nav_disabled">Directional navigation disabled, D-pad moves cursor</string>
 </resources>

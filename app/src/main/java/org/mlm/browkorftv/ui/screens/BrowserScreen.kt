@@ -40,7 +40,6 @@ import org.mlm.browkorftv.activity.main.BrowserUiViewModel
 import org.mlm.browkorftv.activity.main.TabsViewModel
 import org.mlm.browkorftv.model.WebTabState
 import org.mlm.browkorftv.settings.SettingsManager
-import org.mlm.browkorftv.updates.UpdatesViewModel
 import org.mlm.browkorftv.ui.components.ActionBar
 import org.mlm.browkorftv.ui.components.BottomNavigationPanel
 import org.mlm.browkorftv.ui.components.BrowkorfTvProgressBar
@@ -59,7 +58,6 @@ fun BrowserScreen(
 
     uiVm: BrowserUiViewModel,
     tabsVm: TabsViewModel,
-    updatesViewModel: UpdatesViewModel,
     viewModelStoreOwner: ViewModelStoreOwner,
 
     isBlocking: Boolean,
@@ -113,6 +111,29 @@ fun BrowserScreen(
             }
             uiVm.hideMenu()
             uiVm.consumeOpenBookmarksRequest()
+        }
+    }
+
+    LaunchedEffect(uiState.openDownloadsRequest) {
+        if (uiState.openDownloadsRequest) {
+            if (backStack.lastOrNull() != AppKey.Downloads) {
+                backStack.add(AppKey.Downloads)
+            }
+            uiVm.hideMenu()
+            uiVm.consumeOpenDownloadsRequest()
+        }
+    }
+
+    LaunchedEffect(uiState.openHomeRequest) {
+        if (uiState.openHomeRequest) {
+            if (tabsVm.currentTab.value == null) {
+                backStack.clear()
+                backStack.add(AppKey.Home)
+            } else if (backStack.lastOrNull() != AppKey.Home) {
+                backStack.add(AppKey.Home)
+            }
+            uiVm.hideMenu()
+            uiVm.consumeOpenHomeRequest()
         }
     }
 
@@ -367,6 +388,41 @@ fun BrowserScreen(
                 }
             }
 
+            entry<AppKey.Home> {
+                fun returnFromHome() {
+                    if (tabsVm.currentTab.value == null) {
+                        onCloseWindow()
+                    } else if (backStack.size > 1) {
+                        backStack.removeAt(backStack.lastIndex)
+                        uiVm.showMenu()
+                    } else {
+                        backStack.add(AppKey.Browser)
+                        uiVm.showMenu()
+                    }
+                }
+
+                BackHandler(enabled = true, onBack = ::returnFromHome)
+
+                FavoritesScreen(
+                    locked = true,
+                    onBack = ::returnFromHome,
+                    onPickUrl = { url ->
+                        onNavigateOrSearch(url)
+                        backStack.clear()
+                        backStack.add(AppKey.Browser)
+                        uiVm.hideMenu()
+                    },
+                    onAddBookmark = {},
+                    onEditBookmark = {},
+                    onSearch = { query ->
+                        onNavigateOrSearch(query)
+                        backStack.clear()
+                        backStack.add(AppKey.Browser)
+                        uiVm.hideMenu()
+                    }
+                )
+            }
+
             entry<AppKey.History> {
                 HistoryScreen(
                     onBack = {
@@ -416,7 +472,6 @@ fun BrowserScreen(
 
             entry<AppKey.Settings> {
                 SettingsScreen(
-                    updatesViewModel = updatesViewModel,
                     onNavigateBack = {
                         backStack.removeAt(backStack.lastIndex)
                         uiVm.showMenu()

@@ -80,6 +80,7 @@
     <string name="version_and_updates">Версія</string>
     <string name="version_s">Версія: %s</string>
     <string name="check_for_updates">Перевірити оновлення</string>
+    <string name="check_for_updates_description">Перевірити наявність нової версії</string>
     <string name="warning">Увага</string>
     <string name="web_browser_optimized_for_tvs">Веб-браузер, оптимізований для телевізорів</string>
     <string name="new_version_available_s">Доступна нова версія: %s</string>
@@ -153,6 +154,7 @@
         <item>Пошукова система</item>
         <item>Користувацька</item>
         <item>Пуста</item>
+        <item>Закладки</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Закладки</item>
@@ -183,6 +185,8 @@
     <string name="media_fast_forward">Перемотати вперед</string>
     <string name="long_press">Довге натискання</string>
     <string name="toggle_directional_nav">Перемкнути режим навігації за допомогою D-pad</string>
+    <string name="toggle_single_tab_mode">Перемкнути режим однієї вкладки</string>
+    <string name="search_web">Пошук в інтернеті</string>
     <string name="directional_nav_enabled">Навігацію за допомогою D-pad увімкнено, D-pad керує вебсторінкою</string>
     <string name="directional_nav_disabled">Навігацію за допомогою D-pad вимкнено, D-pad переміщує курсор</string>
 </resources>

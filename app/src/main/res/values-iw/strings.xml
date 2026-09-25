@@ -83,6 +83,7 @@
     <string name="update_channel">"ערוץ עדכונים:"</string>
     <string name="auto_check_for_updates">"בדוק אוטומטית לעדכונים:"</string>
     <string name="check_for_updates">בדוק עדכונים</string>
+    <string name="check_for_updates_description">בדוק כעת אם קיימת גרסה חדשה יותר</string>
     <string name="update">"עדכן:"</string>
     <string name="new_version_available_s">"גרסא חדשה זמינה: %s"</string>
     <string name="warning">"אזהרה"</string>
@@ -156,6 +157,7 @@
         <item>מנוע חיפוש</item>
         <item>המותאם אישית</item>
         <item>רֵיק</item>
+        <item>סימניות</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>סימניות</item>
@@ -186,6 +188,8 @@
     <string name="media_fast_forward">הרווח מדיה קדימה</string>
     <string name="long_press">לחיצה ארוכה</string>
     <string name="toggle_directional_nav">הפעל/כבה את הניווט הכיווני</string>
+    <string name="toggle_single_tab_mode">הפעל/כבה מצב כרטיסייה יחידה</string>
+    <string name="search_web">חיפוש באינטרנט</string>
     <string name="directional_nav_enabled">ניווט כיווני מופעל, מקש הכיוונים שולט בדף האינטרנט</string>
     <string name="directional_nav_disabled">ניווט כיווני מושבת, מקש הכיוונים מזיז את הסמן</string>
 </resources>

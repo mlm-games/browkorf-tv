@@ -733,6 +733,11 @@ class WebViewEx(
                         currentOriginalUrl = HOME_PAGE_URL.toUri()
                         super.loadUrl(HOME_PAGE_URL)
                     }
+
+                    HomePageMode.Bookmarks -> {
+                        currentOriginalUrl = null
+                        loadDataWithBaseURL(null, "", "text/html", "UTF-8", null)
+                    }
                 }
             }
 

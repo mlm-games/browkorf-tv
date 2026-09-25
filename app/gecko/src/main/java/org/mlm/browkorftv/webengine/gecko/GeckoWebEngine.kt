@@ -327,6 +327,10 @@ class GeckoWebEngine(val tab: WebTabState) : WebEngine, CursorDrawerDelegate.Tex
                 HomePageMode.HomePage -> {
                     session.loadUri(HOME_PAGE_URL)
                 }
+
+                HomePageMode.Bookmarks -> {
+                    session.loadUri("about:blank")
+                }
             }
         } else {
             session.loadUri(url)

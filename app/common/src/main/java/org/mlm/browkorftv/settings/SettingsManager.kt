@@ -100,7 +100,12 @@ class SettingsManager private constructor(context: Context) {
     }
 
     suspend fun set(name: String, value: Any?) {
-        repository.set(name, value)
+        if (name == "homePageMode" && value is HomePageMode) {
+            val customUrl = current.homePage.takeIf { value == HomePageMode.Custom }
+            setHomePageProperties(value, customUrl)
+        } else {
+            repository.set(name, value)
+        }
     }
 
     suspend fun setTheme(theme: Theme) {
@@ -146,7 +151,9 @@ class SettingsManager private constructor(context: Context) {
                 )
 
                 HomePageMode.Custom -> customUrl ?: AppSettings.HOME_URL_ALIAS
-                HomePageMode.HomePage, HomePageMode.Blank -> AppSettings.HOME_URL_ALIAS
+                HomePageMode.HomePage,
+                HomePageMode.Blank,
+                HomePageMode.Bookmarks -> AppSettings.HOME_URL_ALIAS
             }
             s.copy(homePageMode = mode, homePage = home)
         }

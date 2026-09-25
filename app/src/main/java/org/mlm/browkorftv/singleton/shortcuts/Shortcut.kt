@@ -14,6 +14,7 @@ enum class Shortcut(
 ) {
     MENU(R.string.toggle_main_menu, "shortcut_menu", KeyEvent.KEYCODE_MENU),
     BOOKMARKS(R.string.bookmarks, "shortcut_bookmarks", 0),
+    DOWNLOADS(R.string.downloads, "shortcut_downloads", 0),
     BOOKMARK_1(R.string.bookmarks, "shortcut_bookmark_1", 0, bookmarkSlotNumber = 1),
     BOOKMARK_2(R.string.bookmarks, "shortcut_bookmark_2", 0, bookmarkSlotNumber = 2),
     BOOKMARK_3(R.string.bookmarks, "shortcut_bookmark_3", 0, bookmarkSlotNumber = 3),
@@ -23,6 +24,12 @@ enum class Shortcut(
     NAVIGATE_HOME(R.string.navigate_home, "shortcut_nav_home", 0),
 
     REFRESH_PAGE(R.string.refresh_page, "shortcut_refresh_page", KeyEvent.KEYCODE_REFRESH),
+
+    TOGGLE_SINGLE_TAB_MODE(
+        R.string.toggle_single_tab_mode,
+        "shortcut_toggle_single_tab_mode",
+        0
+    ),
 
     VOICE_SEARCH(R.string.voice_search, "shortcut_voice_search", KeyEvent.KEYCODE_SEARCH),
 

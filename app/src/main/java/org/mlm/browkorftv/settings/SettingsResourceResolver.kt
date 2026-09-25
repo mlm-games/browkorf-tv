@@ -28,6 +28,7 @@ internal fun resolveSettingsResource(key: String): Int = when (key) {
     BrowkorfSettingsKeys.AD_BLOCK_LIST_URL -> R.string.setting_ad_block_list_url
     BrowkorfSettingsKeys.AUTO_CHECK_UPDATES -> R.string.setting_auto_check_updates
     BrowkorfSettingsKeys.UPDATE_CHANNEL -> R.string.setting_update_channel
+    BrowkorfSettingsKeys.CHECK_FOR_UPDATES -> R.string.check_for_updates
     BrowkorfSettingsKeys.USE_HTTP_PROXY -> R.string.setting_use_http_proxy
     BrowkorfSettingsKeys.PROXY_URL -> R.string.setting_proxy_url
     BrowkorfSettingsKeys.DIRECTIONAL_NAVIGATION_MODE -> R.string.setting_directional_navigation_mode
@@ -39,6 +40,7 @@ internal fun resolveSettingsResource(key: String): Int = when (key) {
     BrowkorfSettingsKeys.KEEP_SCREEN_ON_DESCRIPTION -> R.string.setting_keep_screen_on_description
     BrowkorfSettingsKeys.INCOGNITO_MODE_DESCRIPTION -> R.string.setting_incognito_mode_description
     BrowkorfSettingsKeys.WEB_ENGINE_DESCRIPTION -> R.string.setting_web_engine_description
+    BrowkorfSettingsKeys.CHECK_FOR_UPDATES_DESCRIPTION -> R.string.check_for_updates_description
     BrowkorfSettingsKeys.USE_HTTP_PROXY_DESCRIPTION -> R.string.setting_use_http_proxy_description
     BrowkorfSettingsKeys.PROXY_URL_DESCRIPTION -> R.string.setting_proxy_url_description
     BrowkorfSettingsKeys.DIRECTIONAL_NAVIGATION_MODE_DESCRIPTION -> R.string.setting_directional_navigation_mode_description

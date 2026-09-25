@@ -36,6 +36,8 @@ data class BrowserUiState(
     val isLinkActionsVisible: Boolean = false,
     val isMenuVisible: Boolean = false,
     val openBookmarksRequest: Boolean = false,
+    val openDownloadsRequest: Boolean = false,
+    val openHomeRequest: Boolean = false,
     val openUrlRequest: String? = null,
 )
 
@@ -136,6 +138,22 @@ class BrowserUiViewModel : ViewModel() {
 
     fun consumeOpenBookmarksRequest() {
         _uiState.update { it.copy(openBookmarksRequest = false) }
+    }
+
+    fun requestOpenDownloads() {
+        _uiState.update { it.copy(openDownloadsRequest = true) }
+    }
+
+    fun consumeOpenDownloadsRequest() {
+        _uiState.update { it.copy(openDownloadsRequest = false) }
+    }
+
+    fun requestOpenHome() {
+        _uiState.update { it.copy(openHomeRequest = true) }
+    }
+
+    fun consumeOpenHomeRequest() {
+        _uiState.update { it.copy(openHomeRequest = false) }
     }
 
     fun requestOpenUrl(url: String) {

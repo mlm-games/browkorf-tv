@@ -150,7 +150,7 @@ data class AppSettings(
     @Setting(
         title = "Custom Search Engine URL",
         titleKey = BrowkorfSettingsKeys.CUSTOM_SEARCH_ENGINE_URL,
-        category = HomePage::class,
+        category = Search::class,
         type = TextInput::class,
         key = "search_engine_custom_url",
         dependsOn = "searchEngineIndex" // Only relevant when mode is Custom
@@ -236,6 +236,18 @@ data class AppSettings(
         dependsOn = "autoCheckUpdates"
     )
     val updateChannelIndex: Int = 0,
+
+    @Setting(
+        title = "Check for updates",
+        titleKey = BrowkorfSettingsKeys.CHECK_FOR_UPDATES,
+        description = "Check now for a newer version",
+        descriptionKey = BrowkorfSettingsKeys.CHECK_FOR_UPDATES_DESCRIPTION,
+        category = Updates::class,
+        type = Button::class,
+        platforms = [SettingPlatform.ANDROID]
+    )
+    @ActionHandler(CheckForUpdatesAction::class)
+    val checkForUpdates: Unit = Unit,
 
     @Setting(
         title = "Use HTTP Proxy",
@@ -452,6 +464,8 @@ data class AppSettings(
 }
 
 
+object CheckForUpdatesAction : SettingAction
+
 class LanguageSetting
 
 enum class Theme {
@@ -459,5 +473,5 @@ enum class Theme {
 }
 
 enum class HomePageMode {
-    HomePage, SearchEngine, Custom, Blank
+    HomePage, SearchEngine, Custom, Blank, Bookmarks
 }

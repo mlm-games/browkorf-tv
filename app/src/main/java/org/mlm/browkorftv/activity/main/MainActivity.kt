@@ -39,6 +39,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.webkit.URLUtilCompat
+import io.github.mlmgames.settings.core.actions.ActionRegistry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -57,6 +58,9 @@ import org.mlm.browkorftv.model.WebTabState
 import org.mlm.browkorftv.service.downloads.DownloadService
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_PAGE_URL
+import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_URL_ALIAS
+import org.mlm.browkorftv.settings.CheckForUpdatesAction
+import org.mlm.browkorftv.settings.HomePageMode
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.singleton.shortcuts.ShortcutMgr
@@ -371,6 +375,10 @@ open class MainActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        ActionRegistry.register(CheckForUpdatesAction::class) {
+            updatesViewModel.checkManual()
+        }
+
         pendingApkToInstall = savedInstanceState
             ?.getString(STATE_PENDING_APK_PATH)
             ?.let(::File)
@@ -462,7 +470,6 @@ open class MainActivity : AppCompatActivity() {
 
                     uiVm = browserUiViewModel,
                     tabsVm = tabsViewModel,
-                    updatesViewModel = updatesViewModel,
                     viewModelStoreOwner = this@MainActivity,
 
                     isBlocking = isBlocking,
@@ -497,16 +504,13 @@ open class MainActivity : AppCompatActivity() {
                     },
                     onCloseTab = { tab -> closeTab(tab) },
                     onAddTab = {
-                        openInNewTab(settings.homePage, tabsViewModel.tabsStates.value.size)
+                        openHomeInNewTab(tabsViewModel.tabsStates.value.size)
                     },
 
                     onBack = { navigateBack() },
                     onForward = { tabsViewModel.currentTab.value?.webEngine?.goForward() },
                     onRefresh = { refresh() },
-                    onHome = {
-                        navigate(AppSettings.HOME_URL_ALIAS)
-                        browserUiViewModel.toggleMenu()
-                    },
+                    onHome = { openHome() },
                     onZoomIn = { tabsViewModel.currentTab.value?.webEngine?.zoomIn() },
                     onZoomOut = { tabsViewModel.currentTab.value?.webEngine?.zoomOut() },
                     onToggleAdBlock = { toggleAdBlockForTab() },
@@ -752,7 +756,7 @@ open class MainActivity : AppCompatActivity() {
         if (currentTab != null && currentTab.webEngine.canGoBack()) {
             currentTab.webEngine.goBack()
         } else if (goHomeIfNoHistory) {
-            navigate(settings.homePage)
+            openHome()
         } else {
             // toggle overlay menu
             browserUiViewModel.toggleMenu()
@@ -834,12 +838,16 @@ open class MainActivity : AppCompatActivity() {
 
         if (intentUri == null) {
             if (tabs.isEmpty()) {
-                openInNewTab(
-                    settings.homePage,
-                    0,
-                    needToHideMenuOverlay = true,
-                    navigateImmediately = true
-                )
+                if (settings.homePageMode == HomePageMode.Bookmarks) {
+                    browserUiViewModel.requestOpenHome()
+                } else {
+                    openInNewTab(
+                        homePageUrl(),
+                        0,
+                        needToHideMenuOverlay = true,
+                        navigateImmediately = true
+                    )
+                }
             } else {
                 val selected = tabs.firstOrNull { it.selected } ?: tabs.first()
                 changeTab(selected)
@@ -854,8 +862,15 @@ open class MainActivity : AppCompatActivity() {
         }
 
         val currentTab = tabsViewModel.currentTab.value
-        if (currentTab == null || currentTab.url == settings.homePage) {
-            // open overlay menu root
+        val isBookmarksHome = settings.homePageMode == HomePageMode.Bookmarks
+        if (isBookmarksHome && (currentTab == null || currentTab.url == HOME_URL_ALIAS)) {
+            browserUiViewModel.requestOpenHome()
+        } else if (
+            currentTab == null ||
+            currentTab.url == settings.homePage ||
+            currentTab.url == homePageUrl() ||
+            currentTab.url == HOME_URL_ALIAS
+        ) {
             browserUiViewModel.toggleMenu()
         }
 
@@ -892,6 +907,20 @@ open class MainActivity : AppCompatActivity() {
         return tab.webEngine
     }
 
+    private fun homePageUrl(): String = HOME_URL_ALIAS
+
+    private fun openHomeInNewTab(index: Int) {
+        openInNewTab(
+            homePageUrl(),
+            index,
+            needToHideMenuOverlay = true,
+            navigateImmediately = true
+        )
+        if (settings.homePageMode == HomePageMode.Bookmarks) {
+            browserUiViewModel.requestOpenHome()
+        }
+    }
+
     private fun openInCurrentTab(url: String, needToHideMenuOverlay: Boolean) {
         val tab = tabsViewModel.currentTab.value
         if (tab == null) {
@@ -909,27 +938,25 @@ open class MainActivity : AppCompatActivity() {
     private fun closeTab(tab: WebTabState?) {
         if (tab == null) return
         if (settings.singleTabMode) {
-            navigate(settings.homePage)
-            browserUiViewModel.toggleMenu()
+            openHome()
             return
         }
         val tabs = tabsViewModel.tabsStates.value
         val position = tabs.indexOf(tab)
 
         when {
-            tabs.size == 1 -> openInNewTab(
-                settings.homePage,
-                0,
-                needToHideMenuOverlay = true,
-                navigateImmediately = true
-            )
+            tabs.size == 1 -> openHomeInNewTab(0)
 
             position > 0 -> changeTab(tabs[position - 1])
             else -> changeTab(tabs[position + 1])
         }
 
         tabsViewModel.onCloseTab(tab)
-        browserUiViewModel.toggleMenu()
+        if (settings.homePageMode == HomePageMode.Bookmarks) {
+            browserUiViewModel.hideMenu()
+        } else {
+            browserUiViewModel.toggleMenu()
+        }
     }
 
     private fun changeTab(newTab: WebTabState) {
@@ -977,6 +1004,15 @@ open class MainActivity : AppCompatActivity() {
             tab.blockedAds,
             tab.blockedPopups
         )
+    }
+
+    private fun resolvedTabUrl(tab: WebTabState, url: String?): String {
+        val resolved = tab.webEngine.url ?: url ?: tab.url
+        return if (settings.homePageMode == HomePageMode.Bookmarks && tab.url == HOME_URL_ALIAS) {
+            HOME_URL_ALIAS
+        } else {
+            resolved
+        }
     }
 
     private fun onDownloadRequested(
@@ -1115,12 +1151,36 @@ open class MainActivity : AppCompatActivity() {
     }
 
     fun navigate(url: String) {
+        if (url == HOME_URL_ALIAS && settings.homePageMode == HomePageMode.Bookmarks) {
+            browserUiViewModel.requestOpenHome()
+            return
+        }
+
         val tab = tabsViewModel.currentTab.value
         if (tab != null) {
             tab.url = url
             tab.webEngine.loadUrl(url)
         } else {
             openInNewTab(url, 0, needToHideMenuOverlay = true, navigateImmediately = true)
+        }
+    }
+
+    fun openHome() {
+        browserUiViewModel.hideMenu()
+        if (settings.homePageMode == HomePageMode.Bookmarks) {
+            browserUiViewModel.requestOpenHome()
+        } else {
+            navigate(HOME_URL_ALIAS)
+        }
+    }
+
+    fun openDownloads() {
+        browserUiViewModel.requestOpenDownloads()
+    }
+
+    fun toggleSingleTabMode() {
+        lifecycleScope.launch {
+            settingsManager.update { it.copy(singleTabMode = !it.singleTabMode) }
         }
     }
 
@@ -1410,7 +1470,7 @@ open class MainActivity : AppCompatActivity() {
 
         override fun onPageStarted(url: String?) {
             onWebViewUpdated(tab)
-            tab.url = tab.webEngine.url ?: url ?: tab.url
+            tab.url = resolvedTabUrl(tab, url)
             browserUiViewModel.updateUrl(tab.url)
             tab.blockedAds = 0
             tab.blockedPopups = 0
@@ -1419,7 +1479,7 @@ open class MainActivity : AppCompatActivity() {
         override fun onPageFinished(url: String?) {
             if (tabsViewModel.currentTab.value == null) return
             onWebViewUpdated(tab)
-            tab.url = tab.webEngine.url ?: url ?: tab.url
+            tab.url = resolvedTabUrl(tab, url)
             browserUiViewModel.updateUrl(tab.url)
 
             lifecycleScope.launch {

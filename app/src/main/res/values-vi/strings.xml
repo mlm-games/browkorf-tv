@@ -80,6 +80,7 @@
     <string name="update_channel">Cập nhật kênh:</string>
     <string name="auto_check_for_updates">Tự động kiểm tra các bản cập nhật</string>
     <string name="check_for_updates">Kiểm tra cập nhật</string>
+    <string name="check_for_updates_description">Kiểm tra ngay xem có bản cập nhật mới</string>
     <string name="update">Cập nhật</string>
     <string name="new_version_available_s">Có phiên bản mới: %s</string>
     <string name="web_browser_optimized_for_tvs">Trình duyệt web được tối ưu hóa cho TV</string>
@@ -153,6 +154,7 @@
         <item>Công cụ tìm kiếm</item>
         <item>Tùy chỉnh</item>
         <item>Trống</item>
+        <item>Dấu trang</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Dấu trang</item>
@@ -183,6 +185,8 @@
     <string name="media_fast_forward">Tua nhanh</string>
     <string name="long_press">Nhấn giữ</string>
     <string name="toggle_directional_nav">Chuyển đổi điều hướng bằng D-pad</string>
+    <string name="toggle_single_tab_mode">Chuyển đổi chế độ một tab</string>
+    <string name="search_web">Tìm kiếm trên web</string>
     <string name="directional_nav_enabled">Đã bật điều hướng bằng D-pad, D-pad điều khiển trang web</string>
     <string name="directional_nav_disabled">Đã tắt điều hướng bằng D-pad, D-pad di chuyển con trỏ</string>
 </resources>

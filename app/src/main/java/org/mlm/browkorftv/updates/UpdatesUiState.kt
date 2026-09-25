@@ -1,6 +1,7 @@
 package org.mlm.browkorftv.updates
 
 import androidx.lifecycle.ViewModel
+import io.github.mlmgames.settings.core.actions.ActionRegistry
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.settings.AppSettings
+import org.mlm.browkorftv.settings.CheckForUpdatesAction
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.utils.sameDay
 import android.os.SystemClock
@@ -53,6 +55,7 @@ class UpdatesViewModel(
     private var lastCheckFailureElapsed = 0L
 
     init {
+        ActionRegistry.registerAction(CheckForUpdatesAction::class, CheckForUpdatesAction)
         viewModelScope.launch {
             if (!BuildConfig.BUILT_IN_AUTO_UPDATE) return@launch
             try {

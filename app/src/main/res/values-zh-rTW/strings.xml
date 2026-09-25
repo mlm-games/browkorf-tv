@@ -83,6 +83,7 @@
     <string name="update_channel">更新頻道：</string>
     <string name="auto_check_for_updates">自動檢查更新</string>
     <string name="check_for_updates">檢查更新</string>
+    <string name="check_for_updates_description">立即檢查是否有新版本</string>
     <string name="update">更新</string>
     <string name="new_version_available_s">有可用的新版本：%s</string>
     <string name="web_browser_optimized_for_tvs">針對電視強化的網頁瀏覽器</string>
@@ -154,6 +155,8 @@
     <string name="media_fast_forward">媒體快進</string>
     <string name="long_press">長按</string>
     <string name="toggle_directional_nav">切換方向導覽</string>
+    <string name="toggle_single_tab_mode">切換單一分頁模式</string>
+    <string name="search_web">搜尋網頁</string>
     <string name="directional_nav_enabled">方向導覽已啟用，方向鍵控制網頁</string>
     <string name="directional_nav_disabled">方向導覽已停用，方向鍵移動游標</string>
     <string-array name="home_page_links_modes">
@@ -166,6 +169,7 @@
         <item>搜尋引擎</item>
         <item>自訂</item>
         <item>空白</item>
+        <item>書籤</item>
     </string-array>
     <string-array name="popup_blocking_level">
         <item>不阻擋</item>

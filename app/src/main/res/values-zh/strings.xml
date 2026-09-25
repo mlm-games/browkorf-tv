@@ -80,6 +80,7 @@
     <string name="update_channel">更新频道：</string>
     <string name="auto_check_for_updates">自动检查更新</string>
     <string name="check_for_updates">检查更新</string>
+    <string name="check_for_updates_description">立即检查是否有新版本</string>
     <string name="update">更新资料</string>
     <string name="new_version_available_s">新版本可用: %s</string>
     <string name="web_browser_optimized_for_tvs">针对电视进行了优化的网络浏览器</string>
@@ -153,6 +154,7 @@
         <item>搜索引擎</item>
         <item>自定义</item>
         <item>空白页</item>
+        <item>书签</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>书签</item>
@@ -183,6 +185,8 @@
     <string name="media_fast_forward">媒体快进</string>
     <string name="long_press">长按</string>
     <string name="toggle_directional_nav">切换方向导航</string>
+    <string name="toggle_single_tab_mode">切换单标签页模式</string>
+    <string name="search_web">搜索网页</string>
     <string name="directional_nav_enabled">方向导航已启用，方向键控制网页</string>
     <string name="directional_nav_disabled">方向导航已禁用，方向键移动光标</string>
 </resources>

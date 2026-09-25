@@ -83,6 +83,7 @@
     <string name="update_channel">Kanał aktualizacji:</string>
     <string name="auto_check_for_updates">Automatycznie sprawdzaj aktualizacje</string>
     <string name="check_for_updates">Sprawdź aktualizacje</string>
+    <string name="check_for_updates_description">Sprawdź teraz, czy jest nowsza wersja</string>
     <string name="update">Aktualizacja</string>
     <string name="new_version_available_s">Dostępna nowa wersja: %s</string>
     <string name="web_browser_optimized_for_tvs">Przeglądarka internetowa zaoptymalizowana dla telewizorów</string>
@@ -154,6 +155,7 @@
         <item>Wyszukiwarka</item>
         <item>Niestandardowa</item>
         <item>Pusta</item>
+        <item>Zakładki</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Zakładki</item>
@@ -183,6 +185,8 @@
     <string name="media_fast_forward">Przewiń szybko do przodu</string>
     <string name="long_press">Długie naciśnięcie</string>
     <string name="toggle_directional_nav">Przełącz nawigację kierunkową</string>
+    <string name="toggle_single_tab_mode">Przełącz tryb jednej karty</string>
+    <string name="search_web">Szukaj w internecie</string>
     <string name="directional_nav_enabled">Nawigacja kierunkowa włączona, krzyżek kierunkowy steruje stroną internetową</string>
     <string name="directional_nav_disabled">Nawigacja kierunkowa wyłączona, krzyżek kierunkowy przesuwa kursor</string>
 </resources>

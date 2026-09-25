@@ -81,6 +81,7 @@
     <string name="version_and_updates">Versione &amp; Info</string>
     <string name="version_s">Versione: %s</string>
     <string name="check_for_updates">Controlla aggiornamenti</string>
+    <string name="check_for_updates_description">Controlla ora se c\'è una versione più recente</string>
     <string name="update_channel">Canale aggiornamenti:</string>
     <string name="auto_check_for_updates">Verifica aggiornamenti</string>
     <string name="update">Aggiorna</string>
@@ -153,6 +154,7 @@
         <item>Motore di ricerca</item>
         <item>Costume</item>
         <item>Vuoto</item>
+        <item>Segnalibri</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Segnalibri</item>
@@ -183,6 +185,8 @@
     <string name="media_fast_forward">Avanza rapidamente contenuto multimediale</string>
     <string name="long_press">Pressione prolungata</string>
     <string name="toggle_directional_nav">Attiva/disattiva navigazione direzionale</string>
+    <string name="toggle_single_tab_mode">Attiva/disattiva modalità scheda singola</string>
+    <string name="search_web">Cerca sul web</string>
     <string name="directional_nav_enabled">Navigazione direzionale attivata, il D-pad controlla la pagina web</string>
     <string name="directional_nav_disabled">Navigazione direzionale disattivata, il D-pad sposta il cursore</string>
 </resources>

@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.mlm.browkorftv.activity.main.MainActivity
 import org.mlm.browkorftv.model.WebTabState
-import org.mlm.browkorftv.settings.AppSettings.Companion.HOME_URL_ALIAS
 import org.mlm.browkorftv.webengine.WebEngine
 import androidx.core.content.edit
 
@@ -147,13 +146,15 @@ class ShortcutMgr(
         when (shortcut) {
             Shortcut.MENU -> mainActivity.toggleMenu()
             Shortcut.BOOKMARKS -> mainActivity.openBookmarks()
+            Shortcut.DOWNLOADS -> mainActivity.openDownloads()
             Shortcut.BOOKMARK_1 -> mainActivity.openBookmark(bookmarkId(shortcut))
             Shortcut.BOOKMARK_2 -> mainActivity.openBookmark(bookmarkId(shortcut))
             Shortcut.BOOKMARK_3 -> mainActivity.openBookmark(bookmarkId(shortcut))
 
             Shortcut.NAVIGATE_BACK -> mainActivity.navigateBack()
-            Shortcut.NAVIGATE_HOME -> mainActivity.navigate(HOME_URL_ALIAS)
+            Shortcut.NAVIGATE_HOME -> mainActivity.openHome()
             Shortcut.REFRESH_PAGE -> mainActivity.refresh()
+            Shortcut.TOGGLE_SINGLE_TAB_MODE -> mainActivity.toggleSingleTabMode()
             Shortcut.VOICE_SEARCH -> mainActivity.initiateVoiceSearch()
 
             Shortcut.PLAY_PAUSE -> webEngine?.togglePlayback()

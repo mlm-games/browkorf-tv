@@ -82,6 +82,7 @@
     <string name="version_and_updates">نسخه و به روزرسانی ها</string>
     <string name="version_s">"نسخه: %s"</string>
     <string name="check_for_updates">بررسی به‌روزرسانی‌ها</string>
+    <string name="check_for_updates_description">همین حالا برای نسخه جدید بررسی کن</string>
     <string name="update_channel">"کانال ترجمه:"</string>
     <string name="auto_check_for_updates">"بررسی خودکار برای به روزرسانی ها"</string>
     <string name="update">"به روز رسانی"</string>
@@ -157,6 +158,7 @@
         <item>موتور جستجو</item>
         <item>سفارشی</item>
         <item>جای خالی</item>
+        <item>نشانک‌ها</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>نشانک ها</item>
@@ -187,6 +189,8 @@
     <string name="media_fast_forward">جلوبردن سریع رسانه</string>
     <string name="long_press">لمس طولانی</string>
     <string name="toggle_directional_nav">تغییر وضعیت ناوبری جهت‌دار</string>
+    <string name="toggle_single_tab_mode">تغییر حالت تک‌زبانه‌ای</string>
+    <string name="search_web">جست‌وجو در وب</string>
     <string name="directional_nav_enabled">ناوبری جهت‌دار فعال است، دکمهٔ جهت‌نما صفحهٔ وب را کنترل می‌کند</string>
     <string name="directional_nav_disabled">ناوبری جهت‌دار غیرفعال است، دکمهٔ جهت‌نما مکان‌نما را جابه‌جا می‌کند</string>
 </resources>

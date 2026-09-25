@@ -24,6 +24,7 @@ import org.mlm.browkorftv.activity.main.FavoritesViewModel
 import org.mlm.browkorftv.singleton.FaviconsPool
 import org.mlm.browkorftv.ui.components.BrowkorfTvClickableSurface
 import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
+import org.mlm.browkorftv.ui.components.SearchField
 import org.mlm.browkorftv.ui.theme.AppTheme
 import org.mlm.browkorftv.R as AppR
 import org.mlm.browkorftv.common.R as CommonR
@@ -34,11 +35,14 @@ fun FavoritesScreen(
     onPickUrl: (String) -> Unit,
     onAddBookmark: () -> Unit,
     onEditBookmark: (Long) -> Unit,
-    viewModel: FavoritesViewModel = koinViewModel()
+    viewModel: FavoritesViewModel = koinViewModel(),
+    locked: Boolean = false,
+    onSearch: ((String) -> Unit)? = null
 ) {
     val loading by viewModel.loading.collectAsState()
     val bookmarks by viewModel.bookmarks.collectAsState()
-    var editingEnabled by rememberSaveable { mutableStateOf(false) }
+    var editingUnlocked by rememberSaveable { mutableStateOf(false) }
+    val editingEnabled = !locked && editingUnlocked
 
     LaunchedEffect(Unit) { viewModel.loadData() }
 
@@ -52,30 +56,39 @@ fun FavoritesScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(stringResource(AppR.string.favorites), style = MaterialTheme.typography.headlineSmall)
+            Text(
+                stringResource(if (locked) AppR.string.bookmarks else AppR.string.favorites),
+                style = MaterialTheme.typography.headlineSmall
+            )
             Spacer(Modifier.weight(1f))
-            BrowkorfTvIconButton(
-                onClick = { editingEnabled = !editingEnabled },
-                painter = painterResource(
-                    if (editingEnabled) AppR.drawable.outline_lock_24
-                    else AppR.drawable.outline_lock_open_24
-                ),
-                contentDescription = stringResource(
-                    if (editingEnabled) AppR.string.lock_bookmark_editing
-                    else AppR.string.unlock_bookmark_editing
-                ),
-                checked = editingEnabled
-            )
-            BrowkorfTvIconButton(
-                onClick = onAddBookmark,
-                painter = painterResource(AppR.drawable.outline_add_24),
-                contentDescription = stringResource(AppR.string.add_bookmark)
-            )
+            if (!locked) {
+                BrowkorfTvIconButton(
+                    onClick = { editingUnlocked = !editingUnlocked },
+                    painter = painterResource(
+                        if (editingEnabled) AppR.drawable.outline_lock_24
+                        else AppR.drawable.outline_lock_open_24
+                    ),
+                    contentDescription = stringResource(
+                        if (editingEnabled) AppR.string.lock_bookmark_editing
+                        else AppR.string.unlock_bookmark_editing
+                    ),
+                    checked = editingEnabled
+                )
+                BrowkorfTvIconButton(
+                    onClick = onAddBookmark,
+                    painter = painterResource(AppR.drawable.outline_add_24),
+                    contentDescription = stringResource(AppR.string.add_bookmark)
+                )
+            }
             BrowkorfTvIconButton(
                 onClick = onBack,
                 painter = painterResource(AppR.drawable.outline_chevron_forward_24),
                 contentDescription = stringResource(AppR.string.navigate_back)
             )
+        }
+
+        onSearch?.let { search ->
+            SearchField(onSearch = search)
         }
 
         if (loading) {

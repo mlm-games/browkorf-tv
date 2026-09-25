@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.mlmgames.settings.core.actions.ActionRegistry
 import io.github.mlmgames.settings.core.SettingField
 import io.github.mlmgames.settings.core.backup.ExportResult
 import io.github.mlmgames.settings.core.backup.ImportResult
@@ -46,18 +47,15 @@ import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.resolveSettingsResource
 import org.mlm.browkorftv.ui.components.BrowkorfTopBar
 import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
-import org.mlm.browkorftv.updates.UpdatesViewModel
 
 @Composable
 fun SettingsScreen(
-    updatesViewModel: UpdatesViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToShortcuts: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val resources = LocalResources.current
     val settingsManager: SettingsManager = koinInject()
-    val updatesState by updatesViewModel.state.collectAsStateWithLifecycle()
     val settings by settingsManager.settingsState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -155,15 +153,6 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (BuildConfig.BUILT_IN_AUTO_UPDATE) {
-                    SettingsItem(
-                        title = stringResource(R.string.check_for_updates),
-                        enabled = !updatesState.isChecking,
-                        onClick = { updatesViewModel.checkManual() }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
                 // Settings Content
                 AutoSettingsScreen(
                     schema = AppSettingsSchema,
@@ -182,6 +171,11 @@ fun SettingsScreen(
                             if (name == "languageIndex" && value is Int) {
                                 AppLanguage.select(AppLanguage.entries.getOrElse(value) { AppLanguage.System })
                             }
+                        }
+                    },
+                    onAction = { actionClass ->
+                        if (!ActionRegistry.execute(actionClass)) {
+                            snackbarHostState.showSnackbar(resources.getString(R.string.error))
                         }
                     },
                     customTypeHandlers = listOf(

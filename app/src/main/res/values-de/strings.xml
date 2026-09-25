@@ -81,6 +81,7 @@
     <string name="update_channel">Updatekanal:</string>
     <string name="auto_check_for_updates">Automatisch nach Updates suchen</string>
     <string name="check_for_updates">Nach Updates suchen</string>
+    <string name="check_for_updates_description">Jetzt nach einer neueren Version suchen</string>
     <string name="update">Update</string>
     <string name="new_version_available_s">Neue Version verfügbar: %s</string>
     <string name="web_browser_optimized_for_tvs">Webbrowser optimiert für TVs</string>
@@ -153,6 +154,7 @@
         <item>Suchmaschine</item>
         <item>Brauch</item>
         <item>Leer</item>
+        <item>Lesezeichen</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Lesezeichen</item>
@@ -182,6 +184,8 @@
     <string name="media_fast_forward">Medienwiedergabe vorspulen</string>
     <string name="long_press">Langes Drücken</string>
     <string name="toggle_directional_nav">Richtungsnavigation umschalten</string>
+    <string name="toggle_single_tab_mode">Einzeltabmodus umschalten</string>
+    <string name="search_web">Im Web suchen</string>
     <string name="directional_nav_enabled">Richtungsnavigation aktiviert, D-Pad steuert die Webseite</string>
     <string name="directional_nav_disabled">Richtungsnavigation deaktiviert, D-Pad bewegt den Cursor</string>
 </resources>

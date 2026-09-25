@@ -81,6 +81,7 @@
     <string name="version_and_updates">Версия</string>
     <string name="version_s">Версия: %s</string>
     <string name="check_for_updates">Проверить обновления</string>
+    <string name="check_for_updates_description">Проверить наличие новой версии</string>
     <string name="warning">Предупреждение</string>
     <string name="web_browser_optimized_for_tvs">Веб-браузер, оптимизированный для телевизоров</string>
     <string name="new_version_available_s">Доступна новая версия: %s</string>
@@ -153,6 +154,7 @@
         <item>Поисковый движок</item>
         <item>Пользовательская</item>
         <item>Пустая</item>
+        <item>Закладки</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Закладки</item>
@@ -183,6 +185,8 @@
     <string name="media_fast_forward">Перемотать вперёд</string>
     <string name="long_press">Долгое нажатие</string>
     <string name="toggle_directional_nav">Переключить режим навигации с помощью D-pad</string>
+    <string name="toggle_single_tab_mode">Переключить режим одной вкладки</string>
+    <string name="search_web">Поиск в интернете</string>
     <string name="directional_nav_enabled">Навигация с помощью D-pad включена, D-pad управляет веб-страницей</string>
     <string name="directional_nav_disabled">Навигация с помощью D-pad отключена, D-pad перемещает курсор</string>
 </resources>
