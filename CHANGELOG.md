@@ -1,3 +1,8 @@
+## v4.7.3
+
+- Move check updates to actions registry, and add a bookmarks homepage option (seperated), with 2 more shortcut conf.s
+
+
 ## v4.7.2
 
 - Auto update check improvments
