@@ -1,3 +1,12 @@
+## v4.7.2
+
+- Auto update check improvments
+- make it show a snackbar when the bookmark isn't present
+- assingable bookmark shortcuts
+- Add the ability to assign shortcut keys for Bookmarks page
+- fix: changed url can have stale icon
+
+
 ## v4.7.1
 
 - Add the lock toggle for bookmarks as per #11
