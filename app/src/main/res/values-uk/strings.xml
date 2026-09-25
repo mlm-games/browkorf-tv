@@ -79,6 +79,7 @@
     <string name="update_channel">Канал оновлень</string>
     <string name="version_and_updates">Версія</string>
     <string name="version_s">Версія: %s</string>
+    <string name="check_for_updates">Перевірити оновлення</string>
     <string name="warning">Увага</string>
     <string name="web_browser_optimized_for_tvs">Веб-браузер, оптимізований для телевізорів</string>
     <string name="new_version_available_s">Доступна нова версія: %s</string>

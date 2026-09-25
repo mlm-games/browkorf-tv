@@ -22,8 +22,10 @@ import android.webkit.CookieManager
 import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
 import android.webkit.WebStorage
+import android.widget.ProgressBar
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog as AppCompatAlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.SnackbarHostState
@@ -38,10 +40,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.webkit.URLUtilCompat
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
@@ -66,7 +66,7 @@ import org.mlm.browkorftv.ui.components.LinkAction
 import org.mlm.browkorftv.ui.theme.AppTheme
 import org.mlm.browkorftv.ui.screens.BrowserScreen
 import org.mlm.browkorftv.updates.UpdateDialogs
-import org.mlm.browkorftv.updates.UpdatesEvent
+import org.mlm.browkorftv.updates.UpdateInfo
 import org.mlm.browkorftv.updates.UpdatesViewModel
 import org.mlm.browkorftv.utils.EdgeToEdgeViews
 import org.mlm.browkorftv.utils.Utils
@@ -94,6 +94,8 @@ open class MainActivity : AppCompatActivity() {
         private const val COMMON_REQUESTS_START_CODE = 10100
         const val ACTION_INSTALL_APK = "org.mlm.browkorftv.ACTION_INSTALL_APK"
         const val EXTRA_FILE_PATH = "file_path_extra"
+        private const val STATE_PENDING_APK_PATH = "state_pending_apk_path"
+        private const val STATE_INSTALL_REQUEST_IN_PROGRESS = "state_install_request_in_progress"
         private val snackbarManager: SnackbarManager by inject()
     }
 
@@ -128,6 +130,14 @@ open class MainActivity : AppCompatActivity() {
     var openUrlInExternalAppDialog: AlertDialog? = null
 
     private var pendingApkToInstall: File? = null
+    private var installRequestInProgress = false
+    private var updateDownloadDialog: AppCompatAlertDialog? = null
+    private var updateDownloadProgressBar: ProgressBar? = null
+    private var availableUpdateDialog: AppCompatAlertDialog? = null
+    private var wasUpdateDownloading = false
+    private var shownAvailableUpdate: UpdateInfo? = null
+
+    private fun canCheckForUpdates(): Boolean = this !is IncognitoModeMainActivity
 
     private val filePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -136,12 +146,20 @@ open class MainActivity : AppCompatActivity() {
 
     private val unknownSourcesLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (packageManager.canRequestPackageInstalls()) {
-                pendingApkToInstall?.let { file ->
-                    launchInstallAPKIntent(file)
-                }
+            val file = pendingApkToInstall
+            if (file == null) {
+                installRequestInProgress = false
+                return@registerForActivityResult
+            }
+
+            if (packageManager.canRequestPackageInstalls() && launchInstallAPKIntent(file)) {
+                updatesViewModel.clearPendingInstall(file)
+            } else {
+                updatesViewModel.clearPendingInstall(file)
+                snackbarManager.show(getString(R.string.error))
             }
             pendingApkToInstall = null
+            installRequestInProgress = false
         }
 
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
@@ -239,37 +257,66 @@ open class MainActivity : AppCompatActivity() {
     }
 
     private fun handleInstallRequest(file: File) {
+        if (installRequestInProgress) return
+
+        installRequestInProgress = true
+        pendingApkToInstall = file
         if (!packageManager.canRequestPackageInstalls()) {
-            pendingApkToInstall = file
             val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
                 data = "package:$packageName".toUri()
             }
-            unknownSourcesLauncher.launch(intent)
+            try {
+                unknownSourcesLauncher.launch(intent)
+            } catch (_: RuntimeException) {
+                pendingApkToInstall = null
+                installRequestInProgress = false
+                updatesViewModel.clearPendingInstall(file)
+                snackbarManager.show(getString(R.string.error))
+            }
+        } else if (launchInstallAPKIntent(file)) {
+            updatesViewModel.clearPendingInstall(file)
+            pendingApkToInstall = null
+            installRequestInProgress = false
         } else {
-            launchInstallAPKIntent(file)
+            pendingApkToInstall = null
+            installRequestInProgress = false
+            updatesViewModel.clearPendingInstall(file)
         }
     }
 
     @SuppressLint("RequestInstallPackagesPolicy")
-    private fun launchInstallAPKIntent(file: File) {
-        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
-            ?: "application/vnd.android.package-archive"
-        val apkURI = FileProvider.getUriForFile(
-            this,
-            applicationContext.packageName + ".provider",
-            file
-        )
-
-        val install = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
-            setDataAndType(apkURI, mimeType)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    private fun launchInstallAPKIntent(file: File): Boolean {
+        if (!file.isFile) {
+            snackbarManager.show(getString(R.string.error))
+            return false
         }
 
-        try {
+        return try {
+            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                ?: "application/vnd.android.package-archive"
+            val apkURI = FileProvider.getUriForFile(
+                this,
+                applicationContext.packageName + ".provider",
+                file
+            )
+
+            val install = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+                setDataAndType(apkURI, mimeType)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+
             startActivity(install)
+            true
         } catch (_: ActivityNotFoundException) {
             snackbarManager.show(getString(R.string.error))
+            false
+        } catch (_: IllegalArgumentException) {
+            snackbarManager.show(getString(R.string.error))
+            false
+        } catch (_: SecurityException) {
+            snackbarManager.show(getString(R.string.error))
+            false
         }
     }
 
@@ -301,6 +348,9 @@ open class MainActivity : AppCompatActivity() {
     }
 
     private fun updateNetworkState(connected: Boolean) {
+        if (connected && canCheckForUpdates()) {
+            updatesViewModel.checkAutoIfNeeded()
+        }
         runOnUiThread {
             val tab = tabsViewModel.currentTab.value ?: return@runOnUiThread
             tab.webEngine.setNetworkAvailable(connected)
@@ -320,6 +370,14 @@ open class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        pendingApkToInstall = savedInstanceState
+            ?.getString(STATE_PENDING_APK_PATH)
+            ?.let(::File)
+        installRequestInProgress = savedInstanceState
+            ?.getBoolean(STATE_INSTALL_REQUEST_IN_PROGRESS, false) == true &&
+            pendingApkToInstall != null
+        pendingApkToInstall?.let(updatesViewModel::restorePendingInstall)
 
         val incognitoMode = settings.incognitoMode
         Log.d(TAG, "onCreate incognitoMode: $incognitoMode")
@@ -404,6 +462,7 @@ open class MainActivity : AppCompatActivity() {
 
                     uiVm = browserUiViewModel,
                     tabsVm = tabsViewModel,
+                    updatesViewModel = updatesViewModel,
                     viewModelStoreOwner = this@MainActivity,
 
                     isBlocking = isBlocking,
@@ -580,39 +639,69 @@ open class MainActivity : AppCompatActivity() {
                 }
 
                 launch {
-                    updatesViewModel.events.collectLatest { e ->
-                        when (e) {
-                            is UpdatesEvent.ShowUpdateAvailable -> {
-                                UpdateDialogs.showUpdateAvailableDialog(
-                                    activity = this@MainActivity,
-                                    info = e.info,
-                                    onDownload = {
-                                        val (dlg, pb) = UpdateDialogs.showDownloadProgressDialog(
-                                            this@MainActivity
-                                        )
-                                        updatesViewModel.downloadAndRequestInstall(e.info)
-                                        val job = lifecycleScope.launch {
-                                            updatesViewModel.state
-                                                .dropWhile { !it.isDownloading }
-                                                .collect { st ->
-                                                    UpdateDialogs.updateProgressBar(
-                                                        pb,
-                                                        st.downloadProgress
-                                                    )
-                                                    if (!st.isDownloading) {
-                                                        dlg.dismiss()
-                                                        this.cancel()
-                                                    }
-                                                }
+                    updatesViewModel.state.collect { state ->
+                        val availableUpdate = state.availableUpdate
+                        if (availableUpdate == null) {
+                            availableUpdateDialog?.dismiss()
+                            availableUpdateDialog = null
+                            shownAvailableUpdate = null
+                        } else if (availableUpdate != shownAvailableUpdate ||
+                            availableUpdateDialog?.isShowing != true
+                        ) {
+                            availableUpdateDialog?.dismiss()
+                            shownAvailableUpdate = availableUpdate
+                            val shown = UpdateDialogs.showUpdateAvailableDialog(
+                                activity = this@MainActivity,
+                                info = availableUpdate,
+                                onDownload = {
+                                    updatesViewModel.clearAvailableUpdate(availableUpdate)
+                                    updatesViewModel.downloadAndRequestInstall(availableUpdate)
+                                },
+                                onLater = {
+                                    updatesViewModel.clearAvailableUpdate(availableUpdate)
+                                },
+                                onSettings = {
+                                    updatesViewModel.clearAvailableUpdate(availableUpdate)
+                                },
+                                onDismiss = {
+                                    updatesViewModel.clearAvailableUpdate(availableUpdate)
+                                },
+                                onShown = { dialog ->
+                                    availableUpdateDialog = dialog
+                                    dialog.setOnDismissListener {
+                                        if (availableUpdateDialog === dialog) {
+                                            availableUpdateDialog = null
                                         }
-                                        dlg.setOnDismissListener { job.cancel() }
                                     }
+                                }
+                            )
+                            if (!shown) {
+                                updatesViewModel.clearAvailableUpdate(availableUpdate)
+                            }
+                        }
+
+                        state.errorMessage?.let { message ->
+                            snackbarManager.show(message)
+                            updatesViewModel.clearError(message)
+                        }
+
+                        if (state.isDownloading) {
+                            showUpdateDownloadDialog()
+                            updateDownloadProgressBar?.let { progressBar ->
+                                UpdateDialogs.updateProgressBar(
+                                    progressBar,
+                                    state.downloadProgress
                                 )
                             }
+                        } else if (wasUpdateDownloading) {
+                            dismissUpdateDownloadDialog()
+                        }
+                        wasUpdateDownloading = state.isDownloading
 
-                            is UpdatesEvent.RequestInstallApk -> handleInstallRequest(e.file)
-
-            is UpdatesEvent.ToastMessage -> snackbarManager.show(e.message)
+                        state.pendingInstallApk?.let { file ->
+                            if (!installRequestInProgress) {
+                                handleInstallRequest(file)
+                            }
                         }
                     }
                 }
@@ -621,6 +710,31 @@ open class MainActivity : AppCompatActivity() {
 
         // Ensure containers are attached before engine initialization.
         webContainer.post { loadState() }
+    }
+
+    private fun showUpdateDownloadDialog() {
+        if (updateDownloadDialog?.isShowing == true) return
+        updateDownloadDialog?.dismiss()
+
+        val (dialog, progressBar) = UpdateDialogs.showDownloadProgressDialog(
+            this,
+            onCancel = updatesViewModel::cancelDownload
+        )
+        updateDownloadDialog = dialog
+        updateDownloadProgressBar = progressBar
+        dialog.setOnDismissListener {
+            if (updateDownloadDialog === dialog) {
+                updateDownloadDialog = null
+                updateDownloadProgressBar = null
+            }
+        }
+    }
+
+    private fun dismissUpdateDownloadDialog() {
+        val dialog = updateDownloadDialog
+        updateDownloadDialog = null
+        updateDownloadProgressBar = null
+        dialog?.dismiss()
     }
 
     fun closeWindow() {
@@ -649,8 +763,17 @@ open class MainActivity : AppCompatActivity() {
         tabsViewModel.currentTab.value?.webEngine?.reload()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        pendingApkToInstall?.let { outState.putString(STATE_PENDING_APK_PATH, it.absolutePath) }
+        outState.putBoolean(STATE_INSTALL_REQUEST_IN_PROGRESS, installRequestInProgress)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
+        availableUpdateDialog?.dismiss()
+        availableUpdateDialog = null
+        dismissUpdateDownloadDialog()
         if (tabsViewModel.tabsStates.value.isNotEmpty()) {
             tabsViewModel.onDetachActivity()
         }
@@ -736,7 +859,9 @@ open class MainActivity : AppCompatActivity() {
             browserUiViewModel.toggleMenu()
         }
 
-        updatesViewModel.checkAutoIfNeeded()
+        if (canCheckForUpdates()) {
+            updatesViewModel.checkAutoIfNeeded()
+        }
 
         blockingUi.value = false
 
@@ -939,6 +1064,9 @@ open class MainActivity : AppCompatActivity() {
         running = true
         super.onResume()
         registerNetworkCallback()
+        if (canCheckForUpdates()) {
+            updatesViewModel.checkAutoIfNeeded()
+        }
         tabsViewModel.currentTab.value?.webEngine?.onResume()
     }
 

@@ -79,6 +79,7 @@
     <string name="version_s">版本: %s</string>
     <string name="update_channel">更新频道：</string>
     <string name="auto_check_for_updates">自动检查更新</string>
+    <string name="check_for_updates">检查更新</string>
     <string name="update">更新资料</string>
     <string name="new_version_available_s">新版本可用: %s</string>
     <string name="web_browser_optimized_for_tvs">针对电视进行了优化的网络浏览器</string>

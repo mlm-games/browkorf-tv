@@ -82,6 +82,7 @@
     <string name="version_s">Wersja: %s</string>
     <string name="update_channel">Kanał aktualizacji:</string>
     <string name="auto_check_for_updates">Automatycznie sprawdzaj aktualizacje</string>
+    <string name="check_for_updates">Sprawdź aktualizacje</string>
     <string name="update">Aktualizacja</string>
     <string name="new_version_available_s">Dostępna nowa wersja: %s</string>
     <string name="web_browser_optimized_for_tvs">Przeglądarka internetowa zaoptymalizowana dla telewizorów</string>

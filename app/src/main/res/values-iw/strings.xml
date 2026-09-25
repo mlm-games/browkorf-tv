@@ -82,6 +82,7 @@
     <string name="version_s">"גרסא: %s"</string>
     <string name="update_channel">"ערוץ עדכונים:"</string>
     <string name="auto_check_for_updates">"בדוק אוטומטית לעדכונים:"</string>
+    <string name="check_for_updates">בדוק עדכונים</string>
     <string name="update">"עדכן:"</string>
     <string name="new_version_available_s">"גרסא חדשה זמינה: %s"</string>
     <string name="warning">"אזהרה"</string>

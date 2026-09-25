@@ -40,6 +40,7 @@ import org.mlm.browkorftv.activity.main.BrowserUiViewModel
 import org.mlm.browkorftv.activity.main.TabsViewModel
 import org.mlm.browkorftv.model.WebTabState
 import org.mlm.browkorftv.settings.SettingsManager
+import org.mlm.browkorftv.updates.UpdatesViewModel
 import org.mlm.browkorftv.ui.components.ActionBar
 import org.mlm.browkorftv.ui.components.BottomNavigationPanel
 import org.mlm.browkorftv.ui.components.BrowkorfTvProgressBar
@@ -58,6 +59,7 @@ fun BrowserScreen(
 
     uiVm: BrowserUiViewModel,
     tabsVm: TabsViewModel,
+    updatesViewModel: UpdatesViewModel,
     viewModelStoreOwner: ViewModelStoreOwner,
 
     isBlocking: Boolean,
@@ -414,6 +416,7 @@ fun BrowserScreen(
 
             entry<AppKey.Settings> {
                 SettingsScreen(
+                    updatesViewModel = updatesViewModel,
                     onNavigateBack = {
                         backStack.removeAt(backStack.lastIndex)
                         uiVm.showMenu()

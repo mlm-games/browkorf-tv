@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -45,14 +46,18 @@ import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.resolveSettingsResource
 import org.mlm.browkorftv.ui.components.BrowkorfTopBar
 import org.mlm.browkorftv.ui.components.BrowkorfTvIconButton
+import org.mlm.browkorftv.updates.UpdatesViewModel
 
 @Composable
 fun SettingsScreen(
+    updatesViewModel: UpdatesViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToShortcuts: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val settingsManager: SettingsManager = koinInject()
+    val updatesState by updatesViewModel.state.collectAsStateWithLifecycle()
     val settings by settingsManager.settingsState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -74,19 +79,19 @@ fun SettingsScreen(
                 is ExportResult.Success -> {
                     runCatching {
                         context.contentResolver.openOutputStream(uri)?.bufferedWriter().use { writer ->
-                            checkNotNull(writer) { context.getString(R.string.export_failed) }
+                            checkNotNull(writer) { resources.getString(R.string.export_failed) }
                             writer.write(result.json)
                         }
                     }.onSuccess {
-                        snackbarHostState.showSnackbar(context.getString(R.string.backup_exported))
+                        snackbarHostState.showSnackbar(resources.getString(R.string.backup_exported))
                     }.onFailure {
                         snackbarHostState.showSnackbar(
-                            it.message ?: context.getString(R.string.export_failed),
+                            it.message ?: resources.getString(R.string.export_failed),
                         )
                     }
                 }
                 is ExportResult.Error -> snackbarHostState.showSnackbar(
-                    context.getString(R.string.export_failed),
+                    resources.getString(R.string.export_failed),
                 )
             }
         }
@@ -99,7 +104,7 @@ fun SettingsScreen(
         scope.launch {
             runCatching {
                 context.contentResolver.openInputStream(uri)?.bufferedReader().use { reader ->
-                    checkNotNull(reader) { context.getString(R.string.import_failed) }
+                    checkNotNull(reader) { resources.getString(R.string.import_failed) }
                     reader.readText()
                 }
             }.onSuccess { json ->
@@ -107,7 +112,7 @@ fun SettingsScreen(
                 showImportDialog = true
             }.onFailure {
                 snackbarHostState.showSnackbar(
-                    it.message ?: context.getString(R.string.import_failed),
+                    it.message ?: resources.getString(R.string.import_failed),
                 )
             }
         }
@@ -150,6 +155,15 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                if (BuildConfig.BUILT_IN_AUTO_UPDATE) {
+                    SettingsItem(
+                        title = stringResource(R.string.check_for_updates),
+                        enabled = !updatesState.isChecking,
+                        onClick = { updatesViewModel.checkManual() }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
                 // Settings Content
                 AutoSettingsScreen(
                     schema = AppSettingsSchema,
@@ -160,7 +174,7 @@ fun SettingsScreen(
                         scope.launch {
                             if (!BuildConfig.GECKO_INCLUDED && name == "webEngineIndex") {
                                 snackbarHostState.showSnackbar(
-                                    message = context.getString(R.string.gecko_engine_not_included)
+                                    message = resources.getString(R.string.gecko_engine_not_included)
                                 )
                                 return@launch
                             }
@@ -220,11 +234,11 @@ fun SettingsScreen(
                                         val languageIndex = settingsManager.settings.first().languageIndex
                                         AppLanguage.select(AppLanguage.entries.getOrElse(languageIndex) { AppLanguage.System })
                                         snackbarHostState.showSnackbar(
-                                            context.getString(R.string.imported_settings, result.appliedCount),
+                                            resources.getString(R.string.imported_settings, result.appliedCount),
                                         )
                                     }
                                     is ImportResult.Error ->
-                                        snackbarHostState.showSnackbar(context.getString(R.string.import_failed))
+                                        snackbarHostState.showSnackbar(resources.getString(R.string.import_failed))
                                 }
                             }
                         },

@@ -81,6 +81,7 @@
     <string name="main">"اصلی"</string>
     <string name="version_and_updates">نسخه و به روزرسانی ها</string>
     <string name="version_s">"نسخه: %s"</string>
+    <string name="check_for_updates">بررسی به‌روزرسانی‌ها</string>
     <string name="update_channel">"کانال ترجمه:"</string>
     <string name="auto_check_for_updates">"بررسی خودکار برای به روزرسانی ها"</string>
     <string name="update">"به روز رسانی"</string>

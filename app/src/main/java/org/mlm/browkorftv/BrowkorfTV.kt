@@ -15,6 +15,7 @@ import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.webengine.webview.IncognitoWebViewData
 import org.mlm.browkorftv.singleton.AppDatabase
+import org.mlm.browkorftv.updates.UpdateInstaller
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -57,6 +58,12 @@ class BrowkorfTV : Application(), Application.ActivityLifecycleCallbacks {
             androidLogger()
             androidContext(this@BrowkorfTV)
             modules(appModule)
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P ||
+            !getProcessName().endsWith(":incognito")
+        ) {
+            UpdateInstaller.clearTempFilesIfAny(this)
         }
 
         val maxThreadsInOfflineJobsPool = Runtime.getRuntime().availableProcessors()

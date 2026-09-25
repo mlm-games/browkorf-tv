@@ -82,6 +82,7 @@
     <string name="version_s">版本：%s</string>
     <string name="update_channel">更新頻道：</string>
     <string name="auto_check_for_updates">自動檢查更新</string>
+    <string name="check_for_updates">檢查更新</string>
     <string name="update">更新</string>
     <string name="new_version_available_s">有可用的新版本：%s</string>
     <string name="web_browser_optimized_for_tvs">針對電視強化的網頁瀏覽器</string>
