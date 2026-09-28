@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="clear">"پاک کردن"</string>
+  <string name="clear">پاک کردن</string>
   <string name="repost_confirm_message">برای نمایش این صفحه، Browkorf TV باید اطلاعاتی را ارسال کند که هر اقدامی (مانند جستجو یا تأیید سفارش) را که قبلاً انجام شده است، تکرار کند.</string>
   <string name="repost_confirm_title">مطمئنی؟</string>
   <string name="repost_confirm_resend">ارسال مجدد</string>

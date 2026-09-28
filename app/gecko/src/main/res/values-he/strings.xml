@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="clear">"נקה"</string>
+  <string name="clear">נקה</string>
   <string name="repost_confirm_message">כדי להציג עמוד זה, Browkorf TV חייב לשלוח מידע שיחזור על כל פעולה (כגון חיפוש או אישור הזמנה) שבוצעה קודם לכן.</string>
   <string name="repost_confirm_title">האם אתה בטוח?</string>
   <string name="repost_confirm_resend">שלח שוב</string>

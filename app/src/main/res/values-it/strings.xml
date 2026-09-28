@@ -107,7 +107,7 @@
     <string name="back_to_safety">Torna in zona sicura</string>
     <string name="go_im_aware">Ok. Sono consapevole del rischio</string>
     <string name="connection_isnt_secure">Connessione non sicura</string>
-    <string name="hostname">Hostname:</string>
+    <string name="hostname">Nome host:</string>
     <string name="err_desk">Descrizione errore:</string>
     <string name="details">Dettagli:</string>
     <string name="exit">Esci</string>
