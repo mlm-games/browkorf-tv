@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Γλώσσα</string>
+    <string name="language_system_default">Προεπιλογή συστήματος</string>
+    <string name="browkorf_settings_import">Εισαγωγή ρυθμίσεων</string>
+    <string name="browkorf_settings_export">Εξαγωγή ρυθμίσεων</string>
+    <string name="category_general">Γενικά</string>
+    <string name="category_home_page">Αρχική σελίδα</string>
+    <string name="category_search">Αναζήτηση</string>
+    <string name="category_user_agent">User Agent</string>
+    <string name="category_web_engine">Μηχανή ιστού</string>
+    <string name="category_ad_block">Φίλτρο διαφημίσεων</string>
+    <string name="category_updates">Ενημερώσεις</string>
+    <string name="category_proxy">Διακομιστής μεσολάβησης</string>
+    <string name="link_actions">Ενέργειες συνδέσμου</string>
+    <string name="add_bookmark">Προσθήκη σελιδοδείκτη</string>
+    <string name="move_up">Μετακίνηση πάνω</string>
+    <string name="move_down">Μετακίνηση κάτω</string>
+    <string name="lock_bookmark_editing">Κλείδωμα επεξεργασίας σελιδοδεικτών</string>
+    <string name="unlock_bookmark_editing">Ξεκλείδωμα επεξεργασίας σελιδοδεικτών</string>
+    <string name="remove">Αφαίρεση</string>
+    <string name="clear_all">Εκκαθάριση όλων</string>
+    <string name="no_history">Χωρίς ιστορικό</string>
+    <string name="no_downloads">Χωρίς λήψεις</string>
+    <string name="about">Σχετικά</string>
+    <string name="app_info">Εφαρμογή: %1$s (%2$d)</string>
+    <string name="engine_info">Μηχανή: %1$s</string>
+    <string name="edit_bookmark">Επεξεργασία σελιδοδείκτη</string>
+    <string name="edit_title">Επεξεργασία τίτλου</string>
+    <string name="edit_url">Επεξεργασία URL</string>
+    <string name="set_title">Ορισμός τίτλου...</string>
+    <string name="set_url">Ορισμός URL...</string>
+    <string name="target_sdk">Target SDK: %1$d</string>
+    <string name="open_in_current_tab">Άνοιγμα στην τρέχουσα καρτέλα</string>
+    <string name="text_selection">Επιλογή κειμένου</string>
+    <string name="grab_mode">Λειτουργία αρπαγής</string>
+    <string name="microphone">Μικρόφωνο</string>
+    <string name="microphone_permission_required">Απαιτείται άδεια μικροφώνου</string>
+    <string name="voice_no_match">Δεν αναγνωρίστηκε ομιλία. Δοκιμάστε ξανά.</string>
+    <string name="voice_network_error">Σφάλμα δικτύου. Ελέγξτε τη σύνδεση.</string>
+    <string name="voice_search_error">Σφάλμα φωνητικής αναζήτησης: %1$d</string>
+    <string name="copy_error">Σφάλμα αντιγραφής</string>
+    <string name="error_loading_ad_blocker">Σφάλμα κατά τη φόρτωση της λίστας φιλτραρίσματος διαφημίσεων</string>
+    <string name="setting_force_dark_webpage">Εξαναγκασμός σκοτεινής σελίδας</string>
+    <string name="setting_force_dark_webpage_description">Εφαρμογή σκοτεινού θέματος στις σελίδες κατά τη χρήση της σκοτεινής λειτουργίας</string>
+    <string name="setting_keep_screen_on">Διατήρηση οθόνης αναμμένης</string>
+    <string name="setting_keep_screen_on_description">Αποτροπή σβησίματος της οθόνης κατά την περιήγηση</string>
+    <string name="setting_incognito_mode_description">Περιήγηση χωρίς αποθήκευση ιστορικού</string>
+    <string name="setting_allow_autoplay_media">Επιτροπή αυτόματης αναπαραγωγής πολυμέσων</string>
+    <string name="setting_home_page_mode">Λειτουργία αρχικής σελίδας</string>
+    <string name="setting_custom_home_page_url">Προσαρμοσμένο URL αρχικής σελίδας</string>
+    <string name="setting_search_engine">Μηχανή αναζήτησης</string>
+    <string name="setting_custom_search_engine_url">Προσαρμοσμένο URL μηχανής αναζήτησης</string>
+    <string name="setting_user_agent">User Agent</string>
+    <string name="setting_web_engine">Μηχανή ιστού</string>
+    <string name="setting_web_engine_description">Το GeckoView συνιστάται για συσκευές με μνήμη 3GB ή περισσότερο</string>
+    <string name="setting_ad_block">Ενεργοποίηση φίλτρου διαφημίσεων</string>
+    <string name="setting_ad_block_list_url">URL λίστας φιλτραρίσματος</string>
+    <string name="setting_auto_check_updates">Αυτόματος έλεγχος ενημερώσεων</string>
+    <string name="setting_update_channel">Κανάλι ενημερώσεων</string>
+    <string name="setting_use_http_proxy">Χρήση διακομιστή HTTP</string>
+    <string name="setting_use_http_proxy_description">Δρομολόγηση κίνησης μέσω διακομιστή HTTP (π.χ. Clash στο 127.0.0.1:7890). Μπορεί να απαιτείται επανεκκίνηση για το WebView</string>
+    <string name="setting_proxy_url">URL διακομιστή</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Αφήστε το κενό για απενεργοποίηση</string>
+    <string name="setting_directional_navigation_mode">Κατευθυντική πλοήγηση</string>
+    <string name="setting_directional_navigation_mode_description">Αποστολή πλήκτρων βελών στη σελίδα αντί για μετακίνηση του δρομέα (για παιχνίδια/εφαρμογές)</string>
+    <string name="setting_new_tab_button_at_start">Κουμπί νέας καρτέλας στην αρχή</string>
+    <string name="setting_new_tab_button_at_start_description">Το κουμπί + τοποθετείται πριν από τη λίστα καρτελών αντί για μετά</string>
+    <string name="setting_context_menu_on_long_press">Μενού περιεχομένου με παρατεταμένο πάτημα</string>
+    <string name="setting_context_menu_on_long_press_description">Απενεργοποιήστε για να επιτρέπονται ενέργειες σελίδας με παρατεταμένο πάτημα</string>
+    <string name="setting_single_tab_mode">Λειτουργία μίας καρτέλας</string>
+    <string name="setting_single_tab_mode_description">Επαναχρησιμοποιεί την τρέχουσα καρτέλα για κάθε σύνδεσμο ή πρόθεση</string>
+    <string name="change_web_engine">Αλλαγή μηχανής ιστού;</string>
+    <string name="gecko_engine_not_included">Η μηχανή GeckoView δεν περιλαμβάνεται σε αυτή τη συναρμογή.</string>
+    <string name="backup_exported">Το αντίγραφο ασφαλείας εξάχθηκε</string>
+    <string name="export_failed">Η εξαγωγή απέτυχε</string>
+    <string name="import_failed">Η εισαγωγή απέτυχε</string>
+    <string name="imported_settings">Εισήχθησαν %1$d ρυθμίσεις</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Προσαρμοσμένο</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Προεπιλογή (συνιστάται)</item>
+        <item>Chrome (Επιτραπέζιο)</item>
+        <item>Chrome (Κινητό)</item>
+        <item>Firefox (Επιτραπέζιο)</item>
+        <item>Firefox (Κινητό)</item>
+        <item>Edge (Επιτραπέζιο)</item>
+        <item>Προσαρμοσμένο</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Κυκλοφορία</item>
+        <item>Προεπισκόπηση</item>
+    </string-array>
+</resources>

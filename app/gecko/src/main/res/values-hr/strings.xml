@@ -1,0 +1,27 @@
+<resources>
+    <string name="clear">Obriši</string>
+    <string name="repost_confirm_message">Kako bi se ova stranica prikazala, Browkorf TV mora poslati informacije koje će ponoviti radnju (npr. pretragu ili potvrdu narudžbe) koja je ranije izvršena.</string>
+    <string name="repost_confirm_title">Jeste li sigurni?</string>
+    <string name="repost_confirm_resend">Pošalji ponovno</string>
+    <string name="before_unload_message">Ova stranica od vas traži da potvrdite da želite otići - uneseni podaci možda neće biti spremljeni</string>
+    <string name="before_unload_title">Jeste li sigurni?</string>
+    <string name="before_unload_leave_page">Napusti stranicu</string>
+    <string name="before_unload_stay">Ostani na stranici</string>
+    <string name="wait">Pričekaj</string>
+    <string name="stop">Zaustavi</string>
+    <string name="slow_script">Skripta na ovoj stranici uzrokuje da vaš web preglednik radi sporo</string>
+    <string name="request_storage">Dopustiti pristup pohrani uređaja za \"%1$s\"?</string>
+    <string name="request_storage_access">Dopustiti trećim stranama pristup pohravi prve strane za \"%1$s\"?</string>
+    <string name="request_geolocation">Podijeliti lokaciju s \"%1$s\"?</string>
+    <string name="request_notification">Dopustiti obavijesti za \"%1$s\"?</string>
+    <string name="request_video">Podijeliti videozapis s \"%1$s\"</string>
+    <string name="request_audio">Podijeliti zvuk s \"%1$s\"</string>
+    <string name="request_media">Podijeliti videozapis i zvuk s \"%1$s\"</string>
+    <string name="request_xr">Podijeliti WebXR zaslone s \"%1$s\"?</string>
+    <string name="request_autoplay">Dopustiti automatsku reprodukciju videa na \"%1$s\"?</string>
+    <string name="request_media_key_system_access">Dopustiti pristup sistemskim tipkama medija za \"%1$s\"?</string>
+    <string name="media_back_camera">Stražnja kamera</string>
+    <string name="media_front_camera">Prednja kamera</string>
+    <string name="media_microphone">Mikrofon</string>
+    <string name="media_other">Nepoznati izvor</string>
+</resources>

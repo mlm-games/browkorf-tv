@@ -10,7 +10,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import org.mlm.browkorftv.di.appModule
 import org.mlm.browkorftv.network.ProxyManager
-import org.mlm.browkorftv.settings.AppLanguage
+import org.mlm.browkorftv.settings.currentAppLanguage
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.Theme
 import org.mlm.browkorftv.webengine.webview.IncognitoWebViewData
@@ -119,10 +119,10 @@ class BrowkorfTV : Application(), Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {
-        val language = AppLanguage.current()
-        if (settingsManager.current.languageIndex != language.ordinal) {
+        val language = currentAppLanguage()
+        if (settingsManager.current.language != language) {
             ProcessLifecycleOwner.get().lifecycleScope.launch {
-                settingsManager.setLanguageIndex(language.ordinal)
+                settingsManager.setLanguage(language)
             }
         }
     }

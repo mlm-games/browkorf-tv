@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Jezik</string>
+    <string name="language_system_default">Zadano postavkom sustava</string>
+    <string name="browkorf_settings_import">Uvezi postavke</string>
+    <string name="browkorf_settings_export">Izvezi postavke</string>
+    <string name="category_general">Općenito</string>
+    <string name="category_home_page">Početna stranica</string>
+    <string name="category_search">Pretraživanje</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Web pokretač</string>
+    <string name="category_ad_block">Blokator oglasa</string>
+    <string name="category_updates">Ažuriranja</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Radnje poveznica</string>
+    <string name="add_bookmark">Dodaj knjižnu oznaku</string>
+    <string name="move_up">Pomakni gore</string>
+    <string name="move_down">Pomakni dolje</string>
+    <string name="lock_bookmark_editing">Zaključaj uređivanje knjižnih oznaka</string>
+    <string name="unlock_bookmark_editing">Otključaj uređivanje knjižnih oznaka</string>
+    <string name="remove">Ukloni</string>
+    <string name="clear_all">Obriši sve</string>
+    <string name="no_history">Nema povijesti</string>
+    <string name="no_downloads">Nema preuzimanja</string>
+    <string name="about">O programu</string>
+    <string name="app_info">Aplikacija: %1$s (%2$d)</string>
+    <string name="engine_info">Pokretač: %1$s</string>
+    <string name="edit_bookmark">Uredi knjižnu oznaku</string>
+    <string name="edit_title">Uredi naslov</string>
+    <string name="edit_url">Uredi URL</string>
+    <string name="set_title">Postavi naslov…</string>
+    <string name="set_url">Postavi URL…</string>
+    <string name="target_sdk">Ciljni SDK: %1$d</string>
+    <string name="open_in_current_tab">Otvori u trenutnoj kartici</string>
+    <string name="text_selection">Odabir teksta</string>
+    <string name="grab_mode">Način zahvata</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="microphone_permission_required">Potrebna je dozola za mikrofon</string>
+    <string name="voice_no_match">Govor nije prepoznat. Pokušajte ponovno.</string>
+    <string name="voice_network_error">Pogreška mreže. Provjerite vezu.</string>
+    <string name="voice_search_error">Pogreška glasovne pretrage: %1$d</string>
+    <string name="copy_error">Pogreška kopiranja</string>
+    <string name="error_loading_ad_blocker">Pogreška pri učitavanju popisa blokiranja oglasa</string>
+    <string name="setting_force_dark_webpage">Nametni tamnu web-stranicu</string>
+    <string name="setting_force_dark_webpage_description">Primijeni tamnu temu na web-stranice pri korištenju tamnog načina rada</string>
+    <string name="setting_keep_screen_on">Zadrži zaslon uključenim</string>
+    <string name="setting_keep_screen_on_description">Spriječi gašenje zaslona tijekom pregledavanja</string>
+    <string name="setting_incognito_mode_description">Pregledavajte bez spremanja povijesti</string>
+    <string name="setting_allow_autoplay_media">Dopusti automatsku reprodukciju medija</string>
+    <string name="setting_home_page_mode">Način početne stranice</string>
+    <string name="setting_custom_home_page_url">Prilagođeni URL početne stranice</string>
+    <string name="setting_search_engine">Pretraživač</string>
+    <string name="setting_custom_search_engine_url">Prilagođeni URL pretraživača</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Web pokretač</string>
+    <string name="setting_web_engine_description">GeckoView se preporučuje za uređaje s 3 GB RAM-a ili više</string>
+    <string name="setting_ad_block">Omogući blokator oglasa</string>
+    <string name="setting_ad_block_list_url">URL popisa blokiranja oglasa</string>
+    <string name="setting_auto_check_updates">Automatski provjeri ažuriranja</string>
+    <string name="setting_update_channel">Kanal ažuriranja</string>
+    <string name="setting_use_http_proxy">Koristi HTTP proxy</string>
+    <string name="setting_use_http_proxy_description">Preusmjeri promet kroz HTTP proxy (npr. Clash na 127.0.0.1:7890). Za WebView može biti potrebno ponovno pokretanje</string>
+    <string name="setting_proxy_url">URL za proxy</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Ostavite prazno da biste onemogućili</string>
+    <string name="setting_directional_navigation_mode">Način smjerne navigacije</string>
+    <string name="setting_directional_navigation_mode_description">Šalji tipke sa strelicama web-stranici umjesto pomicanja kursora (za igre i aplikacije)</string>
+    <string name="setting_new_tab_button_at_start">Gumb Nova kartica na početku</string>
+    <string name="setting_new_tab_button_at_start_description">Postavlja gumb + ispred popisa kartica umjesto iza njega</string>
+    <string name="setting_context_menu_on_long_press">Kontekstualni izbornik pri dugom pritisku</string>
+    <string name="setting_context_menu_on_long_press_description">Isključite da biste dopustili radnje stranice pri dugom pritisku</string>
+    <string name="setting_single_tab_mode">Način jedne kartice</string>
+    <string name="setting_single_tab_mode_description">Ponovno koristi trenutnu karticu za svaku poveznicu ili namjeru</string>
+    <string name="change_web_engine">Promijeniti web pokretač?</string>
+    <string name="gecko_engine_not_included">GeckoView pokretač nije uključen u ovu verziju.</string>
+    <string name="backup_exported">Sigurnosna kopija izvezena</string>
+    <string name="export_failed">Izvoz nije uspio</string>
+    <string name="import_failed">Uvoz nije uspio</string>
+    <string name="imported_settings">Uvezeno postavki: %1$d</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Prilagođeno</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Zadano (preporučeno)</item>
+        <item>Chrome (desktop)</item>
+        <item>Chrome (mobilni)</item>
+        <item>Firefox (desktop)</item>
+        <item>Firefox (mobilni)</item>
+        <item>Edge (desktop)</item>
+        <item>Prilagođeno</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Objava</item>
+        <item>Predobjava</item>
+    </string-array>
+</resources>

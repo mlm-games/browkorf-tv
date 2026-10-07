@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Idioma</string>
+    <string name="language_system_default">Predeterminado del sistema</string>
+    <string name="browkorf_settings_import">Importar ajustes</string>
+    <string name="browkorf_settings_export">Exportar ajustes</string>
+    <string name="category_general">General</string>
+    <string name="category_home_page">Página de inicio</string>
+    <string name="category_search">Búsqueda</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Motor web</string>
+    <string name="category_ad_block">Bloqueador de anuncios</string>
+    <string name="category_updates">Actualizaciones</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Acciones de enlaces</string>
+    <string name="add_bookmark">Añadir marcador</string>
+    <string name="move_up">Mover arriba</string>
+    <string name="move_down">Mover abajo</string>
+    <string name="lock_bookmark_editing">Bloquear la edición de marcadores</string>
+    <string name="unlock_bookmark_editing">Desbloquear la edición de marcadores</string>
+    <string name="remove">Quitar</string>
+    <string name="clear_all">Borrar todo</string>
+    <string name="no_history">Sin historial</string>
+    <string name="no_downloads">Sin descargas</string>
+    <string name="about">Acerca de</string>
+    <string name="app_info">Aplicación: %1$s (%2$d)</string>
+    <string name="engine_info">Motor: %1$s</string>
+    <string name="edit_bookmark">Editar marcador</string>
+    <string name="edit_title">Editar título</string>
+    <string name="edit_url">Editar URL</string>
+    <string name="set_title">Establecer título…</string>
+    <string name="set_url">Establecer URL…</string>
+    <string name="target_sdk">SDK de destino: %1$d</string>
+    <string name="open_in_current_tab">Abrir en la pestaña actual</string>
+    <string name="text_selection">Selección de texto</string>
+    <string name="grab_mode">Modo de agarre</string>
+    <string name="microphone">Micrófono</string>
+    <string name="microphone_permission_required">Se necesita permiso para el micrófono</string>
+    <string name="voice_no_match">No se reconoció el habla. Inténtalo de nuevo.</string>
+    <string name="voice_network_error">Error de red. Comprueba la conexión.</string>
+    <string name="voice_search_error">Error de búsqueda por voz: %1$d</string>
+    <string name="copy_error">Error al copiar</string>
+    <string name="error_loading_ad_blocker">Error al cargar la lista de bloqueo</string>
+    <string name="setting_force_dark_webpage">Forzar página web oscura</string>
+    <string name="setting_force_dark_webpage_description">Aplicar el tema oscuro a las páginas web cuando se usa el modo oscuro</string>
+    <string name="setting_keep_screen_on">Mantener la pantalla encendida</string>
+    <string name="setting_keep_screen_on_description">Evita que la pantalla se apague mientras navegas</string>
+    <string name="setting_incognito_mode_description">Navega sin guardar el historial</string>
+    <string name="setting_allow_autoplay_media">Permitir la reproducción automática de medios</string>
+    <string name="setting_home_page_mode">Modo de página de inicio</string>
+    <string name="setting_custom_home_page_url">URL propia de la página de inicio</string>
+    <string name="setting_search_engine">Motor de búsqueda</string>
+    <string name="setting_custom_search_engine_url">URL propia del motor de búsqueda</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Motor web</string>
+    <string name="setting_web_engine_description">GeckoView recomendado para dispositivos con 3 GB o más de RAM</string>
+    <string name="setting_ad_block">Activar el bloqueador de anuncios</string>
+    <string name="setting_ad_block_list_url">URL de la lista de bloqueo</string>
+    <string name="setting_auto_check_updates">Buscar actualizaciones automáticamente</string>
+    <string name="setting_update_channel">Canal de actualizaciones</string>
+    <string name="setting_use_http_proxy">Usar proxy HTTP</string>
+    <string name="setting_use_http_proxy_description">Dirige el tráfico a través de un proxy HTTP (por ejemplo, Clash en 127.0.0.1:7890). Puede ser necesario reiniciar WebView</string>
+    <string name="setting_proxy_url">URL del proxy</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Déjalo en blanco para desactivarlo</string>
+    <string name="setting_directional_navigation_mode">Modo de navegación direccional</string>
+    <string name="setting_directional_navigation_mode_description">Envía las teclas de flecha a la página web en lugar de mover el cursor (para juegos y aplicaciones)</string>
+    <string name="setting_new_tab_button_at_start">Botón de pestaña nueva al principio</string>
+    <string name="setting_new_tab_button_at_start_description">Coloca el botón + antes de la lista de pestañas en lugar de después</string>
+    <string name="setting_context_menu_on_long_press">Menú contextual al mantener pulsado</string>
+    <string name="setting_context_menu_on_long_press_description">Desactívalo para permitir acciones de página con pulsación larga</string>
+    <string name="setting_single_tab_mode">Modo de una sola pestaña</string>
+    <string name="setting_single_tab_mode_description">Reutiliza la pestaña actual para cada enlace o intención</string>
+    <string name="change_web_engine">¿Cambiar el motor web?</string>
+    <string name="gecko_engine_not_included">El motor GeckoView no está incluido en esta compilación.</string>
+    <string name="backup_exported">Copia de seguridad exportada</string>
+    <string name="export_failed">Error al exportar</string>
+    <string name="import_failed">Error al importar</string>
+    <string name="imported_settings">Se importaron %1$d ajustes</string>
+
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Personalizado</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Predeterminado (recomendado)</item>
+        <item>Chrome (escritorio)</item>
+        <item>Chrome (móvil)</item>
+        <item>Firefox (escritorio)</item>
+        <item>Firefox (móvil)</item>
+        <item>Edge (escritorio)</item>
+        <item>Personalizado</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Estable</item>
+        <item>Prelanzamiento</item>
+    </string-array>
+</resources>

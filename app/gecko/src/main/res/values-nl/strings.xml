@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clear">Wissen</string>
+    <string name="repost_confirm_message">Om deze pagina weer te geven, moet Browkorf TV informatie versturen die een eerder uitgevoerde actie (zoals een zoekopdracht of een bestelbevestiging) herhaalt.</string>
+    <string name="repost_confirm_title">Weet je het zeker?</string>
+    <string name="repost_confirm_resend">Opnieuw versturen</string>
+    <string name="before_unload_message">Deze pagina vraagt je te bevestigen dat je wilt vertrekken - de gegevens die je hebt ingevoerd, worden mogelijk niet opgeslagen</string>
+    <string name="before_unload_title">Weet je het zeker?</string>
+    <string name="before_unload_leave_page">Pagina verlaten</string>
+    <string name="before_unload_stay">Op de pagina blijven</string>
+    <string name="wait">Wachten</string>
+    <string name="stop">Stoppen</string>
+    <string name="slow_script">Een script op deze pagina zorgt ervoor dat je webbrowser langzaam werkt</string>
+    <string name="request_storage">Toegang tot de opslag van het apparaat toestaan voor \"%1$s\"?</string>
+    <string name="request_storage_access">Derden toestaan toegang te krijgen tot de site-opslag voor \"%1$s\"?</string>
+    <string name="request_geolocation">Je locatie delen met \"%1$s\"?</string>
+    <string name="request_notification">Meldingen toestaan voor \"%1$s\"?</string>
+    <string name="request_video">Video delen met \"%1$s\"</string>
+    <string name="request_audio">Audio delen met \"%1$s\"</string>
+    <string name="request_media">Video en audio delen met \"%1$s\"</string>
+    <string name="request_xr">WebXR-weergaven delen met \"%1$s\"?</string>
+    <string name="request_autoplay">Video automatisch afspelen toestaan op \"%1$s\"?</string>
+    <string name="request_media_key_system_access">Toegang tot de systeemmediatoetsen toestaan voor \"%1$s\"?</string>
+    <string name="media_back_camera">Achtercamera</string>
+    <string name="media_front_camera">Frontcamera</string>
+    <string name="media_microphone">Microfoon</string>
+    <string name="media_other">Onbekende bron</string>
+</resources>

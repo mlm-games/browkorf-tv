@@ -1,0 +1,190 @@
+<resources>
+    <string name="app_name">Browkorf TV: Webbbläsare för TV</string>
+    <string name="error">Fel</string>
+    <string name="ok">OK</string>
+    <string name="loading">Laddar…</string>
+    <string name="url_prompt">Ange söktext eller URL</string>
+    <string name="can_not_recognize">Kan inte känna igen</string>
+    <string name="speak">Sökfråga</string>
+    <string name="open_new_tab">Öppna ny flik</string>
+    <string name="close">Stäng</string>
+    <string name="web_perm_request_confirmation">Den här webbsidan vill använda följande resurser:\n\n%s</string>
+    <string name="allow">Tillåt</string>
+    <string name="deny">Neka</string>
+    <string name="location">Plats</string>
+    <string name="open_in_new_tab">Öppna i ny flik</string>
+    <string name="download_started">Nedladdning startad…\nFilen sparas på:\n%s</string>
+    <string name="downloading_file">Laddar ner fil…</string>
+    <string name="err_cant_open_file_chooser">Kan inte öppna filväljaren</string>
+    <string name="bookmarks">Bokmärken</string>
+    <string name="select_bookmark">Välj bokmärke</string>
+    <string name="bookmark_not_found">Bokmärket finns inte längre</string>
+    <string name="add">Lägg till</string>
+    <string name="edit">Redigera</string>
+    <string name="no_bookmarks_yet">Inga bokmärken än</string>
+    <string name="new_bookmark">Nytt bokmärke</string>
+    <string name="done">Klar</string>
+    <string name="title">Titel</string>
+    <string name="search_history">Sökhistorik</string>
+    <string name="engine">Sökmotor</string>
+    <string name="choose_default_search_engine">Välj standardsökmotor</string>
+    <string name="set_search_engine_as_homepage">Använd sökmotorn som startsida</string>
+    <string name="save">Spara</string>
+    <string name="search_engine_url_with_query_placeholder_query">Sökmotorns URL med platshållare för sökfrågan [query]</string>
+    <string name="change_search_engine">Byt sökmotor</string>
+    <string name="change_user_agent">Byt User-Agent</string>
+    <string name="user_agent_string">User-Agent-sträng</string>
+    <string name="choose_user_agent_string">Välj User-Agent-sträng</string>
+    <string name="edit_user_agent_string">Redigera User-Agent-sträng</string>
+    <string name="nothing">Inget</string>
+    <string name="cancelled">Avbrutet</string>
+    <string name="download">Ladda ner</string>
+    <string name="file_not_found">Filen hittades inte</string>
+    <string name="no_app_for_file_type">Inga program hittades för att öppna den här filtypen</string>
+    <string name="delete">Ta bort</string>
+    <string name="cancel">Avbryt</string>
+    <string name="msg_delete_history">Ta bort de valda historikposterna?</string>
+    <string name="msg_delete_history_all">Ta bort alla historikposter?</string>
+    <string name="open_folder">Öppna den innehållande mappen</string>
+    <string name="no_file_explorer_msg">Det verkar som att ingen lämplig filhanterare är installerad på din enhet</string>
+    <string name="shortcuts">Kortkommandon</string>
+    <string name="favorites">Favoriter</string>
+    <string name="history">Historik</string>
+    <string name="browkorf_settings">Inställningar</string>
+    <string name="shortcut">Kortkommando</string>
+    <string name="toggle_main_menu">Visa eller dölj huvudmenyn</string>
+    <string name="navigate_back">Gå bakåt</string>
+    <string name="navigate_home">Gå till startsidan</string>
+    <string name="refresh_page">Uppdatera sidan</string>
+    <string name="voice_search">Röstsökning</string>
+    <string name="zoom_in">Zooma in</string>
+    <string name="zoom_out">Zooma ut</string>
+    <string name="not_set">Inte inställt</string>
+    <string name="action">Åtgärd:</string>
+    <string name="current_key">Nuvarande tangent:</string>
+    <string name="set_key_for_action">Ange tangent för åtgärden</string>
+    <string name="press_eny_key">Tryck på valfri tangent…</string>
+    <string name="shortcut_key_reserved_for_navigation">Den här tangenten är reserverad för webbläsarens navigering</string>
+    <string name="clear">Rensa</string>
+    <string name="install">Installera</string>
+    <string name="turn_on_unknown_sources">Slå på systeminställningen \"Okända källor\"</string>
+    <string name="turn_on_unknown_sources_for_app">Tillåt Browkorf TV att installera appar från \"Okända källor\" i systeminställningarna</string>
+    <string name="storage_not_mounted">Lagringen är inte monterad</string>
+    <string name="can_not_create_downloads">Kan inte skapa nedladdningsmappen</string>
+    <string name="voice_search_not_found">Röstsökning hittades inte</string>
+    <string name="new_version_dialog_title">Ny version tillgänglig</string>
+    <string name="later">Senare</string>
+    <string name="downloads">Nedladdningar</string>
+    <string name="downloads_notifications_description">Aviseringar om nedladdningarnas status</string>
+    <string name="main">Huvud</string>
+    <string name="version_and_updates">Version &amp; uppdateringar</string>
+    <string name="version_s">Version: %s</string>
+    <string name="update_channel">Uppdateringskanal:</string>
+    <string name="auto_check_for_updates">Sök automatiskt efter uppdateringar</string>
+    <string name="check_for_updates">Sök efter uppdateringar</string>
+    <string name="check_for_updates_description">Kontrollera nu om en nyare version finns</string>
+    <string name="update">Uppdatera</string>
+    <string name="new_version_available_s">Ny version tillgänglig: %s</string>
+    <string name="web_browser_optimized_for_tvs">Webbläsare optimerad för TV-apparater</string>
+    <string name="warning">Varning</string>
+    <string name="unprotected_connection">Osäker anslutning</string>
+    <string name="err_webview_can_not_link">Kan inte länka till WebView-komponenten. Försök installera komponenten Android System WebView först.</string>
+    <string name="new_tab_title">[NY FLIK]</string>
+    <string name="open_a_new_tab_here">Öppna en ny flik här</string>
+    <string name="tabs">Flikar</string>
+    <array name="tabs_options">
+        <item>Öppna ny flik</item>
+        <item>Stäng aktuell</item>
+        <item>Stäng alla</item>
+        <item>Flytta vänster</item>
+        <item>Flytta höger</item>
+    </array>
+    <string name="ssl_expired">Certifikatet har gått ut</string>
+    <string name="ssl_idmismatch">Värdnamnet stämmer inte</string>
+    <string name="ssl_date_invalid">Certifikatets datum är ogiltigt</string>
+    <string name="ssl_invalid">Ett allmänt fel inträffade</string>
+    <string name="back_to_safety">Tillbaka till säkerheten</string>
+    <string name="go_im_aware">Fortsätt. Jag är medveten om risken</string>
+    <string name="connection_isnt_secure">Anslutningen är inte säker</string>
+    <string name="hostname">Värdnamn:</string>
+    <string name="err_desk">Felbeskrivning:</string>
+    <string name="details">Detaljer:</string>
+    <string name="exit">Avsluta</string>
+    <string name="find_in_apps_store">Sök i appbutiken</string>
+    <string name="close_application">Stäng programmet</string>
+    <string name="close_tab">Stäng flik</string>
+    <string name="navigate_forward">Gå framåt</string>
+    <string name="toggle_ads_blocking">Slå av eller på annonsskyddet</string>
+    <string name="never">aldrig</string>
+    <string name="last_update">Senaste uppdatering</string>
+    <string name="update_ad_blocker_list">Uppdatera listan över annonsblockerare</string>
+    <string name="toggle_keep_screen_on">Håll skärmen på</string>
+    <string name="need_restart">Programmet måste startas om</string>
+    <string name="theme">Tema</string>
+    <array name="themes">
+        <item>System</item>
+        <item>Vit</item>
+        <item>Mörk</item>
+    </array>
+    <string name="incognito_mode">Privat läge</string>
+    <string name="incognito_mode_hint">Nu kan du surfa privat, och andra som använder den här enheten kommer inte att se din aktivitet. Browkorf TV sparar inte din surfhistorik, kakor eller webbplatsdata, eller information som fylls i formulär.\n\nDäremot sparas nedladdningar och bokmärken. Din aktivitet kan fortfarande vara synlig för webbplatser du besöker, din organisation eller din internetleverantör.</string>
+    <string name="don_t_show_again">Visa inte igen</string>
+    <string name="why_icon_changed">Varför ändrades ikonen?</string>
+    <string name="clear_web_cache">Rensa webbcachen</string>
+    <string name="block_popups">Blockera popupfönster</string>
+    <string name="block_popups_s">Blockera popupfönster (%s)</string>
+    <string name="popup_dialog_blocked">Popupfönster blockerat</string>
+    <string name="new_tab_blocked">Ny flik blockerad</string>
+    <array name="popup_blocking_level">
+        <item>Blockera inte</item>
+        <item>Blockera dialogrutor</item>
+        <item>Blockera även nya flikar (skriptinitierade)</item>
+        <item>Blockera alla nya fönster (maximal blockering)</item>
+    </array>
+    <string name="copy_to_clipboard">Kopiera till urklipp</string>
+    <string name="copied_to_clipboard">Kopierat till urklipp</string>
+    <string name="share_url">Dela URL</string>
+    <string name="open_in_external_application">Öppna i externt program</string>
+    <string name="external_app_open_error">Kan inte hitta något lämpligt program</string>
+    <string name="home_page">Startsida</string>
+    <string name="custom_home_page_url">Egen URL till startsidan</string>
+    <string name="home_page_links">Länkar på startsidan</string>
+    <array name="home_page_modes">
+        <item>Browkorf TV:s startsida</item>
+        <item>Sökmotor</item>
+        <item>Egen</item>
+        <item>Tom</item>
+        <item>Bokmärken</item>
+    </array>
+    <array name="home_page_links_modes">
+        <item>Bokmärken</item>
+        <item>Senaste historik</item>
+        <item>Besökt oftast</item>
+    </array>
+    <string name="web_browser_engine_temporary_setting">Webbläsarens motor (tillfällig inställning)</string>
+    <string name="need_restart_message">Starta om appen för att ändringarna ska träda i kraft</string>
+    <string name="restart">Starta om</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="site_asks_to_open_unknown_url">Webbplatsen ber om att öppna en okänd URL</string>
+    <string name="site_asks_to_open_unknown_url_message">Vill du öppna den här URL:en i ett externt program?</string>
+    <string name="err_no_app_to_handle_url">Kan inte hitta något lämpligt program för den här URL:en</string>
+    <string name="settings_engine_change_gecko_msg">GeckoViews rekommenderade systemkrav: 3 GB RAM och 64-bitars oktakärnprocessor. Vill du fortsätta?</string>
+    <string name="settings_engine_change_webview_msg">WebView kommer att ha färre funktioner i framtida uppdateringar. Vill du fortsätta?</string>
+    <string name="copy">Kopiera</string>
+    <string name="paste">Klistra in</string>
+    <string name="cut">Klipp ut</string>
+    <string name="share">Dela</string>
+    <string name="search">Sök</string>
+    <string name="http_auth_title">Autentisering krävs</string>
+    <string name="play_pause">Spela/Pausa</string>
+    <string name="media_stop">Stoppa media</string>
+    <string name="media_rewind">Spola bakåt</string>
+    <string name="media_fast_forward">Spola framåt</string>
+    <string name="long_press">Långt tryck</string>
+    <string name="toggle_directional_nav">Slå av eller på riktningsnavigering</string>
+    <string name="toggle_single_tab_mode">Slå av eller på läget med en enda flik</string>
+    <string name="search_web">Sök på webben</string>
+    <string name="directional_nav_enabled">Riktningsnavigering aktiverad, piltangenterna styr webbsidan</string>
+    <string name="directional_nav_disabled">Riktningsnavigering inaktiverad, piltangenterna flyttar markören</string>
+</resources>

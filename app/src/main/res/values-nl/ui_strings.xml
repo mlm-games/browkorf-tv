@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Taal</string>
+    <string name="language_system_default">Systeemstandaard</string>
+    <string name="browkorf_settings_import">Instellingen importeren</string>
+    <string name="browkorf_settings_export">Instellingen exporteren</string>
+    <string name="category_general">Algemeen</string>
+    <string name="category_home_page">Startpagina</string>
+    <string name="category_search">Zoeken</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Webmotor</string>
+    <string name="category_ad_block">Advertentieblokkering</string>
+    <string name="category_updates">Updates</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Linkacties</string>
+    <string name="add_bookmark">Bladwijzer toevoegen</string>
+    <string name="move_up">Omhoog verplaatsen</string>
+    <string name="move_down">Omlaag verplaatsen</string>
+    <string name="lock_bookmark_editing">Bladwijzerbewerking vergrendelen</string>
+    <string name="unlock_bookmark_editing">Bladwijzerbewerking ontgrendelen</string>
+    <string name="remove">Verwijderen</string>
+    <string name="clear_all">Alles wissen</string>
+    <string name="no_history">Geen geschiedenis</string>
+    <string name="no_downloads">Geen downloads</string>
+    <string name="about">Over</string>
+    <string name="app_info">App: %1$s (%2$d)</string>
+    <string name="engine_info">Motor: %1$s</string>
+    <string name="edit_bookmark">Bladwijzer bewerken</string>
+    <string name="edit_title">Titel bewerken</string>
+    <string name="edit_url">URL bewerken</string>
+    <string name="set_title">Titel instellen…</string>
+    <string name="set_url">URL instellen…</string>
+    <string name="target_sdk">Doel-SDK: %1$d</string>
+    <string name="open_in_current_tab">Openen in het huidige tabblad</string>
+    <string name="text_selection">Tekstselectie</string>
+    <string name="grab_mode">Grijpmodus</string>
+    <string name="microphone">Microfoon</string>
+    <string name="microphone_permission_required">Microfoontoestemming vereist</string>
+    <string name="voice_no_match">Geen spraak herkend. Probeer het opnieuw.</string>
+    <string name="voice_network_error">Netwerkfout. Controleer de verbinding.</string>
+    <string name="voice_search_error">Fout bij zoeken met je stem: %1$d</string>
+    <string name="copy_error">Fout bij het kopiëren</string>
+    <string name="error_loading_ad_blocker">Fout bij het laden van de advertentieblokkeerlijst</string>
+    <string name="setting_force_dark_webpage">Donkere webpagina\'s afdwingen</string>
+    <string name="setting_force_dark_webpage_description">Donker thema toepassen op webpagina\'s wanneer de donkere modus is ingeschakeld</string>
+    <string name="setting_keep_screen_on">Scherm aanhouden</string>
+    <string name="setting_keep_screen_on_description">Voorkomen dat het scherm uitgaat tijdens het browsen</string>
+    <string name="setting_incognito_mode_description">Browsen zonder geschiedenis op te slaan</string>
+    <string name="setting_allow_autoplay_media">Automatisch afspelen van media toestaan</string>
+    <string name="setting_home_page_mode">Startpaginamodus</string>
+    <string name="setting_custom_home_page_url">Aangepaste startpagina-URL</string>
+    <string name="setting_search_engine">Zoekmachine</string>
+    <string name="setting_custom_search_engine_url">Aangepaste zoekmachine-URL</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Webmotor</string>
+    <string name="setting_web_engine_description">GeckoView aanbevolen voor apparaten met 3 GB RAM of meer</string>
+    <string name="setting_ad_block">Advertentieblokkering inschakelen</string>
+    <string name="setting_ad_block_list_url">URL van de advertentieblokkeerlijst</string>
+    <string name="setting_auto_check_updates">Automatisch controleren op updates</string>
+    <string name="setting_update_channel">Updatekanaal</string>
+    <string name="setting_use_http_proxy">HTTP-proxy gebruiken</string>
+    <string name="setting_use_http_proxy_description">Verkeer via een HTTP-proxy laten lopen (bijv. Clash op 127.0.0.1:7890). Opnieuw starten kan nodig zijn voor WebView</string>
+    <string name="setting_proxy_url">Proxy-URL</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Leeg laten om uit te schakelen</string>
+    <string name="setting_directional_navigation_mode">Richtingnavigatiemodus</string>
+    <string name="setting_directional_navigation_mode_description">Pijltjestoetsen naar de webpagina sturen in plaats van de cursor te verplaatsen (voor games en apps)</string>
+    <string name="setting_new_tab_button_at_start">Knop voor nieuw tabblad aan het begin</string>
+    <string name="setting_new_tab_button_at_start_description">Plaatst de +-knop vóór de tabbladlijst in plaats van erna</string>
+    <string name="setting_context_menu_on_long_press">Contextmenu bij lang indrukken</string>
+    <string name="setting_context_menu_on_long_press_description">Schakel uit om pagina-acties bij lang indrukken mogelijk te maken</string>
+    <string name="setting_single_tab_mode">Enkele-tabbladmodus</string>
+    <string name="setting_single_tab_mode_description">Hergebruikt het huidige tabblad voor elke link of intentie</string>
+    <string name="change_web_engine">Webmotor wijzigen?</string>
+    <string name="gecko_engine_not_included">De GeckoView-motor is niet opgenomen in deze build.</string>
+    <string name="backup_exported">Back-up geëxporteerd</string>
+    <string name="export_failed">Exporteren mislukt</string>
+    <string name="import_failed">Importeren mislukt</string>
+    <string name="imported_settings">%1$d instellingen geïmporteerd</string>
+
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Aangepast</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Standaard (aanbevolen)</item>
+        <item>Chrome (desktop)</item>
+        <item>Chrome (mobiel)</item>
+        <item>Firefox (desktop)</item>
+        <item>Firefox (mobiel)</item>
+        <item>Edge (desktop)</item>
+        <item>Aangepast</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Stabiel</item>
+        <item>Bèta</item>
+    </string-array>
+</resources>

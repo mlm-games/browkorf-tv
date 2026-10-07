@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clear">مسح</string>
+    <string name="repost_confirm_message">لعرض هذه الصفحة، يجب على Browkorf TV إرسال معلومات ستُكرّر إجراءً سابقًا (مثل البحث أو تأكيد الطلب).</string>
+    <string name="repost_confirm_title">هل أنت متأكد؟</string>
+    <string name="repost_confirm_resend">إعادة الإرسال</string>
+    <string name="before_unload_message">هذه الصفحة تطلب منك تأكيد رغبتك في المغادرة — قد لا يتم حفظ البيانات التي أدخلتها</string>
+    <string name="before_unload_title">هل أنت متأكد؟</string>
+    <string name="before_unload_leave_page">مغادرة الصفحة</string>
+    <string name="before_unload_stay">البقاء في الصفحة</string>
+    <string name="wait">انتظار</string>
+    <string name="stop">إيقاف</string>
+    <string name="slow_script">يوجد سكربت في هذه الصفحة يجعل متصفح الويب يعمل ببطء</string>
+    <string name="request_storage">السماح لـ \"%1$s\" بالوصول إلى تخزين الجهاز؟</string>
+    <string name="request_storage_access">السماح لأطراف ثالثة بالوصول إلى تخزين الطرف الأول لـ \"%1$s\"؟</string>
+    <string name="request_geolocation">مشاركة الموقع مع \"%1$s\"؟</string>
+    <string name="request_notification">السماح بإشعارات \"%1$s\"؟</string>
+    <string name="request_video">مشاركة الفيديو مع \"%1$s\"</string>
+    <string name="request_audio">مشاركة الصوت مع \"%1$s\"</string>
+    <string name="request_media">مشاركة الفيديو والصوت مع \"%1$s\"</string>
+    <string name="request_xr">مشاركة شاشات WebXR مع \"%1$s\"؟</string>
+    <string name="request_autoplay">السماح بتشغيل الفيديو تلقائيًا على \"%1$s\"؟</string>
+    <string name="request_media_key_system_access">السماح بالوصول إلى مفاتيح الوسائط النظامية لـ \"%1$s\"؟</string>
+    <string name="media_back_camera">الكاميرا الخلفية</string>
+    <string name="media_front_camera">الكاميرا الأمامية</string>
+    <string name="media_microphone">الميكروفون</string>
+    <string name="media_other">مصدر غير معروف</string>
+</resources>

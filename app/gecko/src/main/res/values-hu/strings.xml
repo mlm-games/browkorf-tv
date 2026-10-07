@@ -1,0 +1,27 @@
+<resources>
+    <string name="clear">Törlés</string>
+    <string name="repost_confirm_message">Az oldal megjelenítéséhez a Browkorf TV olyan információkat küld, amelyek egy korábban végrehajtott műveletet (pl. keresést vagy rendelési visszaigazolást) megismételnek.</string>
+    <string name="repost_confirm_title">Biztos benne?</string>
+    <string name="repost_confirm_resend">Újraküldés</string>
+    <string name="before_unload_message">Ez az oldal arra kéri, hogy erősítse meg, hogy el szeretne lépni - a megadott adatok mentése elmaradhat</string>
+    <string name="before_unload_title">Biztos benne?</string>
+    <string name="before_unload_leave_page">Oldal elhagyása</string>
+    <string name="before_unload_stay">Maradás az oldalon</string>
+    <string name="wait">Várakozás</string>
+    <string name="stop">Leállítás</string>
+    <string name="slow_script">Az oldal egyik parancsfájlja miatt a webböngésző lassan fut</string>
+    <string name="request_storage">Engedélyezi a(z) \"%1$s\" eszköztárolóhoz való hozzáférést?</string>
+    <string name="request_storage_access">Engedélyezi a harmadik felek hozzáférését a(z) \"%1$s\" első féltárolójához?</string>
+    <string name="request_geolocation">Megosztja a tartózkodási helyet a(z) \"%1$s\" webhellyel?</string>
+    <string name="request_notification">Engedélyezi az értesítéseket a(z) \"%1$s\" webhelytől?</string>
+    <string name="request_video">Megosztja a videót a(z) \"%1$s\" webhellyel</string>
+    <string name="request_audio">Megosztja a hangot a(z) \"%1$s\" webhellyel</string>
+    <string name="request_media">Megosztja a videót és a hangot a(z) \"%1$s\" webhellyel</string>
+    <string name="request_xr">Megosztja a WebXR kijelzőket a(z) \"%1$s\" webhellyel?</string>
+    <string name="request_autoplay">Engedélyezi a videó automatikus lejátszását a(z) \"%1$s\" webhelyen?</string>
+    <string name="request_media_key_system_access">Engedélyezi a rendszermédia-billentyűk használatát a(z) \"%1$s\" webhelyen?</string>
+    <string name="media_back_camera">Hátsó kamera</string>
+    <string name="media_front_camera">Első kamera</string>
+    <string name="media_microphone">Mikrofon</string>
+    <string name="media_other">Ismeretlen forrás</string>
+</resources>

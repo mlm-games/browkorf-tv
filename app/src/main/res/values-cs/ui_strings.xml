@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Jazyk</string>
+    <string name="language_system_default">Výchozí systémový</string>
+    <string name="browkorf_settings_import">Importovat nastavení</string>
+    <string name="browkorf_settings_export">Exportovat nastavení</string>
+    <string name="category_general">Obecné</string>
+    <string name="category_home_page">Domovská stránka</string>
+    <string name="category_search">Hledání</string>
+    <string name="category_user_agent">User Agent</string>
+    <string name="category_web_engine">Webový engine</string>
+    <string name="category_ad_block">Blokování reklam</string>
+    <string name="category_updates">Aktualizace</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Akce s odkazy</string>
+    <string name="add_bookmark">Přidat záložku</string>
+    <string name="move_up">Přesunout nahoru</string>
+    <string name="move_down">Přesunout dolů</string>
+    <string name="lock_bookmark_editing">Zamknout úpravy záložek</string>
+    <string name="unlock_bookmark_editing">Odemknout úpravy záložek</string>
+    <string name="remove">Odebrat</string>
+    <string name="clear_all">Vymazat vše</string>
+    <string name="no_history">Žádná historie</string>
+    <string name="no_downloads">Žádné stažené soubory</string>
+    <string name="about">O aplikaci</string>
+    <string name="app_info">Aplikace: %1$s (%2$d)</string>
+    <string name="engine_info">Engine: %1$s</string>
+    <string name="edit_bookmark">Upravit záložku</string>
+    <string name="edit_title">Upravit název</string>
+    <string name="edit_url">Upravit adresu URL</string>
+    <string name="set_title">Nastavit název...</string>
+    <string name="set_url">Nastavit adresu URL...</string>
+    <string name="target_sdk">Cílové SDK: %1$d</string>
+    <string name="open_in_current_tab">Otevřít v aktuální kartě</string>
+    <string name="text_selection">Výběr textu</string>
+    <string name="grab_mode">Režim uchopení</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="microphone_permission_required">Je vyžadováno oprávnění mikrofonu</string>
+    <string name="voice_no_match">Řeč nerozpoznána. Zkuste to prosím znovu.</string>
+    <string name="voice_network_error">Chyba sítě. Zkontrolujte připojení.</string>
+    <string name="voice_search_error">Chyba hlasového hledání: %1$d</string>
+    <string name="copy_error">Chyba kopírování</string>
+    <string name="error_loading_ad_blocker">Chyba při načítání seznamu pro blokování reklam</string>
+    <string name="setting_force_dark_webpage">Vynutit tmavé webové stránky</string>
+    <string name="setting_force_dark_webpage_description">Použít tmavý motiv na webové stránky při používání tmavého režimu</string>
+    <string name="setting_keep_screen_on">Ponechat obrazovku zapnutou</string>
+    <string name="setting_keep_screen_on_description">Zabránit vypnutí obrazovky při procházení</string>
+    <string name="setting_incognito_mode_description">Prohlížení bez ukládání historie</string>
+    <string name="setting_allow_autoplay_media">Povolit automatické přehrávání médií</string>
+    <string name="setting_home_page_mode">Režim domovské stránky</string>
+    <string name="setting_custom_home_page_url">Vlastní adresa URL domovské stránky</string>
+    <string name="setting_search_engine">Vyhledávací nástroj</string>
+    <string name="setting_custom_search_engine_url">Vlastní adresa URL vyhledávacího nástroje</string>
+    <string name="setting_user_agent">User Agent</string>
+    <string name="setting_web_engine">Webový engine</string>
+    <string name="setting_web_engine_description">Pro zařízení s 3 GB RAM a více se doporučuje GeckoView</string>
+    <string name="setting_ad_block">Zapnout blokování reklam</string>
+    <string name="setting_ad_block_list_url">Adresa URL seznamu pro blokování reklam</string>
+    <string name="setting_auto_check_updates">Automaticky kontrolovat aktualizace</string>
+    <string name="setting_update_channel">Kanál aktualizací</string>
+    <string name="setting_use_http_proxy">Použít HTTP proxy</string>
+    <string name="setting_use_http_proxy_description">Směrovat provoz přes HTTP proxy (např. Clash na 127.0.0.1:7890). Pro WebView může být nutný restart</string>
+    <string name="setting_proxy_url">Adresa URL proxy</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Ponechte prázdné pro vypnutí</string>
+    <string name="setting_directional_navigation_mode">Režim směrové navigace</string>
+    <string name="setting_directional_navigation_mode_description">Odesílat šipky na webovou stránku místo pohybu kurzoru (pro hry a aplikace)</string>
+    <string name="setting_new_tab_button_at_start">Tlačítko nové karty na začátku</string>
+    <string name="setting_new_tab_button_at_start_description">Umístí tlačítko + před seznam karet místo za něj</string>
+    <string name="setting_context_menu_on_long_press">Kontextová nabídka po dlouhém stisknutí</string>
+    <string name="setting_context_menu_on_long_press_description">Vypněte, chcete-li povolit akce stránky dlouhým stisknutím</string>
+    <string name="setting_single_tab_mode">Režim jedné karty</string>
+    <string name="setting_single_tab_mode_description">Znovu používá aktuální kartu pro každý odkaz nebo záměr</string>
+    <string name="change_web_engine">Změnit webový engine?</string>
+    <string name="gecko_engine_not_included">Engine GeckoView není zahrnut v této verzi.</string>
+    <string name="backup_exported">Záloha byla exportována</string>
+    <string name="export_failed">Export se nezdařil</string>
+    <string name="import_failed">Import se nezdařil</string>
+    <string name="imported_settings">Importováno %1$d nastavení</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Vlastní</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Výchozí (doporučeno)</item>
+        <item>Chrome (počítač)</item>
+        <item>Chrome (mobilní)</item>
+        <item>Firefox (počítač)</item>
+        <item>Firefox (mobilní)</item>
+        <item>Edge (počítač)</item>
+        <item>Vlastní</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Verze</item>
+        <item>Předběžná verze</item>
+    </string-array>
+</resources>

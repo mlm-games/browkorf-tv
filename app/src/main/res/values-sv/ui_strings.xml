@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Språk</string>
+    <string name="language_system_default">Systemets standard</string>
+    <string name="browkorf_settings_import">Importera inställningar</string>
+    <string name="browkorf_settings_export">Exportera inställningar</string>
+    <string name="category_general">Allmänt</string>
+    <string name="category_home_page">Startsida</string>
+    <string name="category_search">Sök</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Webbmotor</string>
+    <string name="category_ad_block">Annonsblockerare</string>
+    <string name="category_updates">Uppdateringar</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Länkåtgärder</string>
+    <string name="add_bookmark">Lägg till bokmärke</string>
+    <string name="move_up">Flytta upp</string>
+    <string name="move_down">Flytta ner</string>
+    <string name="lock_bookmark_editing">Lås redigering av bokmärken</string>
+    <string name="unlock_bookmark_editing">Lås upp redigering av bokmärken</string>
+    <string name="remove">Ta bort</string>
+    <string name="clear_all">Rensa alla</string>
+    <string name="no_history">Ingen historik</string>
+    <string name="no_downloads">Inga nedladdningar</string>
+    <string name="about">Om</string>
+    <string name="app_info">App: %1$s (%2$d)</string>
+    <string name="engine_info">Motor: %1$s</string>
+    <string name="edit_bookmark">Redigera bokmärke</string>
+    <string name="edit_title">Redigera titel</string>
+    <string name="edit_url">Redigera URL</string>
+    <string name="set_title">Ange titel…</string>
+    <string name="set_url">Ange URL…</string>
+    <string name="target_sdk">Mål-SDK: %1$d</string>
+    <string name="open_in_current_tab">Öppna i aktuell flik</string>
+    <string name="text_selection">Textmarkering</string>
+    <string name="grab_mode">Grepläge</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="microphone_permission_required">Mikrofonbehörighet krävs</string>
+    <string name="voice_no_match">Inget tal kändes igen. Försök igen.</string>
+    <string name="voice_network_error">Nätverksfel. Kontrollera anslutningen.</string>
+    <string name="voice_search_error">Fel vid röstsökning: %1$d</string>
+    <string name="copy_error">Kopieringsfel</string>
+    <string name="error_loading_ad_blocker">Fel vid laddning av listan över annonsblockerare</string>
+    <string name="setting_force_dark_webpage">Tvinga mörk webbsida</string>
+    <string name="setting_force_dark_webpage_description">Använd mörkt tema på webbsidor när mörkt läge är aktiverat</string>
+    <string name="setting_keep_screen_on">Håll skärmen på</string>
+    <string name="setting_keep_screen_on_description">Förhindra att skärmen stängs under surfandet</string>
+    <string name="setting_incognito_mode_description">Surfa utan att spara historik</string>
+    <string name="setting_allow_autoplay_media">Tillåt automatisk uppspelning av media</string>
+    <string name="setting_home_page_mode">Läge för startsidan</string>
+    <string name="setting_custom_home_page_url">Egen URL till startsidan</string>
+    <string name="setting_search_engine">Sökmotor</string>
+    <string name="setting_custom_search_engine_url">Egen URL till sökmotorn</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Webbmotor</string>
+    <string name="setting_web_engine_description">GeckoView rekommenderas för enheter med 3 GB RAM eller mer</string>
+    <string name="setting_ad_block">Aktivera annonsblockerare</string>
+    <string name="setting_ad_block_list_url">URL för listan över annonsblockering</string>
+    <string name="setting_auto_check_updates">Sök automatiskt efter uppdateringar</string>
+    <string name="setting_update_channel">Uppdateringskanal</string>
+    <string name="setting_use_http_proxy">Använd HTTP-proxy</string>
+    <string name="setting_use_http_proxy_description">Dirigera trafiken genom en HTTP-proxy (t.ex. Clash på 127.0.0.1:7890). Omstart kan krävas för WebView</string>
+    <string name="setting_proxy_url">Proxy-URL</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Lämna tomt för att inaktivera</string>
+    <string name="setting_directional_navigation_mode">Läge för riktningsnavigering</string>
+    <string name="setting_directional_navigation_mode_description">Skicka piltangenter till webbsidan i stället för att flytta markören (för spel och appar)</string>
+    <string name="setting_new_tab_button_at_start">Knappen Ny flik först</string>
+    <string name="setting_new_tab_button_at_start_description">Placerar +-knappen före fliklistan i stället för efter</string>
+    <string name="setting_context_menu_on_long_press">Kontextmeny vid långt tryck</string>
+    <string name="setting_context_menu_on_long_press_description">Inaktivera för att tillåta sidåtgärder vid långt tryck</string>
+    <string name="setting_single_tab_mode">Läge med en enda flik</string>
+    <string name="setting_single_tab_mode_description">Återanvänder den aktuella fliken för varje länk eller intent</string>
+    <string name="change_web_engine">Byta webbmotor?</string>
+    <string name="gecko_engine_not_included">GeckoView-motorn ingår inte i det här bygget.</string>
+    <string name="backup_exported">Säkerhetskopiering exporterad</string>
+    <string name="export_failed">Export misslyckades</string>
+    <string name="import_failed">Import misslyckades</string>
+    <string name="imported_settings">%1$d inställningar importerade</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Egen</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Standard (rekommenderad)</item>
+        <item>Chrome (skrivbord)</item>
+        <item>Chrome (mobil)</item>
+        <item>Firefox (skrivbord)</item>
+        <item>Firefox (mobil)</item>
+        <item>Edge (skrivbord)</item>
+        <item>Egen</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Stabil</item>
+        <item>Förhandsversion</item>
+    </string-array>
+</resources>

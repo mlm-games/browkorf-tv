@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Nyelv</string>
+    <string name="language_system_default">Rendszer alapértelmezése</string>
+    <string name="browkorf_settings_import">Beállítások importálása</string>
+    <string name="browkorf_settings_export">Beállítások exportálása</string>
+    <string name="category_general">Általános</string>
+    <string name="category_home_page">Kezdőlap</string>
+    <string name="category_search">Keresés</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Webmotor</string>
+    <string name="category_ad_block">Hirdetésszűrő</string>
+    <string name="category_updates">Frissítések</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Hivatkozási műveletek</string>
+    <string name="add_bookmark">Könyvjelző hozzáadása</string>
+    <string name="move_up">Mozgatás felfelé</string>
+    <string name="move_down">Mozgatás lefelé</string>
+    <string name="lock_bookmark_editing">Könyvjelzők szerkesztésének zárolása</string>
+    <string name="unlock_bookmark_editing">Könyvjelzők szerkesztésének feloldása</string>
+    <string name="remove">Eltávolítás</string>
+    <string name="clear_all">Összes törlése</string>
+    <string name="no_history">Nincsenek előzmények</string>
+    <string name="no_downloads">Nincsenek letöltések</string>
+    <string name="about">Névjegy</string>
+    <string name="app_info">Alkalmazás: %1$s (%2$d)</string>
+    <string name="engine_info">Motor: %1$s</string>
+    <string name="edit_bookmark">Könyvjelző szerkesztése</string>
+    <string name="edit_title">Cím szerkesztése</string>
+    <string name="edit_url">URL szerkesztése</string>
+    <string name="set_title">Cím megadása…</string>
+    <string name="set_url">URL megadása…</string>
+    <string name="target_sdk">Cél-SDK: %1$d</string>
+    <string name="open_in_current_tab">Megnyitás az aktuális lapon</string>
+    <string name="text_selection">Szövegkijelölés</string>
+    <string name="grab_mode">Megfogás mód</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="microphone_permission_required">Mikrofonengedély szükséges</string>
+    <string name="voice_no_match">Nem sikerült felismerni a beszédet. Próbálja újra.</string>
+    <string name="voice_network_error">Hálózati hiba. Ellenőrizze a kapcsolatot.</string>
+    <string name="voice_search_error">Hiba a hangalapú keresésben: %1$d</string>
+    <string name="copy_error">Másolási hiba</string>
+    <string name="error_loading_ad_blocker">Hiba a hirdetésszűrőlista betöltésekor</string>
+    <string name="setting_force_dark_webpage">Sötét weboldal kényszerítése</string>
+    <string name="setting_force_dark_webpage_description">Sötét téma alkalmazása a weboldalakra sötét mód használatakor</string>
+    <string name="setting_keep_screen_on">Képernyő bekapcsolva tartása</string>
+    <string name="setting_keep_screen_on_description">Megakadályozza a képernyő kikapcsolását böngészés közben</string>
+    <string name="setting_incognito_mode_description">Böngészés az előzmények mentése nélkül</string>
+    <string name="setting_allow_autoplay_media">Média automatikus lejátszásának engedélyezése</string>
+    <string name="setting_home_page_mode">Kezdőlap módja</string>
+    <string name="setting_custom_home_page_url">Egyéni kezdőlap URL-je</string>
+    <string name="setting_search_engine">Keresőmotor</string>
+    <string name="setting_custom_search_engine_url">Egyéni keresőmotor URL-je</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Webmotor</string>
+    <string name="setting_web_engine_description">A GeckoView 3 GB vagy több RAM-mal rendelkező eszközökhöz ajánlott</string>
+    <string name="setting_ad_block">Hirdetésszűrő engedélyezése</string>
+    <string name="setting_ad_block_list_url">Hirdetésszűrőlista URL-je</string>
+    <string name="setting_auto_check_updates">Frissítések automatikus keresése</string>
+    <string name="setting_update_channel">Frissítési csatorna</string>
+    <string name="setting_use_http_proxy">HTTP-proxy használata</string>
+    <string name="setting_use_http_proxy_description">A forgalom átirányítása HTTP-proxyra (pl. Clash a 127.0.0.1:7890 címen). A WebView-hoz újraindítás lehet szükséges</string>
+    <string name="setting_proxy_url">Proxy-URL</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). A kikapcsoláshoz hagyja üresen</string>
+    <string name="setting_directional_navigation_mode">Irányított navigáció módja</string>
+    <string name="setting_directional_navigation_mode_description">Nyílbillentyűk küldése a weboldalra a kurzor mozgatása helyett (játékokhoz és alkalmazásokhoz)</string>
+    <string name="setting_new_tab_button_at_start">Új lap gomb az elején</string>
+    <string name="setting_new_tab_button_at_start_description">A + gombot a laplista elé helyezi, nem mögé</string>
+    <string name="setting_context_menu_on_long_press">Helyi menü hosszú megnyomásra</string>
+    <string name="setting_context_menu_on_long_press_description">Kapcsolja ki, hogy hosszú megnyomásra elérhetők legyenek az oldal műveletei</string>
+    <string name="setting_single_tab_mode">Egyetlen lap módja</string>
+    <string name="setting_single_tab_mode_description">Minden hivatkozáshoz és szándékhoz az aktuális lapot használja újra</string>
+    <string name="change_web_engine">Webmotor módosítása?</string>
+    <string name="gecko_engine_not_included">A GeckoView motor nem része ennek a buildnek.</string>
+    <string name="backup_exported">Biztonsági mentés exportálva</string>
+    <string name="export_failed">Az exportálás nem sikerült</string>
+    <string name="import_failed">Az importálás nem sikerült</string>
+    <string name="imported_settings">%1$d beállítás importálva</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Egyéni</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Alapértelmezett (ajánlott)</item>
+        <item>Chrome (asztali)</item>
+        <item>Chrome (mobil)</item>
+        <item>Firefox (asztali)</item>
+        <item>Firefox (mobil)</item>
+        <item>Edge (asztali)</item>
+        <item>Egyéni</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Kiadás</item>
+        <item>Előzetes</item>
+    </string-array>
+</resources>

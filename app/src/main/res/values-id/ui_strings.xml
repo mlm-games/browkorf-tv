@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Bahasa</string>
+    <string name="language_system_default">Bawaan sistem</string>
+    <string name="browkorf_settings_import">Impor pengaturan</string>
+    <string name="browkorf_settings_export">Ekspor pengaturan</string>
+    <string name="category_general">Umum</string>
+    <string name="category_home_page">Beranda</string>
+    <string name="category_search">Penelusuran</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Mesin web</string>
+    <string name="category_ad_block">Pemblokir iklan</string>
+    <string name="category_updates">Pembaruan</string>
+    <string name="category_proxy">Proxy</string>
+    <string name="link_actions">Aksi tautan</string>
+    <string name="add_bookmark">Tambah penanda halaman</string>
+    <string name="move_up">Naikkan</string>
+    <string name="move_down">Turunkan</string>
+    <string name="lock_bookmark_editing">Kunci pengubahan penanda halaman</string>
+    <string name="unlock_bookmark_editing">Buka kunci pengubahan penanda halaman</string>
+    <string name="remove">Hapus</string>
+    <string name="clear_all">Hapus semua</string>
+    <string name="no_history">Tidak ada riwayat</string>
+    <string name="no_downloads">Tidak ada unduhan</string>
+    <string name="about">Tentang</string>
+    <string name="app_info">Aplikasi: %1$s (%2$d)</string>
+    <string name="engine_info">Mesin: %1$s</string>
+    <string name="edit_bookmark">Ubah penanda halaman</string>
+    <string name="edit_title">Ubah judul</string>
+    <string name="edit_url">Ubah URL</string>
+    <string name="set_title">Atur judul…</string>
+    <string name="set_url">Atur URL…</string>
+    <string name="target_sdk">SDK target: %1$d</string>
+    <string name="open_in_current_tab">Buka di tab saat ini</string>
+    <string name="text_selection">Pemilihan teks</string>
+    <string name="grab_mode">Mode cengkeram</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="microphone_permission_required">Izin mikrofon diperlukan</string>
+    <string name="voice_no_match">Suara tidak dikenali. Silakan coba lagi.</string>
+    <string name="voice_network_error">Kesalahan jaringan. Periksa koneksi.</string>
+    <string name="voice_search_error">Kesalahan pencarian suara: %1$d</string>
+    <string name="copy_error">Kesalahan saat menyalin</string>
+    <string name="error_loading_ad_blocker">Kesalahan saat memuat daftar pemblokir iklan</string>
+    <string name="setting_force_dark_webpage">Paksa halaman web gelap</string>
+    <string name="setting_force_dark_webpage_description">Terapkan tema gelap ke halaman web saat mode gelap digunakan</string>
+    <string name="setting_keep_screen_on">Jaga layar tetap menyala</string>
+    <string name="setting_keep_screen_on_description">Cegah layar mati saat menjelajah</string>
+    <string name="setting_incognito_mode_description">Jelajah tanpa menyimpan riwayat</string>
+    <string name="setting_allow_autoplay_media">Izinkan pemutaran media otomatis</string>
+    <string name="setting_home_page_mode">Mode beranda</string>
+    <string name="setting_custom_home_page_url">URL beranda khusus</string>
+    <string name="setting_search_engine">Mesin pencari</string>
+    <string name="setting_custom_search_engine_url">URL mesin pencari khusus</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Mesin web</string>
+    <string name="setting_web_engine_description">GeckoView direkomendasikan untuk perangkat dengan RAM 3 GB atau lebih</string>
+    <string name="setting_ad_block">Aktifkan pemblokir iklan</string>
+    <string name="setting_ad_block_list_url">URL daftar pemblokir iklan</string>
+    <string name="setting_auto_check_updates">Periksa pembaruan secara otomatis</string>
+    <string name="setting_update_channel">Kanal pembaruan</string>
+    <string name="setting_use_http_proxy">Gunakan proxy HTTP</string>
+    <string name="setting_use_http_proxy_description">Arahkan lalu lintas melalui proxy HTTP (misalnya Clash di 127.0.0.1:7890). Mungkin perlu dijalankan ulang untuk WebView</string>
+    <string name="setting_proxy_url">URL proxy</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Biarkan kosong untuk menonaktifkan</string>
+    <string name="setting_directional_navigation_mode">Mode navigasi arah</string>
+    <string name="setting_directional_navigation_mode_description">Kirim tombol panah ke halaman web alih-alih menggeser kursor (untuk game dan aplikasi)</string>
+    <string name="setting_new_tab_button_at_start">Tombol tab baru di awal</string>
+    <string name="setting_new_tab_button_at_start_description">Menempatkan tombol + sebelum daftar tab, bukan sesudahnya</string>
+    <string name="setting_context_menu_on_long_press">Menu konteks saat menekan lama</string>
+    <string name="setting_context_menu_on_long_press_description">Nonaktifkan agar aksi halaman dapat dilakukan dengan menekan lama</string>
+    <string name="setting_single_tab_mode">Mode satu tab</string>
+    <string name="setting_single_tab_mode_description">Memakai ulang tab saat ini untuk setiap tautan atau intent</string>
+    <string name="change_web_engine">Ubah mesin web?</string>
+    <string name="gecko_engine_not_included">Mesin GeckoView tidak disertakan dalam build ini.</string>
+    <string name="backup_exported">Cadangan diekspor</string>
+    <string name="export_failed">Ekspor gagal</string>
+    <string name="import_failed">Impor gagal</string>
+    <string name="imported_settings">%1$d pengaturan diimpor</string>
+
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Khusus</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Bawaan (disarankan)</item>
+        <item>Chrome (desktop)</item>
+        <item>Chrome (Seluler)</item>
+        <item>Firefox (desktop)</item>
+        <item>Firefox (Seluler)</item>
+        <item>Edge (desktop)</item>
+        <item>Khusus</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Rilis</item>
+        <item>Prarilis</item>
+    </string-array>
+</resources>

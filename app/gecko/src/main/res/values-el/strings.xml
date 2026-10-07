@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clear">Εκκαθάριση</string>
+    <string name="repost_confirm_message">Για την εμφάνιση αυτής της σελίδας, το Browkorf TV πρέπει να στείλει πληροφορίες που θα επαναλάβουν κάποια προηγούμενη ενέργεια (όπως αναζήτηση ή επιβεβαίωση παραγγελίας).</string>
+    <string name="repost_confirm_title">Είστε σίγουροι;</string>
+    <string name="repost_confirm_resend">Επαναποστολή</string>
+    <string name="before_unload_message">Αυτή η σελίδα σας ζητά να επιβεβαιώσετε ότι θέλετε να φύγετε - τα δεδομένα που έχετε εισαγάγει μπορεί να μην αποθηκευτούν</string>
+    <string name="before_unload_title">Είστε σίγουροι;</string>
+    <string name="before_unload_leave_page">Αποχώρηση από τη σελίδα</string>
+    <string name="before_unload_stay">Παραμονή στη σελίδα</string>
+    <string name="wait">Αναμονή</string>
+    <string name="stop">Διακοπή</string>
+    <string name="slow_script">Ένα σενάριο σε αυτή τη σελίδα κάνει τον περιηγητή να εκτελείται αργά</string>
+    <string name="request_storage">Να επιτραπεί η πρόσβαση στον χώρο αποθήκευσης της συσκευής για το \"%1$s\";</string>
+    <string name="request_storage_access">Να επιτραπεί σε τρίτους η πρόσβαση στον χώρο του πρωτοβάθμιου μέρους για το \"%1$s\";</string>
+    <string name="request_geolocation">Κοινοποίηση τοποθεσίας στο \"%1$s\";</string>
+    <string name="request_notification">Να επιτραπούν ειδοποιήσεις για το \"%1$s\";</string>
+    <string name="request_video">Κοινοποίηση βίντεο στο \"%1$s\"</string>
+    <string name="request_audio">Κοινοποίηση ήχου στο \"%1$s\"</string>
+    <string name="request_media">Κοινοποίηση βίντεο και ήχου στο \"%1$s\"</string>
+    <string name="request_xr">Κοινοποίηση οθονών WebXR στο \"%1$s\";</string>
+    <string name="request_autoplay">Να επιτραπεί η αυτόματη αναπαραγωγή βίντεο στο \"%1$s\";</string>
+    <string name="request_media_key_system_access">Να επιτραπεί η πρόσβαση στα πλήκτρα πολυμέσων του συστήματος για το \"%1$s\";</string>
+    <string name="media_back_camera">Πίσω κάμερα</string>
+    <string name="media_front_camera">Μπροστινή κάμερα</string>
+    <string name="media_microphone">Μικρόφωνο</string>
+    <string name="media_other">Άγνωστη πηγή</string>
+</resources>

@@ -1,0 +1,190 @@
+<resources>
+    <string name="app_name">Browkorf TV: Web preglednik za TV</string>
+    <string name="error">Pogreška</string>
+    <string name="ok">OK</string>
+    <string name="loading">Učitavanje…</string>
+    <string name="url_prompt">Unesite pojam pretrage ili URL</string>
+    <string name="can_not_recognize">Nije moguće prepoznati</string>
+    <string name="speak">Pojam pretrage</string>
+    <string name="open_new_tab">Otvori novu karticu</string>
+    <string name="close">Zatvori</string>
+    <string name="web_perm_request_confirmation">Ova web-stranica želi koristiti sljedeće resurse:\n\n%s</string>
+    <string name="allow">Dopusti</string>
+    <string name="deny">Odbij</string>
+    <string name="location">Lokacija</string>
+    <string name="open_in_new_tab">Otvori u novoj kartici</string>
+    <string name="download_started">Preuzimanje je započelo…\nDatoteka će biti spremljena na:\n%s</string>
+    <string name="downloading_file">Preuzimanje datoteke…</string>
+    <string name="err_cant_open_file_chooser">Nije moguće otvoriti birač datoteka</string>
+    <string name="bookmarks">Knjižne oznake</string>
+    <string name="select_bookmark">Odaberi knjižnu oznaku</string>
+    <string name="bookmark_not_found">Knjižna oznaka više ne postoji</string>
+    <string name="add">Dodaj</string>
+    <string name="edit">Uredi</string>
+    <string name="no_bookmarks_yet">Još nema knjižnih oznaka</string>
+    <string name="new_bookmark">Nova knjižna oznaka</string>
+    <string name="done">Gotovo</string>
+    <string name="title">Naslov</string>
+    <string name="search_history">Povijest pretraživanja</string>
+    <string name="engine">Pretraživač</string>
+    <string name="choose_default_search_engine">Odaberi zadani pretraživač</string>
+    <string name="set_search_engine_as_homepage">Postavi pretraživač kao početnu stranicu</string>
+    <string name="save">Spremi</string>
+    <string name="search_engine_url_with_query_placeholder_query">URL pretraživača s rezerviranim mjestom za upit [query]</string>
+    <string name="change_search_engine">Promijeni pretraživač</string>
+    <string name="change_user_agent">Promijeni User-Agent</string>
+    <string name="user_agent_string">User-Agent niz</string>
+    <string name="choose_user_agent_string">Odaberi User-Agent niz</string>
+    <string name="edit_user_agent_string">Uredi User-Agent niz</string>
+    <string name="nothing">Ništa</string>
+    <string name="cancelled">Otkazano</string>
+    <string name="download">Preuzmi</string>
+    <string name="file_not_found">Datoteka nije pronađena</string>
+    <string name="no_app_for_file_type">Nema pronađenih aplikacija za otvaranje ove vrste datoteke</string>
+    <string name="delete">Obriši</string>
+    <string name="cancel">Otkaži</string>
+    <string name="msg_delete_history">Obrisati odabrane stavke povijesti?</string>
+    <string name="msg_delete_history_all">Obrisati sve stavke povijesti?</string>
+    <string name="open_folder">Otvori mapu koja sadrži datoteku</string>
+    <string name="no_file_explorer_msg">Čini se da na vašem uređaju nije instalirana odgovarajuća aplikacija za upravljanje datotekama</string>
+    <string name="shortcuts">Prečaci</string>
+    <string name="favorites">Omiljeno</string>
+    <string name="history">Povijest</string>
+    <string name="browkorf_settings">Postavke</string>
+    <string name="shortcut">Prečac</string>
+    <string name="toggle_main_menu">Uključi ili isključi glavni izbornik</string>
+    <string name="navigate_back">Idi natrag</string>
+    <string name="navigate_home">Idi na početnu stranicu</string>
+    <string name="refresh_page">Osvježi stranicu</string>
+    <string name="voice_search">Glasovna pretraga</string>
+    <string name="zoom_in">Povećaj</string>
+    <string name="zoom_out">Smanji</string>
+    <string name="not_set">Nije postavljeno</string>
+    <string name="action">Radnja:</string>
+    <string name="current_key">Trenutna tipka:</string>
+    <string name="set_key_for_action">Postavi tipku za radnju</string>
+    <string name="press_eny_key">Pritisnite bilo koju tipku…</string>
+    <string name="shortcut_key_reserved_for_navigation">Ova tipka je rezervirana za navigaciju preglednika</string>
+    <string name="clear">Obriši</string>
+    <string name="install">Instaliraj</string>
+    <string name="turn_on_unknown_sources">Uključite postavku sustava \"Nepoznati izvori\"</string>
+    <string name="turn_on_unknown_sources_for_app">Dopustite Browkorf TV-u instaliranje aplikacija s opcije \"Nepoznati izvori\" u postavkama sustava</string>
+    <string name="storage_not_mounted">Pohrana nije montirana</string>
+    <string name="can_not_create_downloads">Nije moguće stvoriti mapu za preuzimanja</string>
+    <string name="voice_search_not_found">Glasovna pretraga nije pronađena</string>
+    <string name="new_version_dialog_title">Dostupna je nova verzija</string>
+    <string name="later">Kasnije</string>
+    <string name="downloads">Preuzimanja</string>
+    <string name="downloads_notifications_description">Obavijesti o statusu preuzimanja</string>
+    <string name="main">Glavno</string>
+    <string name="version_and_updates">Verzija i ažuriranja</string>
+    <string name="version_s">Verzija: %s</string>
+    <string name="update_channel">Kanal ažuriranja:</string>
+    <string name="auto_check_for_updates">Automatski provjeri ažuriranja</string>
+    <string name="check_for_updates">Provjeri ažuriranja</string>
+    <string name="check_for_updates_description">Provjerite sada postoji li novija verzija</string>
+    <string name="update">Ažuriraj</string>
+    <string name="new_version_available_s">Dostupna je nova verzija: %s</string>
+    <string name="web_browser_optimized_for_tvs">Web preglednik optimiziran za televizore</string>
+    <string name="warning">Upozorenje</string>
+    <string name="unprotected_connection">Nezaštićena veza</string>
+    <string name="err_webview_can_not_link">Nije moguće povezati se s WebView komponentom. Prvo pokušajte instalirati komponentu Android System WebView.</string>
+    <string name="new_tab_title">[NOVA KARTICA]</string>
+    <string name="open_a_new_tab_here">Otvori novu karticu ovdje</string>
+    <string name="tabs">Kartice</string>
+    <array name="tabs_options">
+        <item>Otvori novu karticu</item>
+        <item>Zatvori trenutnu</item>
+        <item>Zatvori sve</item>
+        <item>Pomakni lijevo</item>
+        <item>Pomakni desno</item>
+    </array>
+    <string name="ssl_expired">Certifikat je istekao</string>
+    <string name="ssl_idmismatch">Naziv računala ne odgovara</string>
+    <string name="ssl_date_invalid">Datum certifikata je nevažeći</string>
+    <string name="ssl_invalid">Došlo je do opće pogreške</string>
+    <string name="back_to_safety">Natrag na sigurno</string>
+    <string name="go_im_aware">Nastavi. Svjestan sam rizika</string>
+    <string name="connection_isnt_secure">Veza nije sigurna</string>
+    <string name="hostname">Naziv računala:</string>
+    <string name="err_desk">Opis pogreške:</string>
+    <string name="details">Pojedinosti:</string>
+    <string name="exit">Izađi</string>
+    <string name="find_in_apps_store">Pronađi u trgovini aplikacija</string>
+    <string name="close_application">Zatvori aplikaciju</string>
+    <string name="close_tab">Zatvori karticu</string>
+    <string name="navigate_forward">Idi naprijed</string>
+    <string name="toggle_ads_blocking">Uključi ili isključi blokiranje oglasa</string>
+    <string name="never">nikad</string>
+    <string name="last_update">Posljednje ažuriranje</string>
+    <string name="update_ad_blocker_list">Ažuriraj popis blokiranja oglasa</string>
+    <string name="toggle_keep_screen_on">Zadrži zaslon uključenim</string>
+    <string name="need_restart">Aplikaciju je potrebno ponovno pokrenuti</string>
+    <string name="theme">Tema</string>
+    <array name="themes">
+        <item>Sustav</item>
+        <item>Bijela</item>
+        <item>Tamna</item>
+    </array>
+    <string name="incognito_mode">Inkognito način</string>
+    <string name="incognito_mode_hint">Sada možete pregledavati privatno, a ostali ljudi koji koriste ovaj uređaj neće vidjeti vašu aktivnost. Browkorf TV neće spremiti vašu povijest pregledavanja, kolačiće i podatke o web-mjestima te informacije unesene u obrascima.\n\nMeđutim, preuzimanja i knjižne oznake bit će spremljeni. Vaša aktivnost može biti vidljiva web-mjestima koja posjećujete, vašoj organizaciji ili pružatelju internetskih usluga.</string>
+    <string name="don_t_show_again">Ne prikazuj ponovno</string>
+    <string name="why_icon_changed">Zašto se ikona promijenila?</string>
+    <string name="clear_web_cache">Obriši predmemoriju preglednika</string>
+    <string name="block_popups">Blokiranje skočnih prozora</string>
+    <string name="block_popups_s">Blokiranje skočnih prozora (%s)</string>
+    <string name="popup_dialog_blocked">Skočni prozor je blokiran</string>
+    <string name="new_tab_blocked">Nova kartica je blokirana</string>
+    <array name="popup_blocking_level">
+        <item>Ne blokiraj</item>
+        <item>Blokiraj dijaloške okvire</item>
+        <item>Blokiraj i nove kartice (pokrenute skriptom)</item>
+        <item>Blokiraj sve nove prozore (maksimalno blokiranje)</item>
+    </array>
+    <string name="copy_to_clipboard">Kopiraj u međuspremnik</string>
+    <string name="copied_to_clipboard">Kopirano u međuspremnik</string>
+    <string name="share_url">Podijeli URL</string>
+    <string name="open_in_external_application">Otvori u vanjskoj aplikaciji</string>
+    <string name="external_app_open_error">Nije moguće pronaći odgovarajuću aplikaciju</string>
+    <string name="home_page">Početna stranica</string>
+    <string name="custom_home_page_url">Prilagođeni URL početne stranice</string>
+    <string name="home_page_links">Poveznice na početnoj stranici</string>
+    <array name="home_page_modes">
+        <item>Browkorf TV početna</item>
+        <item>Pretraživač</item>
+        <item>Prilagođeno</item>
+        <item>Prazno</item>
+        <item>Knjižne oznake</item>
+    </array>
+    <array name="home_page_links_modes">
+        <item>Knjižne oznake</item>
+        <item>Nedavna povijest</item>
+        <item>Najposjećenije</item>
+    </array>
+    <string name="web_browser_engine_temporary_setting">Pokretač web preglednika (privremena postavka)</string>
+    <string name="need_restart_message">Ponovno pokrenite aplikaciju da biste primijenili promjene</string>
+    <string name="restart">Ponovno pokreni</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="site_asks_to_open_unknown_url">Web-mjesto traži otvaranje nepoznatog URL-a</string>
+    <string name="site_asks_to_open_unknown_url_message">Želite li otvoriti ovaj URL u vanjskoj aplikaciji?</string>
+    <string name="err_no_app_to_handle_url">Nije moguće pronaći odgovarajuću aplikaciju za ovaj URL</string>
+    <string name="settings_engine_change_gecko_msg">GeckoView preporučeni zahtjevi sustava: 3 GB RAM-a, 64-bitni osmojezgreni procesor. Želite li nastaviti?</string>
+    <string name="settings_engine_change_webview_msg">WebView će u budućim ažuriranjima imati manje mogućnosti. Želite li nastaviti?</string>
+    <string name="copy">Kopiraj</string>
+    <string name="paste">Zalijepi</string>
+    <string name="cut">Izreži</string>
+    <string name="share">Podijeli</string>
+    <string name="search">Pretraži</string>
+    <string name="http_auth_title">Potrebna je autentikacija</string>
+    <string name="play_pause">Reproduciraj/Pauza</string>
+    <string name="media_stop">Zaustavi medij</string>
+    <string name="media_rewind">Premotaj unatrag</string>
+    <string name="media_fast_forward">Premotaj unaprijed</string>
+    <string name="long_press">Dugi pritisak</string>
+    <string name="toggle_directional_nav">Uključi ili isključi smjernu navigaciju</string>
+    <string name="toggle_single_tab_mode">Uključi ili isključi način jedne kartice</string>
+    <string name="search_web">Pretraži web</string>
+    <string name="directional_nav_enabled">Smjerna navigacija uključena, tipke sa strelicama upravljaju web-stranicom</string>
+    <string name="directional_nav_disabled">Smjerna navigacija isključena, tipke sa strelicama pomiču kursor</string>
+</resources>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">اللغة</string>
+    <string name="language_system_default">الافتراضي حسب النظام</string>
+    <string name="browkorf_settings_import">استيراد الإعدادات</string>
+    <string name="browkorf_settings_export">تصدير الإعدادات</string>
+    <string name="category_general">عام</string>
+    <string name="category_home_page">الصفحة الرئيسية</string>
+    <string name="category_search">البحث</string>
+    <string name="category_user_agent">User Agent</string>
+    <string name="category_web_engine">محرك الويب</string>
+    <string name="category_ad_block">حظر الإعلانات</string>
+    <string name="category_updates">التحديثات</string>
+    <string name="category_proxy">البروكسي</string>
+    <string name="link_actions">إجراءات الرابط</string>
+    <string name="add_bookmark">إضافة علامة مرجعية</string>
+    <string name="move_up">تحريك لأعلى</string>
+    <string name="move_down">تحريك لأسفل</string>
+    <string name="lock_bookmark_editing">قفل تحرير العلامات المرجعية</string>
+    <string name="unlock_bookmark_editing">إلغاء قفل تحرير العلامات المرجعية</string>
+    <string name="remove">إزالة</string>
+    <string name="clear_all">مسح الكل</string>
+    <string name="no_history">لا يوجد سجل</string>
+    <string name="no_downloads">لا توجد تنزيلات</string>
+    <string name="about">حول</string>
+    <string name="app_info">التطبيق: %1$s (%2$d)</string>
+    <string name="engine_info">المحرك: %1$s</string>
+    <string name="edit_bookmark">تحرير العلامة المرجعية</string>
+    <string name="edit_title">تحرير العنوان</string>
+    <string name="edit_url">تحرير الرابط</string>
+    <string name="set_title">تعيين العنوان...</string>
+    <string name="set_url">تعيين الرابط...</string>
+    <string name="target_sdk">SDK المستهدف: %1$d</string>
+    <string name="open_in_current_tab">فتح في علامة التبويب الحالية</string>
+    <string name="text_selection">تحديد النص</string>
+    <string name="grab_mode">وضع الالتقاط</string>
+    <string name="microphone">الميكروفون</string>
+    <string name="microphone_permission_required">مطلوب إذن الميكروفون</string>
+    <string name="voice_no_match">لم يتم التعرّف على الكلام. حاول مرة أخرى.</string>
+    <string name="voice_network_error">خطأ في الشبكة. تحقق من الاتصال.</string>
+    <string name="voice_search_error">خطأ في البحث الصوتي: %1$d</string>
+    <string name="copy_error">خطأ في النسخ</string>
+    <string name="error_loading_ad_blocker">خطأ في تحميل قائمة حظر الإعلانات</string>
+    <string name="setting_force_dark_webpage">فرض الوضع الداكن على الصفحات</string>
+    <string name="setting_force_dark_webpage_description">تطبيق المظهر الداكن على صفحات الويب عند استخدام الوضع الداكن</string>
+    <string name="setting_keep_screen_on">إبقاء الشاشة مضاءة</string>
+    <string name="setting_keep_screen_on_description">منع انطفاء الشاشة أثناء التصفح</string>
+    <string name="setting_incognito_mode_description">تصفّح دون حفظ السجل</string>
+    <string name="setting_allow_autoplay_media">السماح بتشغيل الوسائط تلقائيًا</string>
+    <string name="setting_home_page_mode">وضع الصفحة الرئيسية</string>
+    <string name="setting_custom_home_page_url">رابط صفحة رئيسية مخصّص</string>
+    <string name="setting_search_engine">محرك البحث</string>
+    <string name="setting_custom_search_engine_url">رابط محرك بحث مخصّص</string>
+    <string name="setting_user_agent">User Agent</string>
+    <string name="setting_web_engine">محرك الويب</string>
+    <string name="setting_web_engine_description">يُوصى بـ GeckoView للأجهزة التي تملك ذاكرة 3GB أو أكثر</string>
+    <string name="setting_ad_block">تفعيل حظر الإعلانات</string>
+    <string name="setting_ad_block_list_url">رابط قائمة حظر الإعلانات</string>
+    <string name="setting_auto_check_updates">التحقق التلقائي من التحديثات</string>
+    <string name="setting_update_channel">قناة التحديث</string>
+    <string name="setting_use_http_proxy">استخدام بروكسي HTTP</string>
+    <string name="setting_use_http_proxy_description">توجيه حركة المرور عبر بروكسي HTTP (مثل Clash على 127.0.0.1:7890). قد يلزم إعادة التشغيل في WebView</string>
+    <string name="setting_proxy_url">رابط البروكسي</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). اتركه فارغًا لتعطيله</string>
+    <string name="setting_directional_navigation_mode">وضع التنقل بالاتجاهات</string>
+    <string name="setting_directional_navigation_mode_description">إرسال مفاتيح الأسهم إلى صفحة الويب بدلًا من تحريك المؤشر (للألعاب والتطبيقات)</string>
+    <string name="setting_new_tab_button_at_start">زر علامة التبويب الجديدة في البداية</string>
+    <string name="setting_new_tab_button_at_start_description">وضع زر + قبل قائمة علامات التبويب بدلًا من بعدها</string>
+    <string name="setting_context_menu_on_long_press">القائمة السياقية عند الضغط المطوّل</string>
+    <string name="setting_context_menu_on_long_press_description">عطّل هذا للسماح بإجراءات الصفحة عند الضغط المطوّل</string>
+    <string name="setting_single_tab_mode">وضع علامة التبويب الواحد</string>
+    <string name="setting_single_tab_mode_description">إعادة استخدام علامة التبويب الحالية لكل رابط أو نية</string>
+    <string name="change_web_engine">تغيير محرك الويب؟</string>
+    <string name="gecko_engine_not_included">محرك GeckoView غير مضمَّن في هذا الإصدار.</string>
+    <string name="backup_exported">تم تصدير النسخة الاحتياطية</string>
+    <string name="export_failed">فشل التصدير</string>
+    <string name="import_failed">فشل الاستيراد</string>
+    <string name="imported_settings">تم استيراد %1$d إعدادًا</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>مخصّص</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>الافتراضي (موصى به)</item>
+        <item>Chrome (سطح المكتب)</item>
+        <item>Chrome (الجوال)</item>
+        <item>Firefox (سطح المكتب)</item>
+        <item>Firefox (الجوال)</item>
+        <item>Edge (سطح المكتب)</item>
+        <item>مخصّص</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>الإصدار الرسمي</item>
+        <item>الإصدار التجريبي</item>
+    </string-array>
+</resources>

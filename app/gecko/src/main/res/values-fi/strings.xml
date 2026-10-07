@@ -1,0 +1,27 @@
+<resources>
+    <string name="clear">Tyhjennä</string>
+    <string name="repost_confirm_message">Jotta tämä sivu voidaan näyttää, Browkorf TV:n on lähetettävä tietoja, jotka toistavat aiemmin suoritetun toiminnon (kuten haun tai tilauksen vahvistuksen).</string>
+    <string name="repost_confirm_title">Oletko varma?</string>
+    <string name="repost_confirm_resend">Lähetä uudelleen</string>
+    <string name="before_unload_message">Tämä sivu pyytää sinua vahvistamaan, että haluat poistua - syöttämiäsi tietoja ei ehkä tallenneta</string>
+    <string name="before_unload_title">Oletko varma?</string>
+    <string name="before_unload_leave_page">Poistu sivulta</string>
+    <string name="before_unload_stay">Pysy sivulla</string>
+    <string name="wait">Odota</string>
+    <string name="stop">Pysäytä</string>
+    <string name="slow_script">Tämän sivun komento aiheuttaa selaimesi hidastumisen</string>
+    <string name="request_storage">Sallitaanko laitteen muistin käyttö sivustolla \"%1$s\"?</string>
+    <string name="request_storage_access">Sallitaanko kolmansien osapuolten käyttää ensimmäisen osapuolen muistia sivustolla \"%1$s\"?</string>
+    <string name="request_geolocation">Jaetaanko sijainti sivuston \"%1$s\" kanssa?</string>
+    <string name="request_notification">Sallitaanko ilmoitukset sivustolla \"%1$s\"?</string>
+    <string name="request_video">Jaetaanko video sivuston \"%1$s\" kanssa</string>
+    <string name="request_audio">Jaetaanko ääni sivuston \"%1$s\" kanssa</string>
+    <string name="request_media">Jaetaanko video ja ääni sivuston \"%1$s\" kanssa</string>
+    <string name="request_xr">Jaetaanko WebXR-näytöt sivuston \"%1$s\" kanssa?</string>
+    <string name="request_autoplay">Sallitaanko videon automaattinen toisto sivustolla \"%1$s\"?</string>
+    <string name="request_media_key_system_access">Sallitaanko järjestelmän medianäppäinten käyttö sivustolla \"%1$s\"?</string>
+    <string name="media_back_camera">Takakamera</string>
+    <string name="media_front_camera">Etukamera</string>
+    <string name="media_microphone">Mikrofoni</string>
+    <string name="media_other">Tuntematon lähde</string>
+</resources>

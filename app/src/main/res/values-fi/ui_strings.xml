@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Kieli</string>
+    <string name="language_system_default">Järjestelmän oletus</string>
+    <string name="browkorf_settings_import">Tuo asetukset</string>
+    <string name="browkorf_settings_export">Vie asetukset</string>
+    <string name="category_general">Yleiset</string>
+    <string name="category_home_page">Kotisivu</string>
+    <string name="category_search">Haku</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Verkkomoottori</string>
+    <string name="category_ad_block">Mainonesto</string>
+    <string name="category_updates">Päivitykset</string>
+    <string name="category_proxy">Välityspalvelin</string>
+    <string name="link_actions">Linkkitoiminnot</string>
+    <string name="add_bookmark">Lisää kirjanmerkki</string>
+    <string name="move_up">Siirry ylös</string>
+    <string name="move_down">Siirry alas</string>
+    <string name="lock_bookmark_editing">Lukitse kirjanmerkkien muokkaus</string>
+    <string name="unlock_bookmark_editing">Poista kirjanmerkkien muokkauksen lukitus</string>
+    <string name="remove">Poista</string>
+    <string name="clear_all">Tyhjennä kaikki</string>
+    <string name="no_history">Ei historiaa</string>
+    <string name="no_downloads">Ei latauksia</string>
+    <string name="about">Tietoja sovelluksesta</string>
+    <string name="app_info">Sovellus: %1$s (%2$d)</string>
+    <string name="engine_info">Moottori: %1$s</string>
+    <string name="edit_bookmark">Muokkaa kirjanmerkkiä</string>
+    <string name="edit_title">Muokkaa otsikkoa</string>
+    <string name="edit_url">Muokkaa URL-osoitetta</string>
+    <string name="set_title">Aseta otsikko…</string>
+    <string name="set_url">Aseta URL-osoite…</string>
+    <string name="target_sdk">Kohde-SDK: %1$d</string>
+    <string name="open_in_current_tab">Avaa nykyisessä välilehdessä</string>
+    <string name="text_selection">Tekstin valinta</string>
+    <string name="grab_mode">Hakutila</string>
+    <string name="microphone">Mikrofoni</string>
+    <string name="microphone_permission_required">Mikrofonia varten vaaditaan lupa</string>
+    <string name="voice_no_match">Puhe tunnistettiin. Yritä uudelleen.</string>
+    <string name="voice_network_error">Verkkovirhe. Tarkista yhteys.</string>
+    <string name="voice_search_error">Äänihakuvirhe: %1$d</string>
+    <string name="copy_error">Kopiointivirhe</string>
+    <string name="error_loading_ad_blocker">Mainosalueluetteloa ladatessa tapahtui virhe</string>
+    <string name="setting_force_dark_webpage">Pakota tumma verkkosivu</string>
+    <string name="setting_force_dark_webpage_description">Käytä tummaa teemaa verkkosivuilla, kun tumma tila on käytössä</string>
+    <string name="setting_keep_screen_on">Pidä näyttö päällä</string>
+    <string name="setting_keep_screen_on_description">Estä näyttön sammuminen selaamisen aikana</string>
+    <string name="setting_incognito_mode_description">Selaa tallentamatta historiaa</string>
+    <string name="setting_allow_autoplay_media">Salli median automaattinen toisto</string>
+    <string name="setting_home_page_mode">Kotisivun tila</string>
+    <string name="setting_custom_home_page_url">Mukautettu kotisivun URL-osoite</string>
+    <string name="setting_search_engine">Hakukone</string>
+    <string name="setting_custom_search_engine_url">Mukautettu hakukoneen URL-osoite</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Verkkomoottori</string>
+    <string name="setting_web_engine_description">GeckoView suositellaan laitteille, joissa on vähintään 3 Gt muistia</string>
+    <string name="setting_ad_block">Ota mainonesto käyttöön</string>
+    <string name="setting_ad_block_list_url">Mainosalueluettelon URL-osoite</string>
+    <string name="setting_auto_check_updates">Tarkista päivitykset automaattisesti</string>
+    <string name="setting_update_channel">Päivityskanava</string>
+    <string name="setting_use_http_proxy">Käytä HTTP-välityspalvelinta</string>
+    <string name="setting_use_http_proxy_description">Ohjaa liikenne HTTP-välityspalvelimen kautta (esim. Clash osoitteessa 127.0.0.1:7890). WebView saattaa vaatia uudelleenkäynnistyksen</string>
+    <string name="setting_proxy_url">Välityspalvelimen URL-osoite</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Jätä tyhjäksi poistaaksesi käytöstä</string>
+    <string name="setting_directional_navigation_mode">Suuntanavigoinnin tila</string>
+    <string name="setting_directional_navigation_mode_description">Lähetä nuolinäppäimet sivustolle kohdistimen liikkumisen sijaan (pelejä ja sovelluksia varten)</string>
+    <string name="setting_new_tab_button_at_start">Uusi välilehti -painike alussa</string>
+    <string name="setting_new_tab_button_at_start_description">Asettaa +-painikkeen välilehtilistan eteen, ei sen jälkeen</string>
+    <string name="setting_context_menu_on_long_press">Kontekstivalikko pitkällä painalluksella</string>
+    <string name="setting_context_menu_on_long_press_description">Poista käytöstä, jotta sivun toiminnot ovat käytettävissä pitkillä painalluksilla</string>
+    <string name="setting_single_tab_mode">Yhden välilehden tila</string>
+    <string name="setting_single_tab_mode_description">Käyttää nykyistä välilehteä uudelleen jokaisessa linkissä ja toiminnossa</string>
+    <string name="change_web_engine">Vaihdetaanko verkkomoottori?</string>
+    <string name="gecko_engine_not_included">GeckoView-moottoria ei sisälly tähän käännökseen.</string>
+    <string name="backup_exported">Varmuuskopio viety</string>
+    <string name="export_failed">Vienti epäonnistui</string>
+    <string name="import_failed">Tuonti epäonnistui</string>
+    <string name="imported_settings">Tuotu %1$d asetusta</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Mukautettu</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Oletus (suositeltu)</item>
+        <item>Chrome (työpöytä)</item>
+        <item>Chrome (mobiili)</item>
+        <item>Firefox (työpöytä)</item>
+        <item>Firefox (mobiili)</item>
+        <item>Edge (työpöytä)</item>
+        <item>Mukautettu</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Julkaisu</item>
+        <item>Esijulkaisu</item>
+    </string-array>
+</resources>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">言語</string>
+    <string name="language_system_default">システムのデフォルト</string>
+    <string name="browkorf_settings_import">設定をインポート</string>
+    <string name="browkorf_settings_export">設定をエクスポート</string>
+    <string name="category_general">一般</string>
+    <string name="category_home_page">ホームページ</string>
+    <string name="category_search">検索</string>
+    <string name="category_user_agent">User Agent</string>
+    <string name="category_web_engine">Webエンジン</string>
+    <string name="category_ad_block">広告ブロック</string>
+    <string name="category_updates">アップデート</string>
+    <string name="category_proxy">プロキシ</string>
+    <string name="link_actions">リンクの操作</string>
+    <string name="add_bookmark">ブックマークを追加</string>
+    <string name="move_up">上へ移動</string>
+    <string name="move_down">下へ移動</string>
+    <string name="lock_bookmark_editing">ブックマークの編集をロック</string>
+    <string name="unlock_bookmark_editing">ブックマークの編集ロックを解除</string>
+    <string name="remove">削除</string>
+    <string name="clear_all">すべてクリア</string>
+    <string name="no_history">履歴はありません</string>
+    <string name="no_downloads">ダウンロードはありません</string>
+    <string name="about">バージョン情報</string>
+    <string name="app_info">アプリ：%1$s（%2$d）</string>
+    <string name="engine_info">エンジン：%1$s</string>
+    <string name="edit_bookmark">ブックマークを編集</string>
+    <string name="edit_title">タイトルを編集</string>
+    <string name="edit_url">URLを編集</string>
+    <string name="set_title">タイトルを設定...</string>
+    <string name="set_url">URLを設定...</string>
+    <string name="target_sdk">ターゲットSDK：%1$d</string>
+    <string name="open_in_current_tab">現在のタブで開く</string>
+    <string name="text_selection">テキスト選択</string>
+    <string name="grab_mode">グラブモード</string>
+    <string name="microphone">マイク</string>
+    <string name="microphone_permission_required">マイクの許可が必要です</string>
+    <string name="voice_no_match">音声を認識できませんでした。もう一度お試しください。</string>
+    <string name="voice_network_error">ネットワークエラーです。接続を確認してください。</string>
+    <string name="voice_search_error">音声検索エラー：%1$d</string>
+    <string name="copy_error">コピーのエラー</string>
+    <string name="error_loading_ad_blocker">広告ブロックリストの読み込みエラー</string>
+    <string name="setting_force_dark_webpage">ウェブページのダークモードを強制</string>
+    <string name="setting_force_dark_webpage_description">ダークモード使用時にウェブページへダークテーマを適用</string>
+    <string name="setting_keep_screen_on">画面をオンに保つ</string>
+    <string name="setting_keep_screen_on_description">閲覧中に画面がオフになるのを防ぎます</string>
+    <string name="setting_incognito_mode_description">履歴を保存せずに閲覧</string>
+    <string name="setting_allow_autoplay_media">メディアの自動再生を許可</string>
+    <string name="setting_home_page_mode">ホームページモード</string>
+    <string name="setting_custom_home_page_url">カスタムホームページのURL</string>
+    <string name="setting_search_engine">検索エンジン</string>
+    <string name="setting_custom_search_engine_url">カスタム検索エンジンのURL</string>
+    <string name="setting_user_agent">User Agent</string>
+    <string name="setting_web_engine">Webエンジン</string>
+    <string name="setting_web_engine_description">メモリ3GB以上の端末ではGeckoViewを推奨</string>
+    <string name="setting_ad_block">広告ブロックを有効化</string>
+    <string name="setting_ad_block_list_url">広告ブロックリストのURL</string>
+    <string name="setting_auto_check_updates">自動でアップデートを確認</string>
+    <string name="setting_update_channel">アップデートチャンネル</string>
+    <string name="setting_use_http_proxy">HTTPプロキシを使用</string>
+    <string name="setting_use_http_proxy_description">HTTPプロキシ経由で通信を転送します（例：127.0.0.1:7890のClash）。WebViewでは再起動が必要な場合があります</string>
+    <string name="setting_proxy_url">プロキシURL</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890（http/socks5）。無効にする場合は空欄にしてください</string>
+    <string name="setting_directional_navigation_mode">方向キーナビゲーションモード</string>
+    <string name="setting_directional_navigation_mode_description">カーソル移動の代わりに矢印キーをページへ送信します（ゲームやアプリ向け）</string>
+    <string name="setting_new_tab_button_at_start">新しいタブボタンを先頭に表示</string>
+    <string name="setting_new_tab_button_at_start_description">+ボタンをタブ一覧の後ろではなく前に配置します</string>
+    <string name="setting_context_menu_on_long_press">長押しでコンテキストメニュー</string>
+    <string name="setting_context_menu_on_long_press_description">オフにすると長押しでページの操作が可能になります</string>
+    <string name="setting_single_tab_mode">単一タブモード</string>
+    <string name="setting_single_tab_mode_description">すべてのリンクやインテントを同じタブで開きます</string>
+    <string name="change_web_engine">Webエンジンを変更しますか？</string>
+    <string name="gecko_engine_not_included">このビルドにはGeckoViewエンジンが含まれていません。</string>
+    <string name="backup_exported">バックアップをエクスポートしました</string>
+    <string name="export_failed">エクスポートに失敗しました</string>
+    <string name="import_failed">インポートに失敗しました</string>
+    <string name="imported_settings">%1$d件の設定をインポートしました</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>カスタム</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>デフォルト（推奨）</item>
+        <item>Chrome（デスクトップ）</item>
+        <item>Chrome（モバイル）</item>
+        <item>Firefox（デスクトップ）</item>
+        <item>Firefox（モバイル）</item>
+        <item>Edge（デスクトップ）</item>
+        <item>カスタム</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>リリース</item>
+        <item>プリリリース</item>
+    </string-array>
+</resources>

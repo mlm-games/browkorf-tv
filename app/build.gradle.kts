@@ -36,12 +36,6 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
-        androidResources {
-            generateLocaleConfig = true
-            localeFilters += setOf(
-                "de", "en", "fa", "he", "it", "pl", "ru", "uk", "vi", "zh", "zh-rTW",
-            )
-        }
     }
 
     val enableApkSplits = (providers.gradleProperty("enableApkSplits").orNull ?: "true").toBoolean()

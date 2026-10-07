@@ -1,0 +1,190 @@
+<resources>
+    <string name="app_name">Browkorf TV: TV-készülékekhez való webböngésző</string>
+    <string name="error">Hiba</string>
+    <string name="ok">OK</string>
+    <string name="loading">Betöltés…</string>
+    <string name="url_prompt">Adja meg a keresendő szöveget vagy az URL-t</string>
+    <string name="can_not_recognize">Nem sikerült felismerni</string>
+    <string name="speak">Keresési kifejezés</string>
+    <string name="open_new_tab">Új lap megnyitása</string>
+    <string name="close">Bezárás</string>
+    <string name="web_perm_request_confirmation">Ez a weboldal a következő erőforrásokat szeretné használni:\n\n%s</string>
+    <string name="allow">Engedélyezés</string>
+    <string name="deny">Megtagadás</string>
+    <string name="location">Tartózkodási hely</string>
+    <string name="open_in_new_tab">Megnyitás új lapon</string>
+    <string name="download_started">A letöltés elindult…\nA fájl helye:\n%s</string>
+    <string name="downloading_file">Fájl letöltése…</string>
+    <string name="err_cant_open_file_chooser">Nem sikerült megnyitni a fájlválasztót</string>
+    <string name="bookmarks">Könyvjelzők</string>
+    <string name="select_bookmark">Könyvjelző kiválasztása</string>
+    <string name="bookmark_not_found">A könyvjelző már nem létezik</string>
+    <string name="add">Hozzáadás</string>
+    <string name="edit">Szerkesztés</string>
+    <string name="no_bookmarks_yet">Még nincsenek könyvjelzők</string>
+    <string name="new_bookmark">Új könyvjelző</string>
+    <string name="done">Kész</string>
+    <string name="title">Cím</string>
+    <string name="search_history">Keresési előzmények</string>
+    <string name="engine">Keresőmotor</string>
+    <string name="choose_default_search_engine">Alapértelmezett keresőmotor kiválasztása</string>
+    <string name="set_search_engine_as_homepage">Keresőmotor beállítása kezdőlapként</string>
+    <string name="save">Mentés</string>
+    <string name="search_engine_url_with_query_placeholder_query">A keresőmotor URL-je a lekérdezés helyőrzőjével [query]</string>
+    <string name="change_search_engine">Keresőmotor módosítása</string>
+    <string name="change_user_agent">User-Agent módosítása</string>
+    <string name="user_agent_string">User-Agent karakterlánc</string>
+    <string name="choose_user_agent_string">User-Agent karakterlánc kiválasztása</string>
+    <string name="edit_user_agent_string">User-Agent karakterlánc szerkesztése</string>
+    <string name="nothing">Semmi</string>
+    <string name="cancelled">Megszakítva</string>
+    <string name="download">Letöltés</string>
+    <string name="file_not_found">A fájl nem található</string>
+    <string name="no_app_for_file_type">Nem található alkalmazás a fájltípus megnyitásához</string>
+    <string name="delete">Törlés</string>
+    <string name="cancel">Mégse</string>
+    <string name="msg_delete_history">Törli a kijelölt előzményelemeket?</string>
+    <string name="msg_delete_history_all">Törli az összes előzményelemet?</string>
+    <string name="open_folder">Tartalmazó mappa megnyitása</string>
+    <string name="no_file_explorer_msg">Úgy tűnik, nincs telepítve megfelelő fájlkezelő az eszközön</string>
+    <string name="shortcuts">Gyorsbillentyűk</string>
+    <string name="favorites">Kedvencek</string>
+    <string name="history">Előzmények</string>
+    <string name="browkorf_settings">Beállítások</string>
+    <string name="shortcut">Gyorsbillentyű</string>
+    <string name="toggle_main_menu">Főmenü ki- és bekapcsolása</string>
+    <string name="navigate_back">Visszanavigálás</string>
+    <string name="navigate_home">Ugrás a kezdőlapra</string>
+    <string name="refresh_page">Oldal frissítése</string>
+    <string name="voice_search">Hangalapú keresés</string>
+    <string name="zoom_in">Nagyítás</string>
+    <string name="zoom_out">Kicsinyítés</string>
+    <string name="not_set">Nincs beállítva</string>
+    <string name="action">Művelet:</string>
+    <string name="current_key">Jelenlegi billentyű:</string>
+    <string name="set_key_for_action">Billentyű hozzárendelése a művelethez</string>
+    <string name="press_eny_key">Nyomjon meg egy billentyűt…</string>
+    <string name="shortcut_key_reserved_for_navigation">Ez a billentyű a böngésző navigációjára van fenntartva</string>
+    <string name="clear">Törlés</string>
+    <string name="install">Telepítés</string>
+    <string name="turn_on_unknown_sources">Kapcsolja be a rendszer \"Ismeretlen források\" beállítását</string>
+    <string name="turn_on_unknown_sources_for_app">Engedélyezze a Browkorf TV számára, hogy alkalmazásokat telepíthessen az \"Ismeretlen források\" lehetőségből a rendszer beállításaiban</string>
+    <string name="storage_not_mounted">A tároló nincs csatolva</string>
+    <string name="can_not_create_downloads">Nem sikerült létrehozni a letöltések mappáját</string>
+    <string name="voice_search_not_found">A hangalapú keresés nem érhető el</string>
+    <string name="new_version_dialog_title">Új verzió érhető el</string>
+    <string name="later">Később</string>
+    <string name="downloads">Letöltések</string>
+    <string name="downloads_notifications_description">Értesítések a letöltések állapotáról</string>
+    <string name="main">Fő</string>
+    <string name="version_and_updates">Verzió és frissítések</string>
+    <string name="version_s">Verzió: %s</string>
+    <string name="update_channel">Frissítési csatorna:</string>
+    <string name="auto_check_for_updates">Frissítések automatikus keresése</string>
+    <string name="check_for_updates">Frissítések keresése</string>
+    <string name="check_for_updates_description">Keressen most újabb verziót</string>
+    <string name="update">Frissítés</string>
+    <string name="new_version_available_s">Új verzió érhető el: %s</string>
+    <string name="web_browser_optimized_for_tvs">TV-készülékekhez optimalizált webböngésző</string>
+    <string name="warning">Figyelmeztetés</string>
+    <string name="unprotected_connection">Nem védett kapcsolat</string>
+    <string name="err_webview_can_not_link">Nem sikerült kapcsolódni a WebView összetevőhöz. Először telepítse az Android System WebView összetevőt.</string>
+    <string name="new_tab_title">[ÚJ LAP]</string>
+    <string name="open_a_new_tab_here">Új lap megnyitása itt</string>
+    <string name="tabs">Lapok</string>
+    <array name="tabs_options">
+        <item>Új lap megnyitása</item>
+        <item>Aktuális bezárása</item>
+        <item>Összes bezárása</item>
+        <item>Mozgatás balra</item>
+        <item>Mozgatás jobbra</item>
+    </array>
+    <string name="ssl_expired">A tanúsítvány lejárt</string>
+    <string name="ssl_idmismatch">A gazdanév nem egyezik</string>
+    <string name="ssl_date_invalid">A tanúsítvány dátuma érvénytelen</string>
+    <string name="ssl_invalid">Általános hiba történt</string>
+    <string name="back_to_safety">Vissza a biztonságos oldalra</string>
+    <string name="go_im_aware">Tovább. Tisztában vagyok a kockázattal</string>
+    <string name="connection_isnt_secure">A kapcsolat nem biztonságos</string>
+    <string name="hostname">Gazdanév:</string>
+    <string name="err_desk">Hiba leírása:</string>
+    <string name="details">Részletek:</string>
+    <string name="exit">Kilépés</string>
+    <string name="find_in_apps_store">Keresés az alkalmazásboltban</string>
+    <string name="close_application">Alkalmazás bezárása</string>
+    <string name="close_tab">Lap bezárása</string>
+    <string name="navigate_forward">Előrenavigálás</string>
+    <string name="toggle_ads_blocking">Hirdetésszűrés ki- és bekapcsolása</string>
+    <string name="never">soha</string>
+    <string name="last_update">Utolsó frissítés</string>
+    <string name="update_ad_blocker_list">Hirdetésszűrőlista frissítése</string>
+    <string name="toggle_keep_screen_on">Képernyő bekapcsolva tartása</string>
+    <string name="need_restart">Az alkalmazást újra kell indítani</string>
+    <string name="theme">Téma</string>
+    <array name="themes">
+        <item>Rendszer</item>
+        <item>Fehér</item>
+        <item>Sötét</item>
+    </array>
+    <string name="incognito_mode">Inkognitómód</string>
+    <string name="incognito_mode_hint">Most már privátan böngészhet, és az eszközt használó más emberek nem látják a tevékenységét. A Browkorf TV nem menti a böngészési előzményeit, a sütiket és webhelyadatokat, valamint az űrlapokba bevitt információkat.\n\nA letöltések és a könyvjelzők azonban mentésre kerülnek. A tevékenysége a meglátogatott webhelyek, a szervezete vagy az internetszolgáltató számára továbbra is látható lehet.</string>
+    <string name="don_t_show_again">Ne jelenjen meg újra</string>
+    <string name="why_icon_changed">Miért változott meg az ikon?</string>
+    <string name="clear_web_cache">Webes gyorsítótár törlése</string>
+    <string name="block_popups">Felugró ablakok blokkolása</string>
+    <string name="block_popups_s">Felugró ablakok blokkolása (%s)</string>
+    <string name="popup_dialog_blocked">Felugró párbeszédpanel blokkolva</string>
+    <string name="new_tab_blocked">Új lap blokkolva</string>
+    <array name="popup_blocking_level">
+        <item>Ne blokkoljon</item>
+        <item>Párbeszédpanelek blokkolása</item>
+        <item>Új lapok blokkolása is (parancssor által indítottak)</item>
+        <item>Minden új ablak blokkolása (maximális blokkolás)</item>
+    </array>
+    <string name="copy_to_clipboard">Másolás a vágólapra</string>
+    <string name="copied_to_clipboard">Másolva a vágólapra</string>
+    <string name="share_url">URL megosztása</string>
+    <string name="open_in_external_application">Megnyitás külső alkalmazásban</string>
+    <string name="external_app_open_error">Nem található megfelelő alkalmazás</string>
+    <string name="home_page">Kezdőlap</string>
+    <string name="custom_home_page_url">Egyéni kezdőlap URL-je</string>
+    <string name="home_page_links">Hivatkozások a kezdőlapon</string>
+    <array name="home_page_modes">
+        <item>Browkorf TV kezdőlap</item>
+        <item>Keresőmotor</item>
+        <item>Egyéni</item>
+        <item>Üres</item>
+        <item>Könyvjelzők</item>
+    </array>
+    <array name="home_page_links_modes">
+        <item>Könyvjelzők</item>
+        <item>Legutóbbi előzmények</item>
+        <item>Leggyakrabban látogatott</item>
+    </array>
+    <string name="web_browser_engine_temporary_setting">Webböngésző motorja (ideiglenes beállítás)</string>
+    <string name="need_restart_message">A módosítások alkalmazásához indítsa újra az alkalmazást</string>
+    <string name="restart">Újraindítás</string>
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
+    <string name="site_asks_to_open_unknown_url">A webhely ismeretlen URL megnyitását kéri</string>
+    <string name="site_asks_to_open_unknown_url_message">Meg szeretné nyitni ezt az URL-t egy külső alkalmazásban?</string>
+    <string name="err_no_app_to_handle_url">Nem található megfelelő alkalmazás az URL kezeléséhez</string>
+    <string name="settings_engine_change_gecko_msg">A GeckoView ajánlott rendszerkövetelményei: 3 GB RAM, 64 bites nyolcmagos processzor. Folytatni szeretné?</string>
+    <string name="settings_engine_change_webview_msg">A WebView a jövőbeli frissítésekben kevesebb funkciót fog tartalmazni. Folytatni szeretné?</string>
+    <string name="copy">Másolás</string>
+    <string name="paste">Beillesztés</string>
+    <string name="cut">Kivágás</string>
+    <string name="share">Megosztás</string>
+    <string name="search">Keresés</string>
+    <string name="http_auth_title">Hitelesítés szükséges</string>
+    <string name="play_pause">Lejátszás/Szünet</string>
+    <string name="media_stop">Leállítás</string>
+    <string name="media_rewind">Visszatekerés</string>
+    <string name="media_fast_forward">Előretekerés</string>
+    <string name="long_press">Hosszú megnyomás</string>
+    <string name="toggle_directional_nav">Irányított navigáció ki- és bekapcsolása</string>
+    <string name="toggle_single_tab_mode">Egyetlen lap módja ki- és bekapcsolása</string>
+    <string name="search_web">Keresés a weben</string>
+    <string name="directional_nav_enabled">Irányított navigáció bekapcsolva, a nyílbillentyűk vezérlik a weboldalt</string>
+    <string name="directional_nav_disabled">Irányított navigáció kikapcsolva, a nyílbillentyűk mozgatják a kurzort</string>
+</resources>

@@ -1,0 +1,27 @@
+<resources>
+    <string name="clear">Rensa</string>
+    <string name="repost_confirm_message">För att visa den här sidan måste Browkorf TV skicka information som upprepar en tidigare utförd åtgärd (t.ex. en sökning eller en orderbekräftelse).</string>
+    <string name="repost_confirm_title">Är du säker?</string>
+    <string name="repost_confirm_resend">Skicka igen</string>
+    <string name="before_unload_message">Den här sidan ber dig bekräfta att du vill lämna den - data du har matat in kanske inte sparas</string>
+    <string name="before_unload_title">Är du säker?</string>
+    <string name="before_unload_leave_page">Lämna sidan</string>
+    <string name="before_unload_stay">Stanna på sidan</string>
+    <string name="wait">Vänta</string>
+    <string name="stop">Stoppa</string>
+    <string name="slow_script">Ett skript på den här sidan gör att din webbläsare kör långsamt</string>
+    <string name="request_storage">Tillåt åtkomst till enhetens lagring för \"%1$s\"?</string>
+    <string name="request_storage_access">Tillåt tredje parter att komma åt förstaparts lagring för \"%1$s\"?</string>
+    <string name="request_geolocation">Dela platsen med \"%1$s\"?</string>
+    <string name="request_notification">Tillåt aviseringar för \"%1$s\"?</string>
+    <string name="request_video">Dela video med \"%1$s\"</string>
+    <string name="request_audio">Dela ljud med \"%1$s\"</string>
+    <string name="request_media">Dela video och ljud med \"%1$s\"</string>
+    <string name="request_xr">Dela WebXR-skärmar med \"%1$s\"?</string>
+    <string name="request_autoplay">Tillåt att video spelas automatiskt på \"%1$s\"?</string>
+    <string name="request_media_key_system_access">Tillåt åtkomst till systemets mediatangenter för \"%1$s\"?</string>
+    <string name="media_back_camera">Bakre kamera</string>
+    <string name="media_front_camera">Framre kamera</string>
+    <string name="media_microphone">Mikrofon</string>
+    <string name="media_other">Okänd källa</string>
+</resources>

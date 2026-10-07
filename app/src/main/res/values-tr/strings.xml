@@ -1,0 +1,190 @@
+<resources>
+    <string name="app_name">Browkorf TV: TV Web Tarayıcısı</string>
+    <string name="error">Hata</string>
+    <string name="ok">Tamam</string>
+    <string name="loading">Yükleniyor…</string>
+    <string name="url_prompt">Sorgu metni veya URL girin</string>
+    <string name="can_not_recognize">Tanınamadı</string>
+    <string name="speak">Sorgu ifadesi</string>
+    <string name="open_new_tab">Yeni sekme aç</string>
+    <string name="close">Kapat</string>
+    <string name="web_perm_request_confirmation">Bu web sayfası aşağıdaki kaynakları kullanmak istiyor:\n\n%s</string>
+    <string name="allow">İzin ver</string>
+    <string name="deny">Reddet</string>
+    <string name="location">Konum</string>
+    <string name="open_in_new_tab">Yeni sekmede aç</string>
+    <string name="download_started">İndirme başlatıldı…\nDosya şuraya kaydedilecek:\n%s</string>
+    <string name="downloading_file">Dosya indiriliyor…</string>
+    <string name="err_cant_open_file_chooser">Dosya seçici açılamıyor</string>
+    <string name="bookmarks">Yer imleri</string>
+    <string name="select_bookmark">Yer imi seç</string>
+    <string name="bookmark_not_found">Yer imi artık mevcut değil</string>
+    <string name="add">Ekle</string>
+    <string name="edit">Düzenle</string>
+    <string name="no_bookmarks_yet">Henüz yer imi yok</string>
+    <string name="new_bookmark">Yeni yer imi</string>
+    <string name="done">Bitti</string>
+    <string name="title">Başlık</string>
+    <string name="search_history">Arama geçmişi</string>
+    <string name="engine">Arama motoru</string>
+    <string name="choose_default_search_engine">Varsayılan arama motorunu seç</string>
+    <string name="set_search_engine_as_homepage">Arama motorunu ana sayfa yap</string>
+    <string name="save">Kaydet</string>
+    <string name="search_engine_url_with_query_placeholder_query">Sorgu yer tutucusu [query] içeren arama motoru URL\'si</string>
+    <string name="change_search_engine">Arama motorunu değiştir</string>
+    <string name="change_user_agent">User-Agent değiştir</string>
+    <string name="user_agent_string">User-Agent dizesi</string>
+    <string name="choose_user_agent_string">User-Agent dizesi seç</string>
+    <string name="edit_user_agent_string">User-Agent dizesini düzenle</string>
+    <string name="nothing">Hiçbir şey</string>
+    <string name="cancelled">İptal edildi</string>
+    <string name="download">İndir</string>
+    <string name="file_not_found">Dosya bulunamadı</string>
+    <string name="no_app_for_file_type">Bu dosya türünü açmak için uygulama bulunamadı</string>
+    <string name="delete">Sil</string>
+    <string name="cancel">İptal</string>
+    <string name="msg_delete_history">Seçilen geçmiş öğeleri silinsin mi?</string>
+    <string name="msg_delete_history_all">Tüm geçmiş öğeleri silinsin mi?</string>
+    <string name="open_folder">İçeren klasörü aç</string>
+    <string name="no_file_explorer_msg">Cihazınızda uygun bir dosya yöneticisi uygulaması yüklü görünmüyor</string>
+    <string name="shortcuts">Kısayollar</string>
+    <string name="favorites">Sık kullanılanlar</string>
+    <string name="history">Geçmiş</string>
+    <string name="browkorf_settings">Ayarlar</string>
+    <string name="shortcut">Kısayol</string>
+    <string name="toggle_main_menu">Ana menüyü aç/kapat</string>
+    <string name="navigate_back">Geri git</string>
+    <string name="navigate_home">Ana sayfaya git</string>
+    <string name="refresh_page">Sayfayı yenile</string>
+    <string name="voice_search">Sesli arama</string>
+    <string name="zoom_in">Yakınlaştır</string>
+    <string name="zoom_out">Uzaklaştır</string>
+    <string name="not_set">Ayarlanmadı</string>
+    <string name="action">Eylem:</string>
+    <string name="current_key">Geçerli tuş:</string>
+    <string name="set_key_for_action">Eylem için tuş ata</string>
+    <string name="press_eny_key">Herhangi bir tuşa basın…</string>
+    <string name="shortcut_key_reserved_for_navigation">Bu tuş tarayıcı gezinmesi için ayrılmıştır</string>
+    <string name="clear">Temizle</string>
+    <string name="install">Yükle</string>
+    <string name="turn_on_unknown_sources">Sistem ayarlarından \"Bilinmeyen kaynaklar\" seçeneğini etkinleştirin</string>
+    <string name="turn_on_unknown_sources_for_app">Browkorf TV\'nin sistem ayarlarındaki \"Bilinmeyen kaynaklar\" seçeneğinden uygulama yükleyebilmesine izin verin</string>
+    <string name="storage_not_mounted">Depolama bağlanmadı</string>
+    <string name="can_not_create_downloads">İndirilenler klasörü oluşturulamıyor</string>
+    <string name="voice_search_not_found">Sesli arama bulunamadı</string>
+    <string name="new_version_dialog_title">Yeni sürüm mevcut</string>
+    <string name="later">Daha sonra</string>
+    <string name="downloads">İndirilenler</string>
+    <string name="downloads_notifications_description">İndirme durumlarıyla ilgili bildirimler</string>
+    <string name="main">Ana</string>
+    <string name="version_and_updates">Sürüm ve güncellemeler</string>
+    <string name="version_s">Sürüm: %s</string>
+    <string name="update_channel">Güncelleme kanalı:</string>
+    <string name="auto_check_for_updates">Güncelleştirmeleri otomatik denetle</string>
+    <string name="check_for_updates">Güncelleştirmeleri denetle</string>
+    <string name="check_for_updates_description">Şimdi daha yeni bir sürüm olup olmadığını denetleyin</string>
+    <string name="update">Güncelle</string>
+    <string name="new_version_available_s">Yeni sürüm mevcut: %s</string>
+    <string name="web_browser_optimized_for_tvs">TV\'ler için optimize edilmiş web tarayıcısı</string>
+    <string name="warning">Uyarı</string>
+    <string name="unprotected_connection">Korumasız bağlantı</string>
+    <string name="err_webview_can_not_link">WebView bileşenine bağlanılamıyor. Önce Android System WebView bileşenini yüklemeyi deneyin.</string>
+    <string name="new_tab_title">[YENİ SEKME]</string>
+    <string name="open_a_new_tab_here">Burada yeni sekme aç</string>
+    <string name="tabs">Sekmeler</string>
+    <array name="tabs_options">
+        <item>Yeni sekme aç</item>
+        <item>Geçerli sekmeyi kapat</item>
+        <item>Tümünü kapat</item>
+        <item>Sola taşı</item>
+        <item>Sağa taşı</item>
+    </array>
+    <string name="ssl_expired">Sertifikanın süresi doldu</string>
+    <string name="ssl_idmismatch">Ana makine adı eşleşmiyor</string>
+    <string name="ssl_date_invalid">Sertifikanın tarihi geçersiz</string>
+    <string name="ssl_invalid">Genel bir hata oluştu</string>
+    <string name="back_to_safety">Güvenli alana dön</string>
+    <string name="go_im_aware">Devam. Riskin farkındayım</string>
+    <string name="connection_isnt_secure">Bağlantı güvenli değil</string>
+    <string name="hostname">Ana makine adı:</string>
+    <string name="err_desk">Hata açıklaması:</string>
+    <string name="details">Ayrıntılar:</string>
+    <string name="exit">Çıkış</string>
+    <string name="find_in_apps_store">Uygulama mağazasında bul</string>
+    <string name="close_application">Uygulamayı kapat</string>
+    <string name="close_tab">Sekmeyi kapat</string>
+    <string name="navigate_forward">İleri git</string>
+    <string name="toggle_ads_blocking">Reklam engellemeyi aç/kapat</string>
+    <string name="never">asla</string>
+    <string name="last_update">Son güncelleme</string>
+    <string name="update_ad_blocker_list">Reklam engelleyici listesini güncelle</string>
+    <string name="toggle_keep_screen_on">Ekranı açık tut</string>
+    <string name="need_restart">Uygulamanın yeniden başlatılması gerekiyor</string>
+    <string name="theme">Tema</string>
+    <array name="themes">
+        <item>Sistem</item>
+        <item>Beyaz</item>
+        <item>Koyu</item>
+    </array>
+    <string name="incognito_mode">Gizli mod</string>
+    <string name="incognito_mode_hint">Artık gizli şekilde gezinebilirsiniz ve bu cihazı kullanan diğer kişiler etkinliğinizi göremez. Browkorf TV gezinme geçmişinizi, çerezleri ve site verilerini, formlara girilen bilgileri kaydetmez.\n\nAncak indirilenler ve yer imleri kaydedilir. Etkinliğiniz ziyaret ettiğiniz web siteleri, kuruluşunuz veya internet servis sağlayıcınız tarafından görünür olmaya devam edebilir.</string>
+    <string name="don_t_show_again">Tekrar gösterme</string>
+    <string name="why_icon_changed">Simge neden değişti?</string>
+    <string name="clear_web_cache">Web önbelleğini temizle</string>
+    <string name="block_popups">Açılır pencereleri engelle</string>
+    <string name="block_popups_s">Açılır pencereleri engelle (%s)</string>
+    <string name="popup_dialog_blocked">Açılır pencere engellendi</string>
+    <string name="new_tab_blocked">Yeni sekme engellendi</string>
+    <array name="popup_blocking_level">
+        <item>Engelleme yok</item>
+        <item>İleti pencerelerini engelle</item>
+        <item>Yeni sekmeleri de engelle (betik tarafından başlatılan)</item>
+        <item>Tüm yeni pencereleri engelle (azami engelleme)</item>
+    </array>
+    <string name="copy_to_clipboard">Panoya kopyala</string>
+    <string name="copied_to_clipboard">Panoya kopyalandı</string>
+    <string name="share_url">URL\'yi paylaş</string>
+    <string name="open_in_external_application">Harici uygulamada aç</string>
+    <string name="external_app_open_error">Uygun uygulama bulunamadı</string>
+    <string name="home_page">Ana sayfa</string>
+    <string name="custom_home_page_url">Özel ana sayfa URL\'si</string>
+    <string name="home_page_links">Ana sayfadaki bağlantılar</string>
+    <array name="home_page_modes">
+        <item>Browkorf TV ana sayfası</item>
+        <item>Arama motoru</item>
+        <item>Özel</item>
+        <item>Boş</item>
+        <item>Yer imleri</item>
+    </array>
+    <array name="home_page_links_modes">
+        <item>Yer imleri</item>
+        <item>Son geçmiş</item>
+        <item>En çok ziyaret edilen</item>
+    </array>
+    <string name="web_browser_engine_temporary_setting">Web tarayıcı motoru (geçici ayar)</string>
+    <string name="need_restart_message">Değişiklikleri uygulamak için uygulamayı yeniden başlatın</string>
+    <string name="restart">Yeniden başlat</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="site_asks_to_open_unknown_url">Site bilinmeyen bir URL\'nin açılmasını istiyor</string>
+    <string name="site_asks_to_open_unknown_url_message">Bu URL\'yi harici uygulamada açmak ister misiniz?</string>
+    <string name="err_no_app_to_handle_url">Bu URL\'yi işlemek için uygun uygulama bulunamadı</string>
+    <string name="settings_engine_change_gecko_msg">GeckoView önerilen sistem gereksinimleri: 3 GB RAM, 64 bit sekiz çekirdekli işlemci. Devam etmek istiyor musunuz?</string>
+    <string name="settings_engine_change_webview_msg">WebView gelecekteki güncellemelerde daha az özellik içerecek. Devam etmek istiyor musunuz?</string>
+    <string name="copy">Kopyala</string>
+    <string name="paste">Yapıştır</string>
+    <string name="cut">Kes</string>
+    <string name="share">Paylaş</string>
+    <string name="search">Ara</string>
+    <string name="http_auth_title">Kimlik doğrulaması gerekli</string>
+    <string name="play_pause">Oynat/Duraklat</string>
+    <string name="media_stop">Medyayı durdur</string>
+    <string name="media_rewind">Medyayı geri sar</string>
+    <string name="media_fast_forward">Medyayı ileri sar</string>
+    <string name="long_press">Uzun basma</string>
+    <string name="toggle_directional_nav">Yönlü gezinmeyi aç/kapat</string>
+    <string name="toggle_single_tab_mode">Tek sekme modunu aç/kapat</string>
+    <string name="search_web">Web\'de ara</string>
+    <string name="directional_nav_enabled">Yönlü gezinme etkin, ok tuşları web sayfasını kontrol ediyor</string>
+    <string name="directional_nav_disabled">Yönlü gezinme devre dışı, ok tuşları imleci hareket ettiriyor</string>
+</resources>

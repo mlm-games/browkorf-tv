@@ -2,7 +2,9 @@ package org.mlm.browkorftv.settings
 
 import android.content.Context
 import android.os.Build
+import io.github.mlmgames.settings.core.PreferenceKind
 import io.github.mlmgames.settings.core.SettingsRepository
+import io.github.mlmgames.settings.core.locale.AppLanguage
 import io.github.mlmgames.settings.core.backup.SettingsBackupManager
 import io.github.mlmgames.settings.core.datastore.createSettingsDataStore
 import io.github.mlmgames.settings.core.managers.MigrationManager
@@ -11,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 import org.mlm.browkorftv.utils.Utils
 
 class SettingsManager private constructor(context: Context) {
@@ -33,19 +36,49 @@ class SettingsManager private constructor(context: Context) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val dataStore = createSettingsDataStore(appContext, DATASTORE_NAME)
 
+    private val legacyLanguageNames = listOf(
+        "System",
+        "English",
+        "German",
+        "Persian",
+        "Italian",
+        "Hebrew",
+        "Polish",
+        "Russian",
+        "Ukrainian",
+        "Vietnamese",
+        "ChineseSimplified",
+        "ChineseTraditional",
+    )
+
+    val migrationManager = MigrationManager(
+        dataStore = dataStore,
+        currentVersion = 2,
+        schema = AppSettingsSchema,
+    ).addValueTransform(
+        fromVersion = 1,
+        toVersion = 2,
+        oldKey = "language_index",
+        oldKind = PreferenceKind.INT,
+        newField = "language",
+    ) { stored -> (stored as? Int)?.let(legacyLanguageNames::getOrNull) }
+
+    init {
+        runBlocking(Dispatchers.IO) { migrationManager.migrate() }
+    }
+
     val repository = SettingsRepository(
         dataStore = dataStore,
         schema = AppSettingsSchema
     )
 
-    val migrationManager = MigrationManager(dataStore, currentVersion = 1)
     val resetManager = ResetManager(dataStore, AppSettingsSchema)
 
     val backupManager = SettingsBackupManager<AppSettings>(
         dataStore = dataStore,
         schema = AppSettingsSchema,
         appId = appContext.packageName,
-        schemaVersion = 1,
+        schemaVersion = 2,
     )
 
     val settings: Flow<AppSettings> = repository.flow
@@ -112,8 +145,8 @@ class SettingsManager private constructor(context: Context) {
         update { it.copy(theme = theme) }
     }
 
-    suspend fun setLanguageIndex(index: Int) {
-        update { it.copy(languageIndex = index) }
+    suspend fun setLanguage(language: AppLanguage) {
+        update { it.copy(language = language) }
     }
 
     suspend fun setKeepScreenOn(value: Boolean) {

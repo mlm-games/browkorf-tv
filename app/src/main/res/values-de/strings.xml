@@ -165,7 +165,7 @@
     <string name="need_restart_message">Starten Sie die App neu, um die Änderungen zu übernehmen</string>
     <string name="restart">Neu starten</string>
     <string name="yes">Ja</string>
-    <string name="no">NEIN</string>
+    <string name="no">Nein</string>
     <string name="site_asks_to_open_unknown_url">Die Website fordert zum Öffnen einer unbekannten URL auf</string>
     <string name="site_asks_to_open_unknown_url_message">Möchten Sie diese URL in einer externen App öffnen?</string>
     <string name="err_no_app_to_handle_url">Kann keine geeignete Anwendung finden, um diese URL zu verarbeiten</string>

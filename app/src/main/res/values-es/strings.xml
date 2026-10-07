@@ -1,0 +1,192 @@
+<resources>
+    <string name="app_name">Browkorf TV: Navegador web para TV</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="loading">Cargando…</string>
+    <string name="url_prompt">Introduce el texto de búsqueda o la URL</string>
+    <string name="can_not_recognize">No se ha podido reconocer</string>
+    <string name="speak">Texto de búsqueda</string>
+    <string name="open_new_tab">Abrir nueva pestaña</string>
+    <string name="close">Cerrar</string>
+    <string name="web_perm_request_confirmation">Esta página web quiere usar los siguientes recursos:\n\n%s</string>
+    <string name="allow">Permitir</string>
+    <string name="deny">Denegar</string>
+    <string name="location">Ubicación</string>
+    <string name="open_in_new_tab">Abrir en una pestaña nueva</string>
+    <string name="download_started">Descarga iniciada…\nEl archivo se guardará en:\n%s</string>
+    <string name="downloading_file">Descargando archivo…</string>
+    <string name="err_cant_open_file_chooser">No se puede abrir el selector de archivos</string>
+    <string name="bookmarks">Marcadores</string>
+    <string name="select_bookmark">Seleccionar marcador</string>
+    <string name="bookmark_not_found">El marcador ya no existe</string>
+    <string name="add">Añadir</string>
+    <string name="edit">Editar</string>
+    <string name="no_bookmarks_yet">Aún no hay marcadores</string>
+    <string name="new_bookmark">Nuevo marcador</string>
+    <string name="done">Listo</string>
+    <string name="title">Título</string>
+    <string name="search_history">Buscar en el historial</string>
+    <string name="engine">Motor de búsqueda</string>
+    <string name="choose_default_search_engine">Elegir el motor de búsqueda predeterminado</string>
+    <string name="set_search_engine_as_homepage">Usar el motor de búsqueda como página de inicio</string>
+    <string name="save">Guardar</string>
+    <string name="search_engine_url_with_query_placeholder_query">URL del motor de búsqueda con marcador de posición [query]</string>
+    <string name="change_search_engine">Cambiar motor de búsqueda</string>
+    <string name="change_user_agent">Cambiar User-Agent</string>
+    <string name="user_agent_string">Cadena User-Agent</string>
+    <string name="choose_user_agent_string">Elegir cadena User-Agent</string>
+    <string name="edit_user_agent_string">Editar cadena User-Agent</string>
+    <string name="nothing">Nada</string>
+    <string name="cancelled">Cancelado</string>
+    <string name="download">Descargar</string>
+    <string name="file_not_found">Archivo no encontrado</string>
+    <string name="no_app_for_file_type">No se encontraron aplicaciones para abrir este tipo de archivo</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="msg_delete_history">¿Eliminar los elementos de historial seleccionados?</string>
+    <string name="msg_delete_history_all">¿Eliminar todo el historial?</string>
+    <string name="open_folder">Abrir la carpeta que lo contiene</string>
+    <string name="no_file_explorer_msg">Parece que no hay ningún gestor de archivos adecuado instalado en tu dispositivo</string>
+    <string name="shortcuts">Atajos</string>
+    <string name="favorites">Favoritos</string>
+    <string name="history">Historial</string>
+    <string name="browkorf_settings">Ajustes</string>
+    <string name="shortcut">Atajo</string>
+    <string name="toggle_main_menu">Mostrar u ocultar el menú principal</string>
+    <string name="navigate_back">Retroceder</string>
+    <string name="navigate_home">Ir al inicio</string>
+    <string name="refresh_page">Actualizar página</string>
+    <string name="voice_search">Búsqueda por voz</string>
+    <string name="zoom_in">Acercar</string>
+    <string name="zoom_out">Alejar</string>
+    <string name="not_set">Sin definir</string>
+    <string name="action">Acción:</string>
+    <string name="current_key">Tecla actual:</string>
+    <string name="set_key_for_action">Asignar tecla a la acción</string>
+    <string name="press_eny_key">Pulsa cualquier tecla…</string>
+    <string name="shortcut_key_reserved_for_navigation">Esta tecla está reservada para la navegación del navegador</string>
+    <string name="clear">Borrar</string>
+    <string name="install">Instalar</string>
+    <string name="turn_on_unknown_sources">Activa la opción «Fuentes desconocidas» de los ajustes del sistema</string>
+    <string name="turn_on_unknown_sources_for_app">Permite a Browkorf TV instalar aplicaciones desde «Fuentes desconocidas» en los ajustes del sistema</string>
+    <string name="storage_not_mounted">Almacenamiento no montado</string>
+    <string name="can_not_create_downloads">No se puede crear la carpeta de descargas</string>
+    <string name="voice_search_not_found">Búsqueda por voz no disponible</string>
+    <string name="new_version_dialog_title">Nueva versión disponible</string>
+    <string name="later">Más tarde</string>
+    <string name="downloads">Descargas</string>
+    <string name="downloads_notifications_description">Notificaciones sobre el estado de las descargas</string>
+    <string name="main">Principal</string>
+    <string name="version_and_updates">Versión y actualizaciones</string>
+    <string name="version_s">Versión: %s</string>
+    <string name="update_channel">Canal de actualizaciones:</string>
+    <string name="auto_check_for_updates">Buscar actualizaciones automáticamente</string>
+    <string name="check_for_updates">Buscar actualizaciones</string>
+    <string name="check_for_updates_description">Comprueba ahora si hay una versión más reciente</string>
+    <string name="update">Actualizar</string>
+    <string name="new_version_available_s">Nueva versión disponible: %s</string>
+    <string name="web_browser_optimized_for_tvs">Navegador web optimizado para televisores</string>
+    <string name="warning">Advertencia</string>
+    <string name="unprotected_connection">Conexión no protegida</string>
+    <string name="err_webview_can_not_link">No se puede vincular al componente WebView. Intenta instalar primero el componente Android System WebView.</string>
+    <string name="new_tab_title">[NUEVA PESTAÑA]</string>
+    <string name="open_a_new_tab_here">Abrir una pestaña nueva aquí</string>
+    <string name="tabs">Pestañas</string>
+    <array name="tabs_options">
+        <item>Abrir pestaña nueva</item>
+        <item>Cerrar la actual</item>
+        <item>Cerrar todas</item>
+        <item>Mover a la izquierda</item>
+        <item>Mover a la derecha</item>
+    </array>
+    <string name="ssl_expired">El certificado ha caducado</string>
+    <string name="ssl_idmismatch">El nombre de host no coincide</string>
+    <string name="ssl_date_invalid">La fecha del certificado no es válida</string>
+    <string name="ssl_invalid">Se ha producido un error genérico</string>
+    <string name="back_to_safety">Volver a un lugar seguro</string>
+    <string name="go_im_aware">Continuar. Acepto el riesgo</string>
+    <string name="connection_isnt_secure">La conexión no es segura</string>
+    <string name="hostname">Nombre de host:</string>
+    <string name="err_desk">Descripción del error:</string>
+    <string name="details">Detalles:</string>
+    <string name="exit">Salir</string>
+    <string name="find_in_apps_store">Buscar en la tienda de aplicaciones</string>
+    <string name="close_application">Cerrar la aplicación</string>
+    <string name="close_tab">Cerrar pestaña</string>
+    <string name="navigate_forward">Avanzar</string>
+    <string name="toggle_ads_blocking">Activar o desactivar el bloqueo de anuncios</string>
+    <string name="never">nunca</string>
+    <string name="last_update">Última actualización</string>
+    <string name="update_ad_blocker_list">Actualizar la lista de bloqueo</string>
+    <string name="toggle_keep_screen_on">Mantener la pantalla encendida</string>
+    <string name="need_restart">Es necesario reiniciar la aplicación</string>
+    <string name="theme">Tema</string>
+    <array name="themes">
+        <item>Sistema</item>
+        <item>Claro</item>
+        <item>Oscuro</item>
+    </array>
+    <string name="incognito_mode">Modo incógnito</string>
+    <string name="incognito_mode_hint">Ahora puedes navegar en privado y las demás personas que usen este dispositivo no verán tu actividad. Browkorf TV no guardará tu historial de navegación, las cookies ni los datos de los sitios, ni la información introducida en los formularios.\n\nSin embargo, las descargas y los marcadores sí se guardarán. Tu actividad podría seguir siendo visible para los sitios web que visites, tu organización o tu proveedor de servicios de Internet.</string>
+    <string name="don_t_show_again">No volver a mostrar</string>
+    <string name="why_icon_changed">¿Por qué cambió el icono?</string>
+    <string name="clear_web_cache">Borrar la caché web</string>
+    <string name="block_popups">Bloqueo de ventanas emergentes</string>
+    <string name="block_popups_s">Bloqueo de ventanas emergentes (%s)</string>
+    <string name="popup_dialog_blocked">Diálogo emergente bloqueado</string>
+    <string name="new_tab_blocked">Pestaña nueva bloqueada</string>
+    <array name="popup_blocking_level">
+        <item>No bloquear</item>
+        <item>Bloquear diálogos</item>
+        <item>También bloquear pestañas nuevas (iniciadas por scripts)</item>
+        <item>Bloquear cualquier ventana nueva (bloqueo máximo)</item>
+    </array>
+    <string name="copy_to_clipboard">Copiar al portapapeles</string>
+    <string name="copied_to_clipboard">Copiado al portapapeles</string>
+    <string name="share_url">Compartir URL</string>
+    <string name="open_in_external_application">Abrir en una aplicación externa</string>
+    <string name="external_app_open_error">No se encontró una aplicación adecuada</string>
+    <string name="home_page">Página de inicio</string>
+    <string name="custom_home_page_url">URL propia de la página de inicio</string>
+    <string name="home_page_links">Enlaces de la página de inicio</string>
+    <array name="home_page_modes">
+        <item>Inicio de Browkorf TV</item>
+        <item>Motor de búsqueda</item>
+        <item>Personalizada</item>
+        <item>En blanco</item>
+        <item>Marcadores</item>
+    </array>
+
+    <array name="home_page_links_modes">
+        <item>Marcadores</item>
+        <item>Historial reciente</item>
+        <item>Más visitados</item>
+    </array>
+
+    <string name="web_browser_engine_temporary_setting">Motor del navegador (ajuste temporal)</string>
+    <string name="need_restart_message">Reinicia la aplicación para aplicar los cambios</string>
+    <string name="restart">Reiniciar</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="site_asks_to_open_unknown_url">El sitio pide abrir una URL desconocida</string>
+    <string name="site_asks_to_open_unknown_url_message">¿Quieres abrir esta URL en una aplicación externa?</string>
+    <string name="err_no_app_to_handle_url">No se encontró una aplicación adecuada para manejar esta URL</string>
+    <string name="settings_engine_change_gecko_msg">GeckoView recomienda estos requisitos de sistema: 3 GB de RAM y CPU octa-core de 64 bits. ¿Quieres continuar?</string>
+    <string name="settings_engine_change_webview_msg">WebView tendrá menos funciones en las próximas actualizaciones. ¿Quieres continuar?</string>
+    <string name="copy">Copiar</string>
+    <string name="paste">Pegar</string>
+    <string name="cut">Cortar</string>
+    <string name="share">Compartir</string>
+    <string name="search">Buscar</string>
+    <string name="http_auth_title">Autenticación necesaria</string>
+    <string name="play_pause">Reproducir/Pausar</string>
+    <string name="media_stop">Detener medios</string>
+    <string name="media_rewind">Retroceder medios</string>
+    <string name="media_fast_forward">Avanzar medios</string>
+    <string name="long_press">Pulsación larga</string>
+    <string name="toggle_directional_nav">Activar o desactivar la navegación direccional</string>
+    <string name="toggle_single_tab_mode">Activar o desactivar el modo de una sola pestaña</string>
+    <string name="search_web">Buscar en la web</string>
+    <string name="directional_nav_enabled">Navegación direccional activada; el D-pad controla la página web</string>
+    <string name="directional_nav_disabled">Navegación direccional desactivada; el D-pad mueve el cursor</string>
+</resources>

@@ -1,6 +1,7 @@
 package org.mlm.browkorftv.settings
 
 import io.github.mlmgames.settings.core.annotations.*
+import io.github.mlmgames.settings.core.locale.AppLanguage
 import io.github.mlmgames.settings.core.resources.SettingsTextKeys
 import io.github.mlmgames.settings.core.types.*
 import androidx.core.net.toUri
@@ -48,7 +49,7 @@ data class BookmarkEntry(
 )
 
 
-@SchemaVersion(version = 1)
+@SchemaVersion(version = 2)
 data class AppSettings(
 
 
@@ -65,12 +66,13 @@ data class AppSettings(
 
     @Setting(
         title = "Language",
-        titleKey = BrowkorfSettingsKeys.LANGUAGE,
+        titleKey = SettingsTextKeys.LANGUAGE,
         category = General::class,
-        type = LanguageSetting::class,
-        key = "language_index"
+        type = Dropdown::class,
+        key = "language",
+        languages = ["en", "ar", "cs", "de", "el", "es", "fa", "fi", "fr", "he", "hr", "hu", "id", "it", "ja", "ko", "nl", "pl", "pt", "ru", "sv", "tr", "uk", "vi", "zh-CN", "zh-TW"]
     )
-    val languageIndex: Int = 0,
+    val language: AppLanguage = AppLanguage.System,
 
     @Setting(
         title = "Force Dark Webpage",
@@ -465,8 +467,6 @@ data class AppSettings(
 
 
 object CheckForUpdatesAction : SettingAction
-
-class LanguageSetting
 
 enum class Theme {
     System, White, Black

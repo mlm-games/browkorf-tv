@@ -1,0 +1,190 @@
+<resources>
+    <string name="app_name">Browkorf TV: متصفح ويب للتلفزيون</string>
+    <string name="error">خطأ</string>
+    <string name="ok">موافق</string>
+    <string name="loading">جارٍ التحميل…</string>
+    <string name="url_prompt">أدخل نص البحث أو الرابط</string>
+    <string name="can_not_recognize">تعذّر التعرّف على المحتوى</string>
+    <string name="speak">عبارة البحث</string>
+    <string name="open_new_tab">فتح علامة تبويب جديدة</string>
+    <string name="close">إغلاق</string>
+    <string name="web_perm_request_confirmation">تريد هذه الصفحة استخدام الموارد التالية:\n\n%s</string>
+    <string name="allow">السماح</string>
+    <string name="deny">رفض</string>
+    <string name="location">الموقع</string>
+    <string name="open_in_new_tab">فتح في علامة تبويب جديدة</string>
+    <string name="download_started">بدأ التنزيل…\nسيُحفظ الملف في:\n%s</string>
+    <string name="downloading_file">جارٍ تنزيل الملف…</string>
+    <string name="err_cant_open_file_chooser">تعذّر فتح نافذة اختيار الملفات</string>
+    <string name="bookmarks">العلامات المرجعية</string>
+    <string name="select_bookmark">اختر علامة مرجعية</string>
+    <string name="bookmark_not_found">لم تعد العلامة المرجعية موجودة</string>
+    <string name="add">إضافة</string>
+    <string name="edit">تحرير</string>
+    <string name="no_bookmarks_yet">لا توجد علامات مرجعية بعد</string>
+    <string name="new_bookmark">علامة مرجعية جديدة</string>
+    <string name="done">تم</string>
+    <string name="title">العنوان</string>
+    <string name="search_history">سجل البحث</string>
+    <string name="engine">محرك البحث</string>
+    <string name="choose_default_search_engine">اختر محرك البحث الافتراضي</string>
+    <string name="set_search_engine_as_homepage">اجعل محرك البحث صفحتك الرئيسية</string>
+    <string name="save">حفظ</string>
+    <string name="search_engine_url_with_query_placeholder_query">رابط محرك البحث مع الوسيط [query]</string>
+    <string name="change_search_engine">تغيير محرك البحث</string>
+    <string name="change_user_agent">تغيير User Agent</string>
+    <string name="user_agent_string">نص User Agent</string>
+    <string name="choose_user_agent_string">اختيار نص User Agent</string>
+    <string name="edit_user_agent_string">تحرير نص User Agent</string>
+    <string name="nothing">لا شيء</string>
+    <string name="cancelled">أُلغي</string>
+    <string name="download">تنزيل</string>
+    <string name="file_not_found">الملف غير موجود</string>
+    <string name="no_app_for_file_type">لم يُعثر على تطبيق لفتح هذا النوع من الملفات</string>
+    <string name="delete">حذف</string>
+    <string name="cancel">إلغاء</string>
+    <string name="msg_delete_history">هل تريد حذف عناصر السجل المحددة؟</string>
+    <string name="msg_delete_history_all">هل تريد حذف كل عناصر السجل؟</string>
+    <string name="open_folder">فتح المجلد الحاوي</string>
+    <string name="no_file_explorer_msg">يبدو أنه لا يوجد تطبيق مستعرض ملفات مناسب مثبّت على جهازك</string>
+    <string name="shortcuts">الاختصارات</string>
+    <string name="favorites">المفضلة</string>
+    <string name="history">السجل</string>
+    <string name="browkorf_settings">الإعدادات</string>
+    <string name="shortcut">اختصار</string>
+    <string name="toggle_main_menu">إظهار القائمة الرئيسية/إخفاؤها</string>
+    <string name="navigate_back">الرجوع</string>
+    <string name="navigate_home">الانتقال إلى الرئيسية</string>
+    <string name="refresh_page">تحديث الصفحة</string>
+    <string name="voice_search">البحث الصوتي</string>
+    <string name="zoom_in">تكبير</string>
+    <string name="zoom_out">تصغير</string>
+    <string name="not_set">غير محدّد</string>
+    <string name="action">الإجراء:</string>
+    <string name="current_key">المفتاح الحالي:</string>
+    <string name="set_key_for_action">تعيين مفتاح للإجراء</string>
+    <string name="press_eny_key">اضغط على أي مفتاح...</string>
+    <string name="shortcut_key_reserved_for_navigation">هذا المفتاح محجوز للتنقّل داخل المتصفح</string>
+    <string name="clear">مسح</string>
+    <string name="install">تثبيت</string>
+    <string name="turn_on_unknown_sources">يرجى تفعيل إعداد النظام \"مصادر غير معروفة\"</string>
+    <string name="turn_on_unknown_sources_for_app">يرجى السماح لـ Browkorf TV بتثبيت التطبيقات من \"مصادر غير معروفة\" في إعدادات النظام</string>
+    <string name="storage_not_mounted">وحدة التخزين غير متصلة</string>
+    <string name="can_not_create_downloads">تعذّر إنشاء مجلد التنزيلات</string>
+    <string name="voice_search_not_found">البحث الصوتي غير متاح</string>
+    <string name="new_version_dialog_title">يتوفر إصدار جديد</string>
+    <string name="later">لاحقًا</string>
+    <string name="downloads">التنزيلات</string>
+    <string name="downloads_notifications_description">إشعارات تتعلق بحالة التنزيلات</string>
+    <string name="main">الرئيسي</string>
+    <string name="version_and_updates">الإصدار والتحديثات</string>
+    <string name="version_s">الإصدار: %s</string>
+    <string name="update_channel">قناة التحديث:</string>
+    <string name="auto_check_for_updates">التحقق التلقائي من التحديثات</string>
+    <string name="check_for_updates">التحقق من التحديثات</string>
+    <string name="check_for_updates_description">تحقّق الآن من وجود إصدار أحدث</string>
+    <string name="update">تحديث</string>
+    <string name="new_version_available_s">يتوفر إصدار جديد: %s</string>
+    <string name="web_browser_optimized_for_tvs">متصفح ويب محسَّن لأجهزة التلفزيون</string>
+    <string name="warning">تحذير</string>
+    <string name="unprotected_connection">اتصال غير محمي</string>
+    <string name="err_webview_can_not_link">تعذّر الربط بمكوّن WebView. حاول تثبيت مكوّن Android System WebView أولًا.</string>
+    <string name="new_tab_title">[علامة تبويب جديدة]</string>
+    <string name="open_a_new_tab_here">افتح علامة تبويب جديدة هنا</string>
+    <string name="tabs">علامات التبويب</string>
+    <array name="tabs_options">
+        <item>فتح علامة تبويب جديدة</item>
+        <item>إغلاق الحالية</item>
+        <item>إغلاق الكل</item>
+        <item>نقل لليسار</item>
+        <item>نقل لليمين</item>
+    </array>
+    <string name="ssl_expired">انتهت صلاحية الشهادة</string>
+    <string name="ssl_idmismatch">عدم تطابق اسم المضيف</string>
+    <string name="ssl_date_invalid">تاريخ الشهادة غير صالح</string>
+    <string name="ssl_invalid">حدث خطأ عام</string>
+    <string name="back_to_safety">العودة إلى مكان آمن</string>
+    <string name="go_im_aware">متابعة، أنا على علم بالمخاطر</string>
+    <string name="connection_isnt_secure">الاتصال غير آمن</string>
+    <string name="hostname">اسم المضيف:</string>
+    <string name="err_desk">وصف الخطأ:</string>
+    <string name="details">التفاصيل:</string>
+    <string name="exit">خروج</string>
+    <string name="find_in_apps_store">ابحث في متجر التطبيقات</string>
+    <string name="close_application">إغلاق التطبيق</string>
+    <string name="close_tab">إغلاق علامة التبويب</string>
+    <string name="navigate_forward">التقدّم</string>
+    <string name="toggle_ads_blocking">تشغيل حظر الإعلانات/إيقافه</string>
+    <string name="never">أبدًا</string>
+    <string name="last_update">آخر تحديث</string>
+    <string name="update_ad_blocker_list">تحديث قائمة حظر الإعلانات</string>
+    <string name="toggle_keep_screen_on">إبقاء الشاشة مضاءة</string>
+    <string name="need_restart">يلزم إعادة تشغيل التطبيق</string>
+    <string name="theme">المظهر</string>
+    <array name="themes">
+        <item>النظام</item>
+        <item>فاتح</item>
+        <item>داكن</item>
+    </array>
+    <string name="incognito_mode">وضع التصفح الخفي</string>
+    <string name="incognito_mode_hint">يمكنك الآن التصفح بخصوصية، ولن يرى مستخدمو هذا الجهاز نشاطك. لن يحتفظ Browkorf TV بسجل تصفحك أو بملفات تعريف الارتباط وبيانات الموقع أو بالمعلومات المُدخلة في النماذج.\n\nلكن ستظل التنزيلات والعلامات المرجعية محفوظة. وقد يبقى نشاطك مرئيًا للمواقع التي تزورها ولمؤسستك أو لمزوّد خدمة الإنترنت.</string>
+    <string name="don_t_show_again">لا تظهره مرة أخرى</string>
+    <string name="why_icon_changed">لماذا تغيّرت الأيقونة؟</string>
+    <string name="clear_web_cache">مسح ذاكرة الويب المؤقتة</string>
+    <string name="block_popups">حظر النوافذ المنبثقة</string>
+    <string name="block_popups_s">حظر النوافذ المنبثقة (%s)</string>
+    <string name="popup_dialog_blocked">تم حظر نافذة حوار منبثقة</string>
+    <string name="new_tab_blocked">تم حظر علامة تبويب جديدة</string>
+    <array name="popup_blocking_level">
+        <item>عدم الحظر</item>
+        <item>حظر النوافذ الحوارية</item>
+        <item>حظر علامات التبويب الجديدة أيضًا (التي تبدأها السكربتات)</item>
+        <item>حظر أي نوافذ جديدة (أقصى حظر)</item>
+    </array>
+    <string name="copy_to_clipboard">نسخ إلى الحافظة</string>
+    <string name="copied_to_clipboard">تم النسخ إلى الحافظة</string>
+    <string name="share_url">مشاركة الرابط</string>
+    <string name="open_in_external_application">فتح في تطبيق خارجي</string>
+    <string name="external_app_open_error">تعذّر العثور على تطبيق مناسب</string>
+    <string name="home_page">الصفحة الرئيسية</string>
+    <string name="custom_home_page_url">رابط صفحة رئيسية مخصّص</string>
+    <string name="home_page_links">روابط الصفحة الرئيسية</string>
+    <array name="home_page_modes">
+        <item>الصفحة الرئيسية لـ Browkorf TV</item>
+        <item>محرك البحث</item>
+        <item>مخصّص</item>
+        <item>فارغة</item>
+        <item>العلامات المرجعية</item>
+    </array>
+    <array name="home_page_links_modes">
+        <item>العلامات المرجعية</item>
+        <item>أحدث سجل</item>
+        <item>الأكثر زيارة</item>
+    </array>
+    <string name="web_browser_engine_temporary_setting">محرك متصفح الويب (إعداد مؤقت)</string>
+    <string name="need_restart_message">أعد تشغيل التطبيق لتطبيق التغييرات</string>
+    <string name="restart">إعادة التشغيل</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="site_asks_to_open_unknown_url">الموقع يطلب فتح رابط غير معروف</string>
+    <string name="site_asks_to_open_unknown_url_message">هل تريد فتح هذا الرابط في تطبيق خارجي؟</string>
+    <string name="err_no_app_to_handle_url">لم يُعثر على تطبيق مناسب للتعامل مع هذا الرابط</string>
+    <string name="settings_engine_change_gecko_msg">المتطلبات النظامية الموصى بها لـ GeckoView: ذاكرة 3GB ومعالج ثماني النواة 64-bit. هل تريد المتابعة؟</string>
+    <string name="settings_engine_change_webview_msg">ستقل ميزات WebView في التحديثات القادمة. هل تريد المتابعة؟</string>
+    <string name="copy">نسخ</string>
+    <string name="paste">لصق</string>
+    <string name="cut">قص</string>
+    <string name="share">مشاركة</string>
+    <string name="search">بحث</string>
+    <string name="http_auth_title">مطلوب مصادقة</string>
+    <string name="play_pause">تشغيل/إيقاف مؤقت</string>
+    <string name="media_stop">إيقاف الوسائط</string>
+    <string name="media_rewind">إرجاع الوسائط</string>
+    <string name="media_fast_forward">تقديم الوسائط</string>
+    <string name="long_press">ضغطة مطوّلة</string>
+    <string name="toggle_directional_nav">تبديل التنقل بالاتجاهات</string>
+    <string name="toggle_single_tab_mode">تبديل وضع علامة التبويب الواحد</string>
+    <string name="search_web">البحث في الويب</string>
+    <string name="directional_nav_enabled">تم تفعيل التنقل بالاتجاهات، وسيتحكم مفتاح الاتجاهات في صفحة الويب</string>
+    <string name="directional_nav_disabled">تم تعطيل التنقل بالاتجاهات، وسيحرّك مفتاح الاتجاهات المؤشر</string>
+</resources>

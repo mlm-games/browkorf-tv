@@ -25,24 +25,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.mlmgames.settings.core.actions.ActionRegistry
-import io.github.mlmgames.settings.core.SettingField
 import io.github.mlmgames.settings.core.backup.ExportResult
 import io.github.mlmgames.settings.core.backup.ImportResult
+import io.github.mlmgames.settings.core.locale.AppLanguage
 import io.github.mlmgames.settings.core.resources.AndroidStringResourceProvider
 import io.github.mlmgames.settings.ui.AutoSettingsScreen
-import io.github.mlmgames.settings.ui.CustomTypeHandler
 import io.github.mlmgames.settings.ui.ProvideStringResources
-import io.github.mlmgames.settings.ui.components.SettingsItem
-import io.github.mlmgames.settings.ui.dialogs.DropdownSettingDialog
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.R
-import org.mlm.browkorftv.settings.AppLanguage
+import org.mlm.browkorftv.settings.applyAppLocale
+import org.mlm.browkorftv.settings.currentAppLanguage
 import org.mlm.browkorftv.settings.AppSettings
 import org.mlm.browkorftv.settings.AppSettingsSchema
-import org.mlm.browkorftv.settings.LanguageSetting
 import org.mlm.browkorftv.settings.SettingsManager
 import org.mlm.browkorftv.settings.resolveSettingsResource
 import org.mlm.browkorftv.ui.components.BrowkorfTopBar
@@ -156,7 +153,7 @@ fun SettingsScreen(
                 // Settings Content
                 AutoSettingsScreen(
                     schema = AppSettingsSchema,
-                    value = settings.copy(languageIndex = AppLanguage.current().ordinal),
+                    value = settings.copy(language = currentAppLanguage()),
                     modifier = Modifier.weight(1f),
                     snackbarHostState = snackbarHostState,
                     onSet = { name, value ->
@@ -168,8 +165,8 @@ fun SettingsScreen(
                                 return@launch
                             }
                             settingsManager.set(name, value)
-                            if (name == "languageIndex" && value is Int) {
-                                AppLanguage.select(AppLanguage.entries.getOrElse(value) { AppLanguage.System })
+                            if (name == "language" && value is AppLanguage) {
+                                applyAppLocale(value.languageTag)
                             }
                         }
                     },
@@ -177,40 +174,7 @@ fun SettingsScreen(
                         if (!ActionRegistry.execute(actionClass)) {
                             snackbarHostState.showSnackbar(resources.getString(R.string.error))
                         }
-                    },
-                    customTypeHandlers = listOf(
-                        CustomTypeHandler(
-                            typeClass = LanguageSetting::class,
-                            render = { field, _, value, enabled, onSet ->
-                                val selectedIndex = getLanguageIndex(field, value)
-                                    .coerceIn(0, AppLanguage.entries.lastIndex)
-                                val systemDefault = stringResource(R.string.language_system_default)
-                                var showDialog by remember(field.name) { mutableStateOf(false) }
-
-                                SettingsItem(
-                                    title = stringResource(R.string.language),
-                                    subtitle = AppLanguage.entries.getOrElse(selectedIndex) {
-                                        AppLanguage.System
-                                    }.displayName ?: systemDefault,
-                                    enabled = enabled,
-                                    onClick = { showDialog = true }
-                                )
-
-                                if (showDialog) {
-                                    DropdownSettingDialog(
-                                        title = stringResource(R.string.language),
-                                        options = AppLanguage.entries.map { it.displayName ?: systemDefault },
-                                        selectedIndex = selectedIndex,
-                                        onDismiss = { showDialog = false },
-                                        onOptionSelected = { index ->
-                                            onSet(field.name, index)
-                                            showDialog = false
-                                        }
-                                    )
-                                }
-                            }
-                        )
-                    )
+                    }
                 )
             }
 
@@ -225,8 +189,7 @@ fun SettingsScreen(
                             scope.launch {
                                 when (result) {
                                     is ImportResult.Success -> {
-                                        val languageIndex = settingsManager.settings.first().languageIndex
-                                        AppLanguage.select(AppLanguage.entries.getOrElse(languageIndex) { AppLanguage.System })
+                                        applyAppLocale(settingsManager.settings.first().language.languageTag)
                                         snackbarHostState.showSnackbar(
                                             resources.getString(R.string.imported_settings, result.appliedCount),
                                         )
@@ -254,6 +217,3 @@ fun SettingsScreen(
     }
 }
 
-@Suppress("UNCHECKED_CAST")
-private fun getLanguageIndex(field: SettingField<AppSettings, *>, value: AppSettings): Int =
-    (field as SettingField<AppSettings, Int>).get(value)

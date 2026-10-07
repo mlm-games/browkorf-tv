@@ -1,0 +1,27 @@
+<resources>
+    <string name="clear">Temizle</string>
+    <string name="repost_confirm_message">Bu sayfayı görüntülemek için Browkorf TV, daha önce gerçekleştirilen bir eylemi (arama veya sipariş onayı gibi) tekrarlayacak bilgileri göndermelidir.</string>
+    <string name="repost_confirm_title">Emin misiniz?</string>
+    <string name="repost_confirm_resend">Yeniden gönder</string>
+    <string name="before_unload_message">Bu sayfa, ayrılmak istediğinizi onaylamanızı istiyor - girdiğiniz veriler kaydedilmeyebilir</string>
+    <string name="before_unload_title">Emin misiniz?</string>
+    <string name="before_unload_leave_page">Sayfadan ayrıl</string>
+    <string name="before_unload_stay">Sayfada kal</string>
+    <string name="wait">Bekle</string>
+    <string name="stop">Durdur</string>
+    <string name="slow_script">Bu sayfadaki bir komut dosyası web tarayıcınızın yavaş çalışmasına neden oluyor</string>
+    <string name="request_storage">\"%1$s\" için cihaz deposuna erişime izin verilsin mi?</string>
+    <string name="request_storage_access">\"%1$s\" için üçüncü tarafların birinci taraf deposuna erişimine izin verilsin mi?</string>
+    <string name="request_geolocation">Konum \"%1$s\" ile paylaşılsın mı?</string>
+    <string name="request_notification">\"%1$s\" için bildirimlere izin verilsin mi?</string>
+    <string name="request_video">Video \"%1$s\" ile paylaşılsın mı</string>
+    <string name="request_audio">Ses \"%1$s\" ile paylaşılsın mı</string>
+    <string name="request_media">Video ve ses \"%1$s\" ile paylaşılsın mı</string>
+    <string name="request_xr">WebXR ekranları \"%1$s\" ile paylaşılsın mı?</string>
+    <string name="request_autoplay">\"%1$s\" sitesinde videonun otomatik oynatılmasına izin verilsin mi?</string>
+    <string name="request_media_key_system_access">\"%1$s\" için sistem medya tuşlarına erişime izin verilsin mi?</string>
+    <string name="media_back_camera">Arka kamera</string>
+    <string name="media_front_camera">Ön kamera</string>
+    <string name="media_microphone">Mikrofon</string>
+    <string name="media_other">Bilinmeyen kaynak</string>
+</resources>

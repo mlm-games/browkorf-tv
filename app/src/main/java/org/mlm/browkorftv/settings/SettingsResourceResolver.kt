@@ -13,7 +13,6 @@ internal fun resolveSettingsResource(key: String): Int = when (key) {
     BrowkorfSettingsKeys.CATEGORY_PROXY -> R.string.category_proxy
 
     BrowkorfSettingsKeys.THEME -> R.string.theme
-    BrowkorfSettingsKeys.LANGUAGE -> R.string.language
     BrowkorfSettingsKeys.FORCE_DARK_WEBPAGE -> R.string.setting_force_dark_webpage
     BrowkorfSettingsKeys.KEEP_SCREEN_ON -> R.string.setting_keep_screen_on
     BrowkorfSettingsKeys.INCOGNITO_MODE -> R.string.incognito_mode

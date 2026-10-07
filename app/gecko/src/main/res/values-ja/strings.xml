@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clear">クリア</string>
+    <string name="repost_confirm_message">このページを表示するには、Browkorf TVが以前の操作（検索や注文の確認など）を繰り返す情報を送信する必要があります。</string>
+    <string name="repost_confirm_title">よろしいですか？</string>
+    <string name="repost_confirm_resend">再送信</string>
+    <string name="before_unload_message">このページを離れるかどうか確認しています。入力したデータは保存されない可能性があります</string>
+    <string name="before_unload_title">よろしいですか？</string>
+    <string name="before_unload_leave_page">ページを離れる</string>
+    <string name="before_unload_stay">ページに留まる</string>
+    <string name="wait">待機</string>
+    <string name="stop">停止</string>
+    <string name="slow_script">このページのスクリプトにより、ブラウザの動作が遅くなっています</string>
+    <string name="request_storage">「%1$s」によるデバイスストレージへのアクセスを許可しますか？</string>
+    <string name="request_storage_access">サードパーティが「%1$s」の第一者ストレージへアクセスすることを許可しますか？</string>
+    <string name="request_geolocation">「%1$s」と位置情報を共有しますか？</string>
+    <string name="request_notification">「%1$s」からの通知を許可しますか？</string>
+    <string name="request_video">「%1$s」と動画を共有</string>
+    <string name="request_audio">「%1$s」と音声を共有</string>
+    <string name="request_media">「%1$s」と動画・音声を共有</string>
+    <string name="request_xr">「%1$s」とWebXRディスプレイを共有しますか？</string>
+    <string name="request_autoplay">「%1$s」での動画の自動再生を許可しますか？</string>
+    <string name="request_media_key_system_access">「%1$s」によるシステムのメディアキーへのアクセスを許可しますか？</string>
+    <string name="media_back_camera">背面カメラ</string>
+    <string name="media_front_camera">前面カメラ</string>
+    <string name="media_microphone">マイク</string>
+    <string name="media_other">不明なソース</string>
+</resources>

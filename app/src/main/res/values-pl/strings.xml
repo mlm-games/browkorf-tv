@@ -167,7 +167,7 @@
     <string name="need_restart_message">Uruchom ponownie aplikację, aby zastosować zmiany</string>
     <string name="restart">Uruchom ponownie</string>
     <string name="yes">Tak</string>
-    <string name="no">NIE</string>
+    <string name="no">Nie</string>
     <string name="site_asks_to_open_unknown_url">Witryna prosi o otwarcie nieznanego adresu URL</string>
     <string name="site_asks_to_open_unknown_url_message">Czy chcesz otworzyć ten adres URL w aplikacji zewnętrznej?</string>
     <string name="err_no_app_to_handle_url">Nie można znaleźć odpowiedniej aplikacji do obsługi tego adresu URL</string>

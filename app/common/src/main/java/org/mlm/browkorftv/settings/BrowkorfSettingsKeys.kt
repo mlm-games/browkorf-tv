@@ -11,7 +11,6 @@ object BrowkorfSettingsKeys {
     const val CATEGORY_PROXY = "browkorf.settings.category.proxy"
 
     const val THEME = "browkorf.settings.theme"
-    const val LANGUAGE = "browkorf.settings.language"
     const val FORCE_DARK_WEBPAGE = "browkorf.settings.force_dark_webpage"
     const val KEEP_SCREEN_ON = "browkorf.settings.keep_screen_on"
     const val INCOGNITO_MODE = "browkorf.settings.incognito_mode"

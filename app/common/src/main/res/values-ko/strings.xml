@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="username">사용자 이름</string>
+    <string name="password">비밀번호</string>
+</resources>

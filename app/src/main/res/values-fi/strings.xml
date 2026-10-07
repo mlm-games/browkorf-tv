@@ -1,0 +1,190 @@
+<resources>
+    <string name="app_name">Browkorf TV: TV-selain</string>
+    <string name="error">Virhe</string>
+    <string name="ok">OK</string>
+    <string name="loading">Ladataan…</string>
+    <string name="url_prompt">Syötä hakusana tai URL-osoite</string>
+    <string name="can_not_recognize">Tunnistaminen epäonnistui</string>
+    <string name="speak">Hakusana</string>
+    <string name="open_new_tab">Avaa uusi välilehti</string>
+    <string name="close">Sulje</string>
+    <string name="web_perm_request_confirmation">Tämä verkkosivu haluaa käyttää seuraavia resursseja:\n\n%s</string>
+    <string name="allow">Salli</string>
+    <string name="deny">Kiellä</string>
+    <string name="location">Sijainti</string>
+    <string name="open_in_new_tab">Avaa uudessa välilehdessä</string>
+    <string name="download_started">Lataus aloitettu…\nTiedosto tallennetaan paikkaan:\n%s</string>
+    <string name="downloading_file">Tiedostoa ladataan…</string>
+    <string name="err_cant_open_file_chooser">Tiedostosalia ei voi avata</string>
+    <string name="bookmarks">Kirjanmerkit</string>
+    <string name="select_bookmark">Valitse kirjanmerkki</string>
+    <string name="bookmark_not_found">Kirjanmerkkiä ei enää ole olemassa</string>
+    <string name="add">Lisää</string>
+    <string name="edit">Muokkaa</string>
+    <string name="no_bookmarks_yet">Ei kirjanmerkkejä vielä</string>
+    <string name="new_bookmark">Uusi kirjanmerkki</string>
+    <string name="done">Valmis</string>
+    <string name="title">Otsikko</string>
+    <string name="search_history">Hakuhistoria</string>
+    <string name="engine">Hakukone</string>
+    <string name="choose_default_search_engine">Valitse oletushakukone</string>
+    <string name="set_search_engine_as_homepage">Aseta hakukone kotisivuksi</string>
+    <string name="save">Tallenna</string>
+    <string name="search_engine_url_with_query_placeholder_query">Hakukoneen URL-osoite, jossa on hakusanalle varattu paikka [query]</string>
+    <string name="change_search_engine">Vaihda hakukone</string>
+    <string name="change_user_agent">Vaihda User-Agent</string>
+    <string name="user_agent_string">User-Agent-merkkijono</string>
+    <string name="choose_user_agent_string">Valitse User-Agent-merkkijono</string>
+    <string name="edit_user_agent_string">Muokkaa User-Agent-merkkijonoa</string>
+    <string name="nothing">Ei mitään</string>
+    <string name="cancelled">Peruutettu</string>
+    <string name="download">Lataa</string>
+    <string name="file_not_found">Tiedostoa ei löydy</string>
+    <string name="no_app_for_file_type">Tämän tyyppisen tiedoston avaamiseen ei löytynyt sovellusta</string>
+    <string name="delete">Poista</string>
+    <string name="cancel">Peruuta</string>
+    <string name="msg_delete_history">Poistetaanko valitut historia-merkinnät?</string>
+    <string name="msg_delete_history_all">Poistetaanko kaikki historia-merkinnät?</string>
+    <string name="open_folder">Avaa sisältävä kansio</string>
+    <string name="no_file_explorer_msg">Vaikuttaa siltä, että laitteellasi ei ole sopivaa tiedostoselainta asennettuna</string>
+    <string name="shortcuts">Pikanäppäimet</string>
+    <string name="favorites">Suosikit</string>
+    <string name="history">Historia</string>
+    <string name="browkorf_settings">Asetukset</string>
+    <string name="shortcut">Pikanäppäin</string>
+    <string name="toggle_main_menu">Näytä tai piilota päävalikko</string>
+    <string name="navigate_back">Siirry takaisin</string>
+    <string name="navigate_home">Siirry kotisivulle</string>
+    <string name="refresh_page">Päivitä sivu</string>
+    <string name="voice_search">Äänihaku</string>
+    <string name="zoom_in">Lähennä</string>
+    <string name="zoom_out">Loitonna</string>
+    <string name="not_set">Ei asetettu</string>
+    <string name="action">Toiminto:</string>
+    <string name="current_key">Nykyinen näppäin:</string>
+    <string name="set_key_for_action">Aseta näppäin toiminnolle</string>
+    <string name="press_eny_key">Paina mitä tahansa näppäintä…</string>
+    <string name="shortcut_key_reserved_for_navigation">Tämä näppäin on varattu selaimen navigointiin</string>
+    <string name="clear">Tyhjennä</string>
+    <string name="install">Asenna</string>
+    <string name="turn_on_unknown_sources">Ota järjestelmäasetuksissa käyttöön \"Tuntemattomat lähteet\"</string>
+    <string name="turn_on_unknown_sources_for_app">Salli Browkorf TV:n asentaa sovelluksia järjestelmäasetusten kohdasta \"Tuntemattomat lähteet\"</string>
+    <string name="storage_not_mounted">Muistia ei ole liitetty</string>
+    <string name="can_not_create_downloads">Latauskansiota ei voi luoda</string>
+    <string name="voice_search_not_found">Äänihakua ei löydy</string>
+    <string name="new_version_dialog_title">Uusi versio saatavilla</string>
+    <string name="later">Myöhemmin</string>
+    <string name="downloads">Lataukset</string>
+    <string name="downloads_notifications_description">Ilmoitukset ladattavien tiedostojen tilasta</string>
+    <string name="main">Pääasetukset</string>
+    <string name="version_and_updates">Versio &amp; päivitykset</string>
+    <string name="version_s">Versio: %s</string>
+    <string name="update_channel">Päivityskanava:</string>
+    <string name="auto_check_for_updates">Tarkista päivitykset automaattisesti</string>
+    <string name="check_for_updates">Tarkista päivitykset</string>
+    <string name="check_for_updates_description">Tarkista nyt, onko saatavilla uudempi versio</string>
+    <string name="update">Päivitä</string>
+    <string name="new_version_available_s">Uusi versio saatavilla: %s</string>
+    <string name="web_browser_optimized_for_tvs">Televisioihin optimoitu verkkoselain</string>
+    <string name="warning">Varoitus</string>
+    <string name="unprotected_connection">Suojaamaton yhteys</string>
+    <string name="err_webview_can_not_link">WebView-komponenttiin ei saada yhteyttä. Yritä ensin asentaa Android System WebView -komponentti.</string>
+    <string name="new_tab_title">[UUSI VÄLILEHTI]</string>
+    <string name="open_a_new_tab_here">Avaa uusi välilehti tähän</string>
+    <string name="tabs">Välilehdet</string>
+    <array name="tabs_options">
+        <item>Avaa uusi välilehti</item>
+        <item>Sulje nykyinen</item>
+        <item>Sulje kaikki</item>
+        <item>Siirry vasemmalle</item>
+        <item>Siirry oikealle</item>
+    </array>
+    <string name="ssl_expired">Varmenne on vanhentunut</string>
+    <string name="ssl_idmismatch">Isäntänimi ei täsmää</string>
+    <string name="ssl_date_invalid">Varmenneen päivämäärä on virheellinen</string>
+    <string name="ssl_invalid">Yleinen virhe tapahtui</string>
+    <string name="back_to_safety">Palaa turvaan</string>
+    <string name="go_im_aware">Jatka. Olen tietoinen riskeistä</string>
+    <string name="connection_isnt_secure">Yhteys ei ole turvallinen</string>
+    <string name="hostname">Isäntänimi:</string>
+    <string name="err_desk">Virheen kuvaus:</string>
+    <string name="details">Tiedot:</string>
+    <string name="exit">Poistu</string>
+    <string name="find_in_apps_store">Etsi sovelluskaupasta</string>
+    <string name="close_application">Sulje sovellus</string>
+    <string name="close_tab">Sulje välilehti</string>
+    <string name="navigate_forward">Siirry eteenpäin</string>
+    <string name="toggle_ads_blocking">Näytä tai piilota mainonesto</string>
+    <string name="never">ei koskaan</string>
+    <string name="last_update">Viimeisin päivitys</string>
+    <string name="update_ad_blocker_list">Päivitä mainosalueluettelo</string>
+    <string name="toggle_keep_screen_on">Pidä näyttö päällä</string>
+    <string name="need_restart">Sovellus on käynnistettävä uudelleen</string>
+    <string name="theme">Teema</string>
+    <array name="themes">
+        <item>Järjestelmä</item>
+        <item>Valkoinen</item>
+        <item>Tumma</item>
+    </array>
+    <string name="incognito_mode">Inkognito-tila</string>
+    <string name="incognito_mode_hint">Nyt voit selata yksityisesti, eikä tämän laitteen muut käyttäjät näe toimintaasi. Browkorf TV ei tallenna selaushistoriaasi, evästeitä tai sivustotietoja eikä lomakkeisiin syöttämiäsi tietoja.\n\nKuitenkin lataukset ja kirjanmerkit tallennetaan. Toimintasi voi silti näkyä vierailemasi sivustojen, organisaatiosi tai internetpalveluntarjoajan näkyviin.</string>
+    <string name="don_t_show_again">Älä näytä enää</string>
+    <string name="why_icon_changed">Miksi kuvake vaihtui?</string>
+    <string name="clear_web_cache">Tyhjennä verkkovälimuisti</string>
+    <string name="block_popups">Ponnahtavien ikkunoiden esto</string>
+    <string name="block_popups_s">Ponnahtavien ikkunoiden esto (%s)</string>
+    <string name="popup_dialog_blocked">Ponnahtava ikkuna estetty</string>
+    <string name="new_tab_blocked">Uusi välilehti estetty</string>
+    <array name="popup_blocking_level">
+        <item>Älä estä</item>
+        <item>Estä ponnahtavat ikkunat</item>
+        <item>Estä myös uudet välilehdet (skriptin avulla avatut)</item>
+        <item>Estä kaikki uudet ikkunat (tehokoin esto)</item>
+    </array>
+    <string name="copy_to_clipboard">Kopioi leikepöydälle</string>
+    <string name="copied_to_clipboard">Kopioitu leikepöydälle</string>
+    <string name="share_url">Jaa URL-osoite</string>
+    <string name="open_in_external_application">Avaa ulkoisessa sovelluksessa</string>
+    <string name="external_app_open_error">Sopivaa sovellusta ei löydy</string>
+    <string name="home_page">Kotisivu</string>
+    <string name="custom_home_page_url">Mukautettu kotisivun URL-osoite</string>
+    <string name="home_page_links">Linkit kotisivulla</string>
+    <array name="home_page_modes">
+        <item>Browkorf TV:n kotisivu</item>
+        <item>Hakukone</item>
+        <item>Mukautettu</item>
+        <item>Tyhjä</item>
+        <item>Kirjanmerkit</item>
+    </array>
+    <array name="home_page_links_modes">
+        <item>Kirjanmerkit</item>
+        <item>Uusimmat historiatiedot</item>
+        <item>Eniten vieraillut</item>
+    </array>
+    <string name="web_browser_engine_temporary_setting">Verkkoselaimen moottori (väliaikainen asetus)</string>
+    <string name="need_restart_message">Käynnistä sovellus uudelleen, jotta muutokset tulevat voimaan</string>
+    <string name="restart">Käynnistä uudelleen</string>
+    <string name="yes">Kyllä</string>
+    <string name="no">Ei</string>
+    <string name="site_asks_to_open_unknown_url">Sivusto pyytää avaamaan tuntemattoman URL-osoitteen</string>
+    <string name="site_asks_to_open_unknown_url_message">Haluatko avata tämän URL-osoitteen ulkoisessa sovelluksessa?</string>
+    <string name="err_no_app_to_handle_url">Sopivaa sovellusta tämän URL-osoitteen käsittelyyn ei löydy</string>
+    <string name="settings_engine_change_gecko_msg">GeckoView:n suositellut järjestelmävaatimukset: 3 Gt muistia ja 64-bittinen kahdeksasydinprosessori. Haluatko jatkaa?</string>
+    <string name="settings_engine_change_webview_msg">WebView-saattaa tulevaisuuden päivityksissä sisältää vähemmän ominaisuuksia. Haluatko jatkaa?</string>
+    <string name="copy">Kopioi</string>
+    <string name="paste">Liitä</string>
+    <string name="cut">Leikkaa</string>
+    <string name="share">Jaa</string>
+    <string name="search">Hae</string>
+    <string name="http_auth_title">Todennus vaaditaan</string>
+    <string name="play_pause">Toista / Tauko</string>
+    <string name="media_stop">Pysäytä media</string>
+    <string name="media_rewind">Kelaa mediaa taakse</string>
+    <string name="media_fast_forward">Kelaa mediaa eteenpäin</string>
+    <string name="long_press">Pitkä painallus</string>
+    <string name="toggle_directional_nav">Näytä tai piilota suuntanavigointi</string>
+    <string name="toggle_single_tab_mode">Näytä tai piilota yhden välilehden tila</string>
+    <string name="search_web">Hae verkosta</string>
+    <string name="directional_nav_enabled">Suuntanavigointi käytössä, nuolinäppäimet ohjaavat sivua</string>
+    <string name="directional_nav_disabled">Suuntanavigointi poissa käytöstä, nuolinäppäimet siirtävät kohdistinta</string>
+</resources>

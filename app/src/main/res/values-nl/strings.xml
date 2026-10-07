@@ -1,0 +1,192 @@
+<resources>
+    <string name="app_name">Browkorf TV: webbrowser voor tv</string>
+    <string name="error">Fout</string>
+    <string name="ok">OK</string>
+    <string name="loading">Laden…</string>
+    <string name="url_prompt">Voer zoektekst of URL in</string>
+    <string name="can_not_recognize">Niet herkend</string>
+    <string name="speak">Zoekopdracht</string>
+    <string name="open_new_tab">Nieuw tabblad openen</string>
+    <string name="close">Sluiten</string>
+    <string name="web_perm_request_confirmation">Deze webpagina wil de volgende bronnen gebruiken:\n\n%s</string>
+    <string name="allow">Toestaan</string>
+    <string name="deny">Weigeren</string>
+    <string name="location">Locatie</string>
+    <string name="open_in_new_tab">Openen in nieuw tabblad</string>
+    <string name="download_started">Download gestart…\nHet bestand wordt opgeslagen in:\n%s</string>
+    <string name="downloading_file">Bestand downloaden…</string>
+    <string name="err_cant_open_file_chooser">Kan de bestandskiezer niet openen</string>
+    <string name="bookmarks">Bladwijzers</string>
+    <string name="select_bookmark">Bladwijzer selecteren</string>
+    <string name="bookmark_not_found">De bladwijzer bestaat niet meer</string>
+    <string name="add">Toevoegen</string>
+    <string name="edit">Bewerken</string>
+    <string name="no_bookmarks_yet">Nog geen bladwijzers</string>
+    <string name="new_bookmark">Nieuwe bladwijzer</string>
+    <string name="done">Gereed</string>
+    <string name="title">Titel</string>
+    <string name="search_history">Zoeken in de geschiedenis</string>
+    <string name="engine">Zoekmachine</string>
+    <string name="choose_default_search_engine">Standaard zoekmachine kiezen</string>
+    <string name="set_search_engine_as_homepage">Zoekmachine als startpagina instellen</string>
+    <string name="save">Opslaan</string>
+    <string name="search_engine_url_with_query_placeholder_query">Zoekmachine-URL met plaatshouder voor de zoekopdracht [query]</string>
+    <string name="change_search_engine">Zoekmachine wijzigen</string>
+    <string name="change_user_agent">User-Agent wijzigen</string>
+    <string name="user_agent_string">User-Agent-string</string>
+    <string name="choose_user_agent_string">User-Agent-string kiezen</string>
+    <string name="edit_user_agent_string">User-Agent-string bewerken</string>
+    <string name="nothing">Niets</string>
+    <string name="cancelled">Geannuleerd</string>
+    <string name="download">Downloaden</string>
+    <string name="file_not_found">Bestand niet gevonden</string>
+    <string name="no_app_for_file_type">Geen app gevonden om dit bestandstype te openen</string>
+    <string name="delete">Verwijderen</string>
+    <string name="cancel">Annuleren</string>
+    <string name="msg_delete_history">Geselecteerde geschiedenisitems verwijderen?</string>
+    <string name="msg_delete_history_all">Alle geschiedenisitems verwijderen?</string>
+    <string name="open_folder">De bevattende map openen</string>
+    <string name="no_file_explorer_msg">Het lijkt erop dat er geen geschikte bestandsbeheerder op je apparaat is geïnstalleerd</string>
+    <string name="shortcuts">Snelkoppelingen</string>
+    <string name="favorites">Favorieten</string>
+    <string name="history">Geschiedenis</string>
+    <string name="browkorf_settings">Instellingen</string>
+    <string name="shortcut">Snelkoppeling</string>
+    <string name="toggle_main_menu">Hoofdmenu tonen of verbergen</string>
+    <string name="navigate_back">Terug</string>
+    <string name="navigate_home">Naar de startpagina</string>
+    <string name="refresh_page">Pagina vernieuwen</string>
+    <string name="voice_search">Zoeken met je stem</string>
+    <string name="zoom_in">Inzoomen</string>
+    <string name="zoom_out">Uitzoomen</string>
+    <string name="not_set">Niet ingesteld</string>
+    <string name="action">Actie:</string>
+    <string name="current_key">Huidige toets:</string>
+    <string name="set_key_for_action">Toets voor actie toewijzen</string>
+    <string name="press_eny_key">Druk op een toets…</string>
+    <string name="shortcut_key_reserved_for_navigation">Deze toets is gereserveerd voor de browsnavigatie</string>
+    <string name="clear">Wissen</string>
+    <string name="install">Installeren</string>
+    <string name="turn_on_unknown_sources">Schakel de systeeminstelling \"Onbekende bronnen\" in</string>
+    <string name="turn_on_unknown_sources_for_app">Sta Browkorf TV toe apps te installeren vanaf \"Onbekende bronnen\" in de systeeminstellingen</string>
+    <string name="storage_not_mounted">Opslag niet gekoppeld</string>
+    <string name="can_not_create_downloads">Kan de downloadmap niet aanmaken</string>
+    <string name="voice_search_not_found">Zoeken met je stem niet gevonden</string>
+    <string name="new_version_dialog_title">Nieuwe versie beschikbaar</string>
+    <string name="later">Later</string>
+    <string name="downloads">Downloads</string>
+    <string name="downloads_notifications_description">Meldingen over de status van downloads</string>
+    <string name="main">Hoofd</string>
+    <string name="version_and_updates">Versie en updates</string>
+    <string name="version_s">Versie: %s</string>
+    <string name="update_channel">Updatekanaal:</string>
+    <string name="auto_check_for_updates">Automatisch controleren op updates</string>
+    <string name="check_for_updates">Controleren op updates</string>
+    <string name="check_for_updates_description">Controleer nu op een nieuwere versie</string>
+    <string name="update">Bijwerken</string>
+    <string name="new_version_available_s">Nieuwe versie beschikbaar: %s</string>
+    <string name="web_browser_optimized_for_tvs">Webbrowser geoptimaliseerd voor tv\'s</string>
+    <string name="warning">Waarschuwing</string>
+    <string name="unprotected_connection">Onbeveiligde verbinding</string>
+    <string name="err_webview_can_not_link">Kan geen koppeling maken met het WebView-component. Probeer eerst het Android System WebView-component te installeren.</string>
+    <string name="new_tab_title">[NIEUW TABBLAD]</string>
+    <string name="open_a_new_tab_here">Hier een nieuw tabblad openen</string>
+    <string name="tabs">Tabbladen</string>
+    <array name="tabs_options">
+        <item>Nieuw tabblad openen</item>
+        <item>Huidige sluiten</item>
+        <item>Alles sluiten</item>
+        <item>Links verplaatsen</item>
+        <item>Rechts verplaatsen</item>
+    </array>
+    <string name="ssl_expired">Het certificaat is verlopen</string>
+    <string name="ssl_idmismatch">De hostnaam komt niet overeen</string>
+    <string name="ssl_date_invalid">De datum van het certificaat is ongeldig</string>
+    <string name="ssl_invalid">Er is een algemene fout opgetreden</string>
+    <string name="back_to_safety">Terug naar een veilige plek</string>
+    <string name="go_im_aware">Doorgaan. Ik ben me van het risico bewust</string>
+    <string name="connection_isnt_secure">De verbinding is niet beveiligd</string>
+    <string name="hostname">Hostnaam:</string>
+    <string name="err_desk">Foutbeschrijving:</string>
+    <string name="details">Details:</string>
+    <string name="exit">Afsluiten</string>
+    <string name="find_in_apps_store">Zoeken in de appstore</string>
+    <string name="close_application">App sluiten</string>
+    <string name="close_tab">Tabblad sluiten</string>
+    <string name="navigate_forward">Vooruit</string>
+    <string name="toggle_ads_blocking">Advertentieblokkering in- of uitschakelen</string>
+    <string name="never">nooit</string>
+    <string name="last_update">Laatste update</string>
+    <string name="update_ad_blocker_list">Advertentieblokkeerlijst bijwerken</string>
+    <string name="toggle_keep_screen_on">Scherm aanhouden</string>
+    <string name="need_restart">De app moet opnieuw worden gestart</string>
+    <string name="theme">Thema</string>
+    <array name="themes">
+        <item>Systeem</item>
+        <item>Licht</item>
+        <item>Donker</item>
+    </array>
+    <string name="incognito_mode">Privémodus</string>
+    <string name="incognito_mode_hint">Je kunt nu privé browsen; andere mensen die dit apparaat gebruiken, zien je activiteit niet. Browkorf TV bewaart je browsegeschiedenis, cookies en sitegegevens en de informatie die je in formulieren invoert niet.\n\nDownloads en bladwijzers worden echter wel opgeslagen. Je activiteit kan nog steeds zichtbaar zijn voor websites die je bezoekt, je organisatie of je internetprovider.</string>
+    <string name="don_t_show_again">Niet meer tonen</string>
+    <string name="why_icon_changed">Waarom is het pictogram gewijzigd?</string>
+    <string name="clear_web_cache">Webcache wissen</string>
+    <string name="block_popups">Pop-ups blokkeren</string>
+    <string name="block_popups_s">Pop-ups blokkeren (%s)</string>
+    <string name="popup_dialog_blocked">Pop-upvenster geblokkeerd</string>
+    <string name="new_tab_blocked">Nieuw tabblad geblokkeerd</string>
+    <array name="popup_blocking_level">
+        <item>Niet blokkeren</item>
+        <item>Dialogen blokkeren</item>
+        <item>Ook nieuwe tabbladen blokkeren (door scripts gestart)</item>
+        <item>Alle nieuwe vensters blokkeren (maximaal blokkeren)</item>
+    </array>
+    <string name="copy_to_clipboard">Naar het klembord kopiëren</string>
+    <string name="copied_to_clipboard">Gekopieerd naar het klembord</string>
+    <string name="share_url">URL delen</string>
+    <string name="open_in_external_application">Openen in een externe app</string>
+    <string name="external_app_open_error">Geen geschikte app gevonden</string>
+    <string name="home_page">Startpagina</string>
+    <string name="custom_home_page_url">Aangepaste startpagina-URL</string>
+    <string name="home_page_links">Links op de startpagina</string>
+    <array name="home_page_modes">
+        <item>Browkorf TV-startpagina</item>
+        <item>Zoekmachine</item>
+        <item>Aangepast</item>
+        <item>Leeg</item>
+        <item>Bladwijzers</item>
+    </array>
+
+    <array name="home_page_links_modes">
+        <item>Bladwijzers</item>
+        <item>Recente geschiedenis</item>
+        <item>Meest bezocht</item>
+    </array>
+
+    <string name="web_browser_engine_temporary_setting">Webbrowsermotor (tijdelijke instelling)</string>
+    <string name="need_restart_message">Start de app opnieuw om de wijzigingen toe te passen</string>
+    <string name="restart">Opnieuw starten</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <string name="site_asks_to_open_unknown_url">Site wil een onbekende URL openen</string>
+    <string name="site_asks_to_open_unknown_url_message">Wil je deze URL openen in een externe app?</string>
+    <string name="err_no_app_to_handle_url">Geen geschikte app gevonden om deze URL te verwerken</string>
+    <string name="settings_engine_change_gecko_msg">Aanbevolen systeemvereisten voor GeckoView: 3 GB RAM, 64-bits octa-core cpu. Wil je doorgaan?</string>
+    <string name="settings_engine_change_webview_msg">WebView heeft in toekomstige updates minder functies. Wil je doorgaan?</string>
+    <string name="copy">Kopiëren</string>
+    <string name="paste">Plakken</string>
+    <string name="cut">Knippen</string>
+    <string name="share">Delen</string>
+    <string name="search">Zoeken</string>
+    <string name="http_auth_title">Authenticatie vereist</string>
+    <string name="play_pause">Afspelen/Pauzeren</string>
+    <string name="media_stop">Media stoppen</string>
+    <string name="media_rewind">Media terugspoelen</string>
+    <string name="media_fast_forward">Media doorspoelen</string>
+    <string name="long_press">Lang indrukken</string>
+    <string name="toggle_directional_nav">Richtingnavigatie in- of uitschakelen</string>
+    <string name="toggle_single_tab_mode">Enkele-tabbladmodus in- of uitschakelen</string>
+    <string name="search_web">Zoeken op het web</string>
+    <string name="directional_nav_enabled">Richtingnavigatie ingeschakeld, de D-pad bedient de webpagina</string>
+    <string name="directional_nav_disabled">Richtingnavigatie uitgeschakeld, de D-pad verplaatst de cursor</string>
+</resources>

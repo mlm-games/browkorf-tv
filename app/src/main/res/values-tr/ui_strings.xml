@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">Dil</string>
+    <string name="language_system_default">Sistem varsayılanı</string>
+    <string name="browkorf_settings_import">Ayarları içe aktar</string>
+    <string name="browkorf_settings_export">Ayarları dışa aktar</string>
+    <string name="category_general">Genel</string>
+    <string name="category_home_page">Ana sayfa</string>
+    <string name="category_search">Arama</string>
+    <string name="category_user_agent">User-Agent</string>
+    <string name="category_web_engine">Web motoru</string>
+    <string name="category_ad_block">Reklam engelleyici</string>
+    <string name="category_updates">Güncelleştirmeler</string>
+    <string name="category_proxy">Ara sunucu</string>
+    <string name="link_actions">Bağlantı eylemleri</string>
+    <string name="add_bookmark">Yer imi ekle</string>
+    <string name="move_up">Yukarı taşı</string>
+    <string name="move_down">Aşağı taşı</string>
+    <string name="lock_bookmark_editing">Yer imi düzenlemeyi kilitle</string>
+    <string name="unlock_bookmark_editing">Yer imi düzenlemenin kilidini aç</string>
+    <string name="remove">Kaldır</string>
+    <string name="clear_all">Tümünü temizle</string>
+    <string name="no_history">Geçmiş yok</string>
+    <string name="no_downloads">İndirilen yok</string>
+    <string name="about">Hakkında</string>
+    <string name="app_info">Uygulama: %1$s (%2$d)</string>
+    <string name="engine_info">Motor: %1$s</string>
+    <string name="edit_bookmark">Yer imini düzenle</string>
+    <string name="edit_title">Başlığı düzenle</string>
+    <string name="edit_url">URL\'yi düzenle</string>
+    <string name="set_title">Başlık girin…</string>
+    <string name="set_url">URL girin…</string>
+    <string name="target_sdk">Hedef SDK: %1$d</string>
+    <string name="open_in_current_tab">Geçerli sekmede aç</string>
+    <string name="text_selection">Metin seçimi</string>
+    <string name="grab_mode">Kavrama modu</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="microphone_permission_required">Mikrofon izni gerekli</string>
+    <string name="voice_no_match">Konuşma tanınamadı. Lütfen tekrar deneyin.</string>
+    <string name="voice_network_error">Ağ hatası. Bağlantıyı kontrol edin.</string>
+    <string name="voice_search_error">Sesli arama hatası: %1$d</string>
+    <string name="copy_error">Kopyalama hatası</string>
+    <string name="error_loading_ad_blocker">Reklam engelleyici listesi yüklenirken hata oluştu</string>
+    <string name="setting_force_dark_webpage">Koyu web sayfasını zorla</string>
+    <string name="setting_force_dark_webpage_description">Koyu mod kullanılırken web sayfalarına koyu tema uygula</string>
+    <string name="setting_keep_screen_on">Ekranı açık tut</string>
+    <string name="setting_keep_screen_on_description">Gezinme sırasında ekranın kapanmasını önler</string>
+    <string name="setting_incognito_mode_description">Geçmiş kaydedilmeden gezinin</string>
+    <string name="setting_allow_autoplay_media">Otomatik medya oynatmaya izin ver</string>
+    <string name="setting_home_page_mode">Ana sayfa modu</string>
+    <string name="setting_custom_home_page_url">Özel ana sayfa URL\'si</string>
+    <string name="setting_search_engine">Arama motoru</string>
+    <string name="setting_custom_search_engine_url">Özel arama motoru URL\'si</string>
+    <string name="setting_user_agent">User-Agent</string>
+    <string name="setting_web_engine">Web motoru</string>
+    <string name="setting_web_engine_description">GeckoView 3 GB ve üzeri RAM\'e sahip cihazlar için önerilir</string>
+    <string name="setting_ad_block">Reklam engelleyiciyi etkinleştir</string>
+    <string name="setting_ad_block_list_url">Reklam engelleme listesi URL\'si</string>
+    <string name="setting_auto_check_updates">Güncelleştirmeleri otomatik denetle</string>
+    <string name="setting_update_channel">Güncelleme kanalı</string>
+    <string name="setting_use_http_proxy">HTTP ara sunucusu kullan</string>
+    <string name="setting_use_http_proxy_description">Trafiği HTTP ara sunucusu üzerinden yönlendir (ör. 127.0.0.1:7890 üzerinde Clash). WebView için yeniden başlatma gerekebilir</string>
+    <string name="setting_proxy_url">Ara sunucu URL\'si</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Devre dışı bırakmak için boş bırakın</string>
+    <string name="setting_directional_navigation_mode">Yönlü gezinme modu</string>
+    <string name="setting_directional_navigation_mode_description">İmleci hareket ettirmek yerine ok tuşlarını web sayfasına gönder (oyunlar ve uygulamalar için)</string>
+    <string name="setting_new_tab_button_at_start">Yeni sekme düğmesi en başta</string>
+    <string name="setting_new_tab_button_at_start_description">+ düğmesini sekme listesinin sonrasına değil önüne yerleştirir</string>
+    <string name="setting_context_menu_on_long_press">Uzun basmada bağlam menüsü</string>
+    <string name="setting_context_menu_on_long_press_description">Uzun basmada sayfa eylemlerine izin vermek için devre dışı bırakın</string>
+    <string name="setting_single_tab_mode">Tek sekme modu</string>
+    <string name="setting_single_tab_mode_description">Her bağlantı ve niyet için geçerli sekmeyi yeniden kullanır</string>
+    <string name="change_web_engine">Web motoru değiştirilsin mi?</string>
+    <string name="gecko_engine_not_included">GeckoView motoru bu derlemeye dahil değildir.</string>
+    <string name="backup_exported">Yedek dışa aktarıldı</string>
+    <string name="export_failed">Dışa aktarma başarısız oldu</string>
+    <string name="import_failed">İçe aktarma başarısız oldu</string>
+    <string name="imported_settings">%1$d ayar içe aktarıldı</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>Özel</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>Varsayılan (önerilen)</item>
+        <item>Chrome (Masaüstü)</item>
+        <item>Chrome (Mobil)</item>
+        <item>Firefox (Masaüstü)</item>
+        <item>Firefox (Mobil)</item>
+        <item>Edge (Masaüstü)</item>
+        <item>Özel</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>Sürüm</item>
+        <item>Sürüm öncesi</item>
+    </string-array>
+</resources>

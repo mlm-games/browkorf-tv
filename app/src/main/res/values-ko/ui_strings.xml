@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="language">언어</string>
+    <string name="language_system_default">시스템 기본값</string>
+    <string name="browkorf_settings_import">설정 가져오기</string>
+    <string name="browkorf_settings_export">설정 내보내기</string>
+    <string name="category_general">일반</string>
+    <string name="category_home_page">홈페이지</string>
+    <string name="category_search">검색</string>
+    <string name="category_user_agent">User Agent</string>
+    <string name="category_web_engine">웹 엔진</string>
+    <string name="category_ad_block">광고 차단</string>
+    <string name="category_updates">업데이트</string>
+    <string name="category_proxy">프록시</string>
+    <string name="link_actions">링크 동작</string>
+    <string name="add_bookmark">북마크 추가</string>
+    <string name="move_up">위로 이동</string>
+    <string name="move_down">아래로 이동</string>
+    <string name="lock_bookmark_editing">북마크 편집 잠금</string>
+    <string name="unlock_bookmark_editing">북마크 편집 잠금 해제</string>
+    <string name="remove">제거</string>
+    <string name="clear_all">모두 지우기</string>
+    <string name="no_history">기록 없음</string>
+    <string name="no_downloads">다운로드 없음</string>
+    <string name="about">정보</string>
+    <string name="app_info">앱: %1$s (%2$d)</string>
+    <string name="engine_info">엔진: %1$s</string>
+    <string name="edit_bookmark">북마크 편집</string>
+    <string name="edit_title">제목 편집</string>
+    <string name="edit_url">URL 편집</string>
+    <string name="set_title">제목 설정...</string>
+    <string name="set_url">URL 설정...</string>
+    <string name="target_sdk">대상 SDK: %1$d</string>
+    <string name="open_in_current_tab">현재 탭에서 열기</string>
+    <string name="text_selection">텍스트 선택</string>
+    <string name="grab_mode">그랩 모드</string>
+    <string name="microphone">마이크</string>
+    <string name="microphone_permission_required">마이크 권한이 필요합니다</string>
+    <string name="voice_no_match">음성을 인식하지 못했습니다. 다시 시도해 주세요.</string>
+    <string name="voice_network_error">네트워크 오류입니다. 연결을 확인하세요.</string>
+    <string name="voice_search_error">음성 검색 오류: %1$d</string>
+    <string name="copy_error">복사 오류</string>
+    <string name="error_loading_ad_blocker">광고 차단 목록을 불러오는 중 오류 발생</string>
+    <string name="setting_force_dark_webpage">웹페이지 어두운 모드 적용</string>
+    <string name="setting_force_dark_webpage_description">어두운 모드 사용 시 웹페이지에 어두운 테마 적용</string>
+    <string name="setting_keep_screen_on">화면 켜두기</string>
+    <string name="setting_keep_screen_on_description">탐색 중 화면이 꺼지지 않도록 합니다</string>
+    <string name="setting_incognito_mode_description">기록을 저장하지 않고 탐색</string>
+    <string name="setting_allow_autoplay_media">미디어 자동 재생 허용</string>
+    <string name="setting_home_page_mode">홈페이지 모드</string>
+    <string name="setting_custom_home_page_url">사용자 지정 홈페이지 URL</string>
+    <string name="setting_search_engine">검색 엔진</string>
+    <string name="setting_custom_search_engine_url">사용자 지정 검색 엔진 URL</string>
+    <string name="setting_user_agent">User Agent</string>
+    <string name="setting_web_engine">웹 엔진</string>
+    <string name="setting_web_engine_description">메모리 3GB 이상 기기에서는 GeckoView 권장</string>
+    <string name="setting_ad_block">광고 차단 켜기</string>
+    <string name="setting_ad_block_list_url">광고 차단 목록 URL</string>
+    <string name="setting_auto_check_updates">업데이트 자동 확인</string>
+    <string name="setting_update_channel">업데이트 채널</string>
+    <string name="setting_use_http_proxy">HTTP 프록시 사용</string>
+    <string name="setting_use_http_proxy_description">HTTP 프록시로 트래픽을 라우팅합니다(예: 127.0.0.1:7890의 Clash). WebView는 재시작이 필요할 수 있습니다</string>
+    <string name="setting_proxy_url">프록시 URL</string>
+    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). 비활성화하려면 비워 두세요</string>
+    <string name="setting_directional_navigation_mode">방향 탐색 모드</string>
+    <string name="setting_directional_navigation_mode_description">커서 이동 대신 웹페이지에 방향키를 보냅니다(게임/앱용)</string>
+    <string name="setting_new_tab_button_at_start">새 탭 버튼을 맨 앞에 배치</string>
+    <string name="setting_new_tab_button_at_start_description">+ 버튼을 탭 목록 뒤가 아니라 앞에 배치합니다</string>
+    <string name="setting_context_menu_on_long_press">길게 누를 때 컨텍스트 메뉴</string>
+    <string name="setting_context_menu_on_long_press_description">끄면 길게 누르기로 페이지 동작을 실행할 수 있습니다</string>
+    <string name="setting_single_tab_mode">단일 탭 모드</string>
+    <string name="setting_single_tab_mode_description">모든 링크나 인텐트에 현재 탭을 재사용합니다</string>
+    <string name="change_web_engine">웹 엔진을 변경할까요?</string>
+    <string name="gecko_engine_not_included">이 빌드에는 GeckoView 엔진이 포함되어 있지 않습니다.</string>
+    <string name="backup_exported">백업을 내보냈습니다</string>
+    <string name="export_failed">내보내기 실패</string>
+    <string name="import_failed">가져오기 실패</string>
+    <string name="imported_settings">%1$d개의 설정을 가져왔습니다</string>
+    <string-array name="search_engine_options">
+        <item>DuckDuckGo Lite</item>
+        <item>Google</item>
+        <item>Bing</item>
+        <item>Yahoo!</item>
+        <item>DuckDuckGo</item>
+        <item>Yandex</item>
+        <item>Startpage</item>
+        <item>사용자 지정</item>
+    </string-array>
+    <string-array name="user_agent_options">
+        <item>기본값(권장)</item>
+        <item>Chrome(데스크톱)</item>
+        <item>Chrome(모바일)</item>
+        <item>Firefox(데스크톱)</item>
+        <item>Firefox(모바일)</item>
+        <item>Edge(데스크톱)</item>
+        <item>사용자 지정</item>
+    </string-array>
+    <string-array name="web_engine_options">
+        <item>GeckoView</item>
+        <item>WebView</item>
+    </string-array>
+    <string-array name="update_channel_options">
+        <item>릴리스</item>
+        <item>프리릴리스</item>
+    </string-array>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clear">Bersihkan</string>
+    <string name="repost_confirm_message">Untuk menampilkan halaman ini, Browkorf TV harus mengirim informasi yang akan mengulang tindakan apa pun (seperti pencarian atau konfirmasi pesanan) yang dilakukan sebelumnya.</string>
+    <string name="repost_confirm_title">Anda yakin?</string>
+    <string name="repost_confirm_resend">Kirim ulang</string>
+    <string name="before_unload_message">Halaman ini meminta Anda mengonfirmasi bahwa Anda ingin pergi - data yang Anda masukkan mungkin tidak disimpan</string>
+    <string name="before_unload_title">Anda yakin?</string>
+    <string name="before_unload_leave_page">Tinggalkan halaman</string>
+    <string name="before_unload_stay">Tetap di halaman</string>
+    <string name="wait">Tunggu</string>
+    <string name="stop">Berhenti</string>
+    <string name="slow_script">Skrip di halaman ini membuat peramban web Anda menjadi lambat</string>
+    <string name="request_storage">Izinkan akses ke penyimpanan perangkat untuk \"%1$s\"?</string>
+    <string name="request_storage_access">Izinkan pihak ketiga mengakses penyimpanan situs untuk \"%1$s\"?</string>
+    <string name="request_geolocation">Bagikan lokasi dengan \"%1$s\"?</string>
+    <string name="request_notification">Izinkan notifikasi untuk \"%1$s\"?</string>
+    <string name="request_video">Bagikan video dengan \"%1$s\"</string>
+    <string name="request_audio">Bagikan audio dengan \"%1$s\"</string>
+    <string name="request_media">Bagikan video dan audio dengan \"%1$s\"</string>
+    <string name="request_xr">Bagikan tampilan WebXR dengan \"%1$s\"?</string>
+    <string name="request_autoplay">Izinkan video diputar otomatis di \"%1$s\"?</string>
+    <string name="request_media_key_system_access">Izinkan akses tombol media sistem untuk \"%1$s\"?</string>
+    <string name="media_back_camera">Kamera belakang</string>
+    <string name="media_front_camera">Kamera depan</string>
+    <string name="media_microphone">Mikrofon</string>
+    <string name="media_other">Sumber tidak dikenal</string>
+</resources>
