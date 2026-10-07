@@ -169,7 +169,7 @@
     <string name="site_asks_to_open_unknown_url">Webbplatsen ber om att öppna en okänd URL</string>
     <string name="site_asks_to_open_unknown_url_message">Vill du öppna den här URL:en i ett externt program?</string>
     <string name="err_no_app_to_handle_url">Kan inte hitta något lämpligt program för den här URL:en</string>
-    <string name="settings_engine_change_gecko_msg">GeckoViews rekommenderade systemkrav: 3 GB RAM och 64-bitars oktakärnprocessor. Vill du fortsätta?</string>
+    <string name="settings_engine_change_gecko_msg">GeckoView rekommenderade systemkrav: 3 GB RAM och 64-bitars oktakärnprocessor. Vill du fortsätta?</string>
     <string name="settings_engine_change_webview_msg">WebView kommer att ha färre funktioner i framtida uppdateringar. Vill du fortsätta?</string>
     <string name="copy">Kopiera</string>
     <string name="paste">Klistra in</string>

@@ -25,7 +25,7 @@
     <string name="new_bookmark">Penanda halaman baru</string>
     <string name="done">Selesai</string>
     <string name="title">Judul</string>
-    <string name="search_history">Cari di riwayat</string>
+    <string name="search_history">Riwayat pencarian</string>
     <string name="engine">Mesin pencari</string>
     <string name="choose_default_search_engine">Pilih mesin pencari bawaan</string>
     <string name="set_search_engine_as_homepage">Jadikan mesin pencari sebagai beranda</string>

@@ -6,7 +6,7 @@
     <string name="loading">بارگذاری…</string>
     <string name="url_prompt">جستجو یا URL را تایپ کنید</string>
     <string name="can_not_recognize">قابل تشخیص نیست</string>
-    <string name="speak">صحبت کردن</string>
+    <string name="speak">عبارت جست‌وجو</string>
     <string name="open_new_tab">برگه جدید را باز کنید</string>
     <string name="close">بستن</string>
     <string name="web_perm_request_confirmation">این صفحه وب می خواهد از منابع زیر استفاده کند:
@@ -32,12 +32,12 @@
     <string name="engine">موتور جستجو</string>
     <string name="choose_default_search_engine">موتور جستجوی پیش فرض را انتخاب کنید</string>
     <string name="save">ذخیره</string>
-    <string name="search_engine_url_with_query_placeholder_query">URL موتور جستجو</string>
+    <string name="search_engine_url_with_query_placeholder_query">URL موتور جستجو با جای‌نگهدار پرس‌وجو [query]</string>
     <string name="change_search_engine">موتور جستجو را تغییر دهید</string>
-    <string name="change_user_agent">نمایه کاربری را تغییر دهید</string>
-    <string name="user_agent_string">نمایه کاربری</string>
-    <string name="choose_user_agent_string">نمایه کاربری را انتخاب کنید</string>
-    <string name="edit_user_agent_string">نمایه کاربری را ویرایش کنید</string>
+    <string name="change_user_agent">عامل کاربر را تغییر دهید</string>
+    <string name="user_agent_string">عامل کاربر</string>
+    <string name="choose_user_agent_string">عامل کاربر را انتخاب کنید</string>
+    <string name="edit_user_agent_string">عامل کاربر را ویرایش کنید</string>
     <string name="nothing">هیچ</string>
     <string name="cancelled">لغو شد</string>
     <string name="download">دانلود</string>
@@ -83,13 +83,13 @@
     <string name="version_s">نسخه: %s</string>
     <string name="check_for_updates">بررسی به‌روزرسانی‌ها</string>
     <string name="check_for_updates_description">همین حالا برای نسخه جدید بررسی کن</string>
-    <string name="update_channel">کانال ترجمه:</string>
+    <string name="update_channel">کانال به‌روزرسانی:</string>
     <string name="auto_check_for_updates">بررسی خودکار برای به روزرسانی ها</string>
     <string name="update">به روز رسانی</string>
     <string name="new_version_available_s">نسخه جدید موجود است: %s</string>
     <string name="warning">هشدار</string>
     <string name="unprotected_connection">اتصال محافظت نشده</string>
-    <string name="err_webview_can_not_link">نمی توان به وب نما متصل شد.ابتدا وب نما سیستم Android را نصب کنید.</string>
+    <string name="err_webview_can_not_link">نمی‌توان به مؤلفهٔ WebView متصل شد. ابتدا مؤلفهٔ Android System WebView را نصب کنید.</string>
     <string name="new_tab_title">[زبانه جدید]</string>
     <string name="open_a_new_tab_here">یک برگه جدید در اینجا باز کنید</string>
     <string name="tabs">برگه ها</string>
@@ -110,11 +110,11 @@
     <string name="navigate_forward">حرکت به جلو</string>
     <string name="web_browser_optimized_for_tvs">مرورگر وب برای تلویزیون بهینه شده است</string>
     <string name="never">هرگز</string>
-    <string name="last_update">اخرین بروزرسانی  Mo</string>
+    <string name="last_update">آخرین بروزرسانی</string>
     <string name="update_ad_blocker_list">لیست مسدودکننده تبلیغات را به روز کنید</string>
     <string name="toggle_ads_blocking">مسدود کردن تبلیغات را تغییر دهید</string>
     <string name="need_restart">نیاز به راه اندازی مجدد برنامه</string>
-    <string name="theme">موضوع</string>
+    <string name="theme">تم</string>
     <array name="themes">
         <item>سیستم</item>
         <item>سفید</item>
@@ -123,13 +123,13 @@
     <string name="set_search_engine_as_homepage">موتور جستجو را به عنوان صفحه اصلی تنظیم کنید</string>
     <string name="toggle_keep_screen_on">صفحه نمایش را روشن بگذارید</string>
     <string name="incognito_mode">حالت ناشناس</string>
-    <string name="incognito_mode_hint">اکنون می توانید به صورت خصوصی مرور کنید و سایر افرادی که از این دستگاه استفاده می کنند فعالیت شما را نخواهند دید. Browkorf TV تاریخچه مرور، کوکی ها و داده های سایت، اطلاعات وارد شده در فرم ها را ذخیره نمی کند.  با این حال، دانلودها و نشانک ها ذخیره خواهند شد. ممکن است فعالیت شما همچنان برای وب‌سایت‌هایی که بازدید می‌کنید، سازمان یا ارائه‌دهنده خدمات اینترنتی شما قابل مشاهده باشد.</string>
+    <string name="incognito_mode_hint">اکنون می توانید به صورت خصوصی مرور کنید و سایر افرادی که از این دستگاه استفاده می کنند فعالیت شما را نخواهند دید. Browkorf TV تاریخچه مرور، کوکی ها و داده های سایت، اطلاعات وارد شده در فرم ها را ذخیره نمی کند.\n\nبا این حال، دانلودها و نشانک ها ذخیره خواهند شد. ممکن است فعالیت شما همچنان برای وب‌سایت‌هایی که بازدید می‌کنید، سازمان یا ارائه‌دهنده خدمات اینترنتی شما قابل مشاهده باشد.</string>
     <string name="don_t_show_again">دیگر نشان نده</string>
     <string name="why_icon_changed">چرا نماد تغییر کرد؟</string>
     <string name="clear_web_cache">کش وب را پاک کنید</string>
     <string-array name="tabs_options">
-        <item>ورودی جدید</item>
-        <item>جریان را ببند</item>
+        <item>باز کردن زبانهٔ جدید</item>
+        <item>بستن زبانهٔ فعلی</item>
         <item>همه را ببند</item>
         <item>حرکت به سمت چپ</item>
         <item>برو راست</item>
@@ -154,7 +154,7 @@
     <string name="home_page">صفحه نخست</string>
     <string name="custom_home_page_url">URL صفحه اصلی سفارشی</string>
     <string-array name="home_page_modes">
-        <item>تلویزیون برادر خانه</item>
+        <item>خانهٔ Browkorf TV</item>
         <item>موتور جستجو</item>
         <item>سفارشی</item>
         <item>جای خالی</item>

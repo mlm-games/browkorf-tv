@@ -36,7 +36,7 @@
     <string name="grab_mode">Hakutila</string>
     <string name="microphone">Mikrofoni</string>
     <string name="microphone_permission_required">Mikrofonia varten vaaditaan lupa</string>
-    <string name="voice_no_match">Puhe tunnistettiin. Yritä uudelleen.</string>
+    <string name="voice_no_match">Puhetta ei tunnistettu. Yritä uudelleen.</string>
     <string name="voice_network_error">Verkkovirhe. Tarkista yhteys.</string>
     <string name="voice_search_error">Äänihakuvirhe: %1$d</string>
     <string name="copy_error">Kopiointivirhe</string>

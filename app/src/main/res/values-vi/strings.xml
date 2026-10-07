@@ -5,7 +5,7 @@
     <string name="ok">OK</string>
     <string name="loading">Đang tải…</string>
     <string name="url_prompt">Nhập văn bản hoặc URL</string>
-    <string name="can_not_recognize">Không thể xác nhận</string>
+    <string name="can_not_recognize">Không thể nhận dạng</string>
     <string name="speak">Truy vấn tìm kiếm</string>
     <string name="open_new_tab">Mở tab mới</string>
     <string name="close">Đóng</string>
@@ -34,7 +34,7 @@
     <string name="user_agent_string">Chuỗi User Agent</string>
     <string name="choose_user_agent_string">Chọn chuỗi User Agent</string>
     <string name="edit_user_agent_string">Chỉnh sửa chuỗi User Agent</string>
-    <string name="nothing">Không có tải xuống</string>
+    <string name="nothing">Không có</string>
     <string name="cancelled">Đã hủy</string>
     <string name="download">Tải xuống</string>
     <string name="file_not_found">Không tìm thấy tệp</string>
@@ -162,7 +162,7 @@
         <item>Truy cập nhiều nhất</item>
     </string-array>
 
-    <string name="web_browser_engine_temporary_setting">Web browser engine (cài đặt tạm thời)</string>
+    <string name="web_browser_engine_temporary_setting">Động cơ trình duyệt web (cài đặt tạm thời)</string>
     <string name="need_restart_message">Khởi động lại ứng dụng để áp dụng các thay đổi</string>
     <string name="restart">Khởi động lại</string>
     <string name="yes">CÓ</string>

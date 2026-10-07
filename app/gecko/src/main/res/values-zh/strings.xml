@@ -20,7 +20,7 @@
   <string name="request_media">允许 "%1$s" 访问相机与话筒吗？</string>
   <string name="request_xr">允许 "%1$s" 访问您的 WebXR 显示器吗?</string>
   <string name="request_autoplay">允许在 "%1$s" 的视频自动播放吗?</string>
-  <string name="request_media_key_system_access">允许 "%1$s" 访问您的媒体解密密钥吗?</string>
+  <string name="request_media_key_system_access">允许 "%1$s" 访问系统媒体密钥吗?</string>
   <string name="media_back_camera">后置相机</string>
   <string name="media_front_camera">前置相机</string>
   <string name="media_microphone">话筒</string>

@@ -29,7 +29,7 @@
     <string name="choose_default_search_engine">Verwendete Suchmaschine auswählen</string>
     <string name="set_search_engine_as_homepage">Suchmaschine als Startseite verwenden</string>
     <string name="save">Speichern</string>
-    <string name="search_engine_url_with_query_placeholder_query">URL der Suchmaschine mit [Suchbegriff-Platzhalter]</string>
+    <string name="search_engine_url_with_query_placeholder_query">URL der Suchmaschine mit [query]-Platzhalter</string>
     <string name="change_search_engine">Suchmaschine ändern</string>
     <string name="change_user_agent">User-Agent ändern</string>
     <string name="user_agent_string">User-Agent-Zeichenfolge</string>
@@ -103,7 +103,7 @@
     <string name="ssl_date_invalid">Datum des Zertifikats ungültig</string>
     <string name="ssl_invalid">Ein Fehler ist aufgetreten</string>
     <string name="back_to_safety">Zurück in Sicherheit</string>
-    <string name="go_im_aware">Weiter, ich kenne das Risiko! </string>
+    <string name="go_im_aware">Weiter, ich kenne das Risiko!</string>
     <string name="connection_isnt_secure">Unsichere Verbindung</string>
     <string name="hostname">Hostname:</string>
     <string name="err_desk">Fehlerbeschreibung:</string>
@@ -152,13 +152,13 @@
     <string-array name="home_page_modes">
         <item>Browkorf TV Home</item>
         <item>Suchmaschine</item>
-        <item>Brauch</item>
+        <item>Benutzerdefiniert</item>
         <item>Leer</item>
         <item>Lesezeichen</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Lesezeichen</item>
-        <item>Neueste Geschichte</item>
+        <item>Neuester Verlauf</item>
         <item>Meist besuchte</item>
     </string-array>
     <string name="web_browser_engine_temporary_setting">Webbrowser-Engine (vorübergehende Einstellung)</string>

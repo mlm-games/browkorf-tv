@@ -12,12 +12,12 @@
   <string name="stop">Zatrzymaj</string>
   <string name="slow_script">Skrypt na tej stronie powoduje powolne działanie przeglądarki</string>
   <string name="request_storage">Zezwolić na dostęp do pamięci urządzenia dla „%1$s”?</string>
-  <string name="request_storage_access">Zezwolić innym firmom na dostęp do własnej pamięci masowej „%1$s”?</string>
+  <string name="request_storage_access">Zezwolić stronom trzecim na dostęp do pamięci pierwszej strony „%1$s”?</string>
   <string name="request_geolocation">Udostępnić lokalizację „%1$s”?</string>
   <string name="request_notification">Zezwolić na powiadomienia dla „%1$s”?</string>
-  <string name="request_video">Udostępnij obraz „%1$s”</string>
+  <string name="request_video">Udostępnij wideo „%1$s”</string>
   <string name="request_audio">Udostępnij dźwięk „%1$s”</string>
-  <string name="request_media">Udostępnij obraz i dźwiek „%1$s”</string>
+  <string name="request_media">Udostępnij wideo i dźwięk „%1$s”</string>
   <string name="request_xr">Udostępnij ekrany WebXR „%1$s”?</string>
   <string name="request_autoplay">Zezwolić na automatyczne odtwarzanie wideo w „%1$s”?</string>
   <string name="request_media_key_system_access">Zezwolić na dostęp do systemowego klucza multimedialnego dla „%1$s”?</string>

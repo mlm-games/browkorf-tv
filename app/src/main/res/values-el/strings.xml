@@ -179,7 +179,7 @@
     <string name="http_auth_title">Απαιτείται ταυτοποίηση</string>
     <string name="play_pause">Αναπαραγωγή/Παύση</string>
     <string name="media_stop">Διακοπή πολυμέσων</string>
-    <string name="media_rewind">Πίσω στα πολυμέσα</string>
+    <string name="media_rewind">Επαναφορά πολυμέσων</string>
     <string name="media_fast_forward">Προώθηση πολυμέσων</string>
     <string name="long_press">Παρατεταμένο πάτημα</string>
     <string name="toggle_directional_nav">Εναλλαγή κατευθυντικής πλοήγησης</string>

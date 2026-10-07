@@ -31,7 +31,7 @@
     <string name="choose_default_search_engine">Imposta il motore di ricerca predefinito</string>
     <string name="set_search_engine_as_homepage">Imposta il motore di ricerca come homepage</string>
     <string name="save">Salva</string>
-    <string name="search_engine_url_with_query_placeholder_query">URL del motore di ricerca con segnaposto [testo]</string>
+    <string name="search_engine_url_with_query_placeholder_query">URL del motore di ricerca con segnaposto [query]</string>
     <string name="change_search_engine">Cambia motore di ricerca</string>
     <string name="change_user_agent">Cambia User Agent</string>
     <string name="user_agent_string">Stringa User Agent</string>
@@ -150,15 +150,15 @@
     <string name="home_page">Pagina iniziale</string>
     <string name="custom_home_page_url">URL personalizzato della home page</string>
     <string-array name="home_page_modes">
-        <item>TV fratello casa</item>
+        <item>Home di Browkorf TV</item>
         <item>Motore di ricerca</item>
-        <item>Costume</item>
+        <item>Personalizzato</item>
         <item>Vuoto</item>
         <item>Segnalibri</item>
     </string-array>
     <string-array name="home_page_links_modes">
         <item>Segnalibri</item>
-        <item>Storia più recente</item>
+        <item>Cronologia recente</item>
         <item>Più visitato</item>
     </string-array>
 

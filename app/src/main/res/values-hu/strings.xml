@@ -138,7 +138,7 @@
     <array name="popup_blocking_level">
         <item>Ne blokkoljon</item>
         <item>Párbeszédpanelek blokkolása</item>
-        <item>Új lapok blokkolása is (parancssor által indítottak)</item>
+        <item>Új lapok blokkolása is (parancsfájl által indítottak)</item>
         <item>Minden új ablak blokkolása (maximális blokkolás)</item>
     </array>
     <string name="copy_to_clipboard">Másolás a vágólapra</string>
