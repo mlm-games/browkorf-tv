@@ -56,5 +56,6 @@ internal fun resolveSettingsResource(key: String): Int = when (key) {
 
     BrowkorfSettingsKeys.WEB_ENGINE_CONFIRMATION_TITLE -> R.string.change_web_engine
     BrowkorfSettingsKeys.WEB_ENGINE_CONFIRMATION_MESSAGE -> R.string.need_restart_message
+    BrowkorfSettingsKeys.PROXY_URL_INVALID -> R.string.setting_proxy_url_invalid
     else -> 0
 }

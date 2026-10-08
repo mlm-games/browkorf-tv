@@ -56,13 +56,20 @@ object ProxyManager {
     fun current(): ProxyConfig? = currentConfig
 
     fun apply(settings: AppSettings) {
-        val parsed = try {
-            parseProxyConfig(settings)
-        } catch (e: ProxyConfigurationException) {
-            Log.w(TAG, "Invalid proxy config: ${e.message}")
-            null
+        when (val resolution = resolveProxyConfig(settings)) {
+            is ProxyResolution.Disabled -> applyConfig(null)
+            is ProxyResolution.Invalid -> {
+                Log.e(TAG, "Proxy turned off: ${resolution.reason}")
+                applyConfig(null)
+            }
+
+            is ProxyResolution.Active -> {
+                for (limitation in resolution.config.browsingLimitations()) {
+                    Log.e(TAG, "Proxy ${resolution.config.sanitizedUrl}: $limitation, web pages bypass it")
+                }
+                applyConfig(resolution.config)
+            }
         }
-        applyConfig(parsed)
     }
 
     fun applyConfig(config: ProxyConfig?) {
@@ -98,6 +105,8 @@ object ProxyManager {
                 System.setProperty("https.nonProxyHosts", "localhost|127.0.0.1|::1")
                 System.clearProperty("socksProxyHost")
                 System.clearProperty("socksProxyPort")
+                System.clearProperty("java.net.socks.username")
+                System.clearProperty("java.net.socks.password")
             } else { // socks5
                 System.setProperty("socksProxyHost", config.host)
                 System.setProperty("socksProxyPort", config.port.toString())
@@ -134,7 +143,7 @@ object ProxyManager {
             }
 
             if (config.scheme != "http") {
-                Log.i(TAG, "SOCKS proxy: WebView ProxyController only supports HTTP; clearing override and relying on system properties")
+                Log.e(TAG, "SOCKS proxy: WebView ProxyController only supports HTTP, web pages will bypass it")
                 controller.clearProxyOverride(executor) {}
                 return
             }
@@ -149,8 +158,8 @@ object ProxyManager {
                 .addBypassRule("localhost")
                 .addBypassRule("::1")
 
-            if (config.username != null) {
-                Log.w(TAG, "WebView proxy auth not natively supported by ProxyController; browsing may prompt for credentials")
+            if (config.hasCredentials) {
+                Log.e(TAG, "WebView ProxyController cannot authenticate, web pages will get 407 from the proxy")
             }
 
             controller.setProxyOverride(builder.build(), executor) {
@@ -166,13 +175,19 @@ object ProxyManager {
     private fun tryApplyGeckoProxy(config: ProxyConfig?) {
         try {
             Class.forName("org.mlm.browkorftv.webengine.gecko.GeckoWebEngine")
-            // GeckoView has no official proxy API (bug 1525486), but its internal
-            // org.mozilla.gecko.util.ProxySelector reads http.proxyHost/https.proxyHost/socksProxyHost
-            // per-request, so System.setProperty changes apply without restart.
-            if (config != null) {
-                Log.i(TAG, "Proxy active (${config.sanitizedUrl}). GeckoView will use system properties via ProxySelector")
-            } else {
+            // GeckoView has no official proxy API (bug 1525486). Native code asks
+            // GeckoAppShell.getProxyForURI, whose org.mozilla.gecko.util.ProxySelector reads
+            // http/https.proxyHost per request and can only ever answer DIRECT or PROXY, so
+            // System.setProperty changes apply without restart but SOCKS and credentials
+            // can never reach GeckoView.
+            if (config == null) {
                 Log.i(TAG, "Proxy cleared")
+            } else if (config.isSocks) {
+                Log.e(TAG, "SOCKS proxy ${config.sanitizedUrl}: GeckoView only resolves http/https proxies, web pages will bypass it")
+            } else if (config.hasCredentials) {
+                Log.e(TAG, "Proxy ${config.sanitizedUrl}: GeckoView cannot authenticate to a proxy, web pages will get 407")
+            } else {
+                Log.i(TAG, "Proxy active (${config.sanitizedUrl}). GeckoView will use system properties via ProxySelector")
             }
         } catch (_: ClassNotFoundException) {
             // nothing to do

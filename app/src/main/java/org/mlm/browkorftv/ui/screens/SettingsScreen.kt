@@ -1,5 +1,6 @@
 package org.mlm.browkorftv.ui.screens
 
+import android.content.res.Resources
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +38,10 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.mlm.browkorftv.BuildConfig
 import org.mlm.browkorftv.R
+import org.mlm.browkorftv.network.ProxyLimitation
+import org.mlm.browkorftv.network.ProxyResolution
+import org.mlm.browkorftv.network.browsingLimitations
+import org.mlm.browkorftv.network.resolveProxyConfig
 import org.mlm.browkorftv.settings.applyAppLocale
 import org.mlm.browkorftv.settings.currentAppLanguage
 import org.mlm.browkorftv.settings.AppSettings
@@ -63,6 +69,11 @@ fun SettingsScreen(
     // Backup/Restore Logic
     var showImportDialog by remember { mutableStateOf(false) }
     var importJsonContent by remember { mutableStateOf<String?>(null) }
+
+    // A proxy the browser can't honour must not stay invisible (imported settings, restart)
+    LaunchedEffect(Unit) {
+        proxyWarning(settings, resources)?.let { snackbarHostState.showSnackbar(it) }
+    }
 
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
@@ -168,6 +179,16 @@ fun SettingsScreen(
                             if (name == "language" && value is AppLanguage) {
                                 applyAppLocale(value.languageTag)
                             }
+                            if (name == "proxyEnabled" || name == "proxyUrl") {
+                                val candidate = when (value) {
+                                    is Boolean -> settings.copy(proxyEnabled = value)
+                                    is String -> settings.copy(proxyUrl = value)
+                                    else -> settings
+                                }
+                                proxyWarning(candidate, resources)?.let {
+                                    snackbarHostState.showSnackbar(it)
+                                }
+                            }
                         }
                     },
                     onAction = { actionClass ->
@@ -217,3 +238,18 @@ fun SettingsScreen(
     }
 }
 
+private fun proxyWarning(settings: AppSettings, resources: Resources): String? =
+    when (val resolution = resolveProxyConfig(settings)) {
+        is ProxyResolution.Invalid -> resources.getString(R.string.setting_proxy_url_invalid)
+        is ProxyResolution.Active -> when (resolution.config.browsingLimitations().firstOrNull()) {
+            ProxyLimitation.SOCKS_FOR_BROWSING ->
+                resources.getString(R.string.proxy_socks_browsing_unsupported)
+
+            ProxyLimitation.CREDENTIALS_FOR_BROWSING ->
+                resources.getString(R.string.proxy_credentials_browsing_unsupported)
+
+            null -> null
+        }
+
+        ProxyResolution.Disabled -> null
+    }

@@ -35,6 +35,12 @@ data class ProxyConfig(
             append(port)
         }
 
+    val isSocks: Boolean
+        get() = scheme == "socks5"
+
+    val hasCredentials: Boolean
+        get() = !username.isNullOrBlank()
+
     val sanitizedUrl: String
         get() = buildString {
             append(scheme)
@@ -51,11 +57,42 @@ data class ProxyConfig(
         }
 }
 
+enum class ProxyLimitation {
+    SOCKS_FOR_BROWSING,
+    CREDENTIALS_FOR_BROWSING,
+}
+
+// WebView's ProxyController only accepts HTTP proxy rules, and neither WebView nor
+// GeckoView can hand proxy credentials to the browser engine, so anything else only
+// reaches the app's own requests (favicons, update checks, downloads, ad block list).
+fun ProxyConfig.browsingLimitations(): List<ProxyLimitation> = buildList {
+    if (isSocks) add(ProxyLimitation.SOCKS_FOR_BROWSING)
+    if (hasCredentials) add(ProxyLimitation.CREDENTIALS_FOR_BROWSING)
+}
+
+sealed interface ProxyResolution {
+    data object Disabled : ProxyResolution
+    data class Active(val config: ProxyConfig) : ProxyResolution
+    data class Invalid(val reason: String) : ProxyResolution
+}
+
+fun resolveProxyConfig(settings: AppSettings): ProxyResolution = try {
+    when (val config = parseProxyConfig(settings)) {
+        null -> ProxyResolution.Disabled
+        else -> ProxyResolution.Active(config)
+    }
+} catch (e: ProxyConfigurationException) {
+    ProxyResolution.Invalid(e.message ?: "Invalid proxy URL")
+}
+
 fun parseProxyConfig(settings: AppSettings): ProxyConfig? {
     if (!settings.proxyEnabled) return null
     val raw = settings.proxyUrl.trim()
     if (raw.isBlank()) return null
+    return parseProxyUrl(raw)
+}
 
+fun parseProxyUrl(raw: String): ProxyConfig {
     val uri = try {
         URI(raw).parseServerAuthority()
     } catch (e: Exception) {

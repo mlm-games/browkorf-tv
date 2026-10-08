@@ -54,4 +54,5 @@ object BrowkorfSettingsKeys {
 
     const val WEB_ENGINE_CONFIRMATION_TITLE = "browkorf.settings.web_engine.confirmation.title"
     const val WEB_ENGINE_CONFIRMATION_MESSAGE = "browkorf.settings.web_engine.confirmation.message"
+    const val PROXY_URL_INVALID = "browkorf.settings.proxy_url.invalid"
 }

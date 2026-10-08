@@ -59,9 +59,10 @@
     <string name="setting_auto_check_updates">Auto Check Updates</string>
     <string name="setting_update_channel">Update Channel</string>
     <string name="setting_use_http_proxy">Use HTTP Proxy</string>
-    <string name="setting_use_http_proxy_description">Route traffic through HTTP proxy (e.g. Clash on 127.0.0.1:7890). Restart may be required for WebView</string>
+    <string name="setting_use_http_proxy_description">Route traffic through HTTP proxy (e.g. Clash on 127.0.0.1:7890)</string>
     <string name="setting_proxy_url">Proxy URL</string>
-    <string name="setting_proxy_url_description">http://127.0.0.1:7890 (http/socks5). Leave blank to disable</string>
+    <string name="setting_proxy_url_description">e.g. http://127.0.0.1:7890. Web pages only use HTTP proxies; socks5:// and credentials apply to downloads and updates. Leave blank to disable</string>
+    <string name="setting_proxy_url_invalid">Invalid proxy URL</string>
     <string name="setting_directional_navigation_mode">Directional Navigation Mode</string>
     <string name="setting_directional_navigation_mode_description">Send arrow keys to webpage instead of moving cursor (for games/apps)</string>
     <string name="setting_new_tab_button_at_start">New Tab Button At The Start</string>
@@ -72,6 +73,8 @@
     <string name="setting_single_tab_mode_description">Reuses the current tab for every link or intent</string>
     <string name="change_web_engine">Change Web Engine?</string>
     <string name="gecko_engine_not_included">GeckoView engine is not included in this build.</string>
+    <string name="proxy_socks_browsing_unsupported">Web pages can\'t use a SOCKS proxy, only downloads and updates will go through it</string>
+    <string name="proxy_credentials_browsing_unsupported">Web pages can\'t authenticate to a proxy, only downloads and updates will go through it</string>
     <string name="backup_exported">Backup exported</string>
     <string name="export_failed">Export failed</string>
     <string name="import_failed">Import failed</string>

@@ -254,7 +254,7 @@ data class AppSettings(
     @Setting(
         title = "Use HTTP Proxy",
         titleKey = BrowkorfSettingsKeys.USE_HTTP_PROXY,
-        description = "Route traffic through HTTP proxy (e.g. Clash on 127.0.0.1:7890). Restart may be required for WebView",
+        description = "Route traffic through HTTP proxy (e.g. Clash on 127.0.0.1:7890)",
         descriptionKey = BrowkorfSettingsKeys.USE_HTTP_PROXY_DESCRIPTION,
         category = Proxy::class,
         type = Toggle::class,
@@ -265,13 +265,14 @@ data class AppSettings(
     @Setting(
         title = "Proxy URL",
         titleKey = BrowkorfSettingsKeys.PROXY_URL,
-        description = "http://127.0.0.1:7890 (http/socks5). Leave blank to disable",
+        description = "e.g. http://127.0.0.1:7890. Web pages only use HTTP proxies, socks5:// and credentials apply to downloads and updates. Leave blank to disable",
         descriptionKey = BrowkorfSettingsKeys.PROXY_URL_DESCRIPTION,
         category = Proxy::class,
         type = TextInput::class,
         key = "proxy_url",
         dependsOn = "proxyEnabled"
     )
+    @ValidatedBy(ProxyUrlValidator::class)
     val proxyUrl: String = "http://127.0.0.1:7890",
 
     @Setting(
