@@ -1,0 +1,3 @@
+- display proxy limitations and fix few issues
+- Drop the backslash escape before a question mark in eight locales
+- Move to kmp-settings 0.10.3

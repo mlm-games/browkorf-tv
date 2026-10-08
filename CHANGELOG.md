@@ -1,3 +1,10 @@
+## v4.7.4
+
+- display proxy limitations and fix few issues
+- Drop the backslash escape before a question mark in eight locales
+- Move to kmp-settings 0.10.3
+
+
 ## v4.7.3
 
 - Move check updates to actions registry, and add a bookmarks homepage option (seperated), with 2 more shortcut conf.s
